@@ -18,6 +18,7 @@ public class PlayerMove implements Listener {
     }
     @EventHandler(priority = EventPriority.NORMAL)
     public void onPlayerMove(PlayerMoveEvent event) {
+        if (event.getTo() == null)return;
         if (event.getFrom().getChunk() == event.getTo().getChunk())return;
         if (chunkStorage.isProtected(event.getPlayer().getLocation().getChunk())) {
             if (event.getPlayer().getPersistentDataContainer().has(NamespacedKey.minecraft("chunk-visitor"), PersistentDataType.STRING)) {
