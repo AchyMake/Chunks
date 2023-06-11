@@ -39,7 +39,7 @@ public class UpdateChecker {
     public void getUpdate() {
         if (plugin.getConfig().getBoolean("notify-update.enable")) {
             (new UpdateChecker(plugin, resourceId)).getVersion((latest) -> {
-                if (plugin.getDescription().getVersion().equals("Paper-" + latest)) {
+                if (plugin.getDescription().getVersion().equals(latest)) {
                     message.sendLog(Level.INFO, "You are using the latest version");
                 } else {
                     message.sendLog(Level.INFO, "New Update: " + latest);
@@ -51,7 +51,7 @@ public class UpdateChecker {
     public void sendMessage(Player player) {
         if (plugin.getConfig().getBoolean("notify-update.enable")) {
             (new UpdateChecker(plugin, resourceId)).getVersion((latest) -> {
-                if (!plugin.getDescription().getVersion().equalsIgnoreCase("Paper-" + latest)) {
+                if (!plugin.getDescription().getVersion().equalsIgnoreCase(latest)) {
                     message.send(player, "&6" + plugin.getName() + " Update:&f "+ latest);
                     message.send(player, "&6Current Version: &f" + plugin.getDescription().getVersion());
                 }
