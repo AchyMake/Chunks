@@ -12,8 +12,12 @@ import java.util.List;
 import java.util.UUID;
 
 public class Members extends ChunkSubCommand {
-    private final Message message = Chunks.getMessage();
-    private final Database database = Chunks.getDatabase();
+    private Database getDatabase() {
+        return Chunks.getDatabase();
+    }
+    private Message getMessage() {
+        return Chunks.getMessage();
+    }
     @Override
     public String getName() {
         return "members";
@@ -30,36 +34,36 @@ public class Members extends ChunkSubCommand {
     public void perform(Player player, String[] args) {
         if (player.hasPermission("chunks.command.chunk.members")) {
             if (args.length == 1) {
-                if (database.get(player).getStringList("members").isEmpty()){
-                    message.send(player, "&cYou don't have any members");
+                if (getDatabase().getConfig(player).getStringList("members").isEmpty()){
+                    getMessage().send(player, "&cYou don't have any members");
                 } else {
-                    message.send(player, "&6Chunk Members:");
-                    for (String uuidListed : database.get(player).getStringList("members")) {
-                        message.send(player, "- " + player.getServer().getOfflinePlayer(UUID.fromString(uuidListed)).getName());
+                    getMessage().send(player, "&6Chunk Members:");
+                    for (String uuidListed : getDatabase().getConfig(player).getStringList("members")) {
+                        getMessage().send(player, "- " + player.getServer().getOfflinePlayer(UUID.fromString(uuidListed)).getName());
                     }
                 }
             }
             if (args.length == 3) {
                 OfflinePlayer target = Bukkit.getOfflinePlayer(args[2]);
                 if (args[1].equalsIgnoreCase("add")) {
-                    if (database.get(player).getStringList("members").contains(target.getUniqueId().toString())) {
-                        message.send(player, "&cYou already have&f " + target.getName() + "&c as member");
+                    if (getDatabase().getConfig(player).getStringList("members").contains(target.getUniqueId().toString())) {
+                        getMessage().send(player, "&cYou already have&f " + target.getName() + "&c as member");
                     } else {
 
-                        List<String> members = database.get(player).getStringList("members");
+                        List<String> members = getDatabase().getConfig(player).getStringList("members");
                         members.add(target.getUniqueId().toString());
-                        database.setStringList(player, "members", members);
-                        message.send(player, "&6You added&f " + target.getName() + "&6 to members");
+                        getDatabase().setStringList(player, "members", members);
+                        getMessage().send(player, "&6You added&f " + target.getName() + "&6 to members");
                     }
                 }
                 if (args[1].equalsIgnoreCase("remove")) {
-                    if (database.get(player).getStringList("members").contains(target.getUniqueId().toString())) {
-                        List<String> members = database.get(player).getStringList("members");
+                    if (getDatabase().getConfig(player).getStringList("members").contains(target.getUniqueId().toString())) {
+                        List<String> members = getDatabase().getConfig(player).getStringList("members");
                         members.remove(target.getUniqueId().toString());
-                        database.setStringList(player, "members", members);
-                        message.send(player, "&6You removed&f " + target.getName() + "&6 from members");
+                        getDatabase().setStringList(player, "members", members);
+                        getMessage().send(player, "&6You removed&f " + target.getName() + "&6 from members");
                     } else {
-                        message.send(player, "&6You don't have&f " + target.getName() + "&6 as member");
+                        getMessage().send(player, "&6You don't have&f " + target.getName() + "&6 as member");
                     }
                 }
             }

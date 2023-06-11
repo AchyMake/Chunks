@@ -12,30 +12,36 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 
 public class DamageEntity implements Listener {
-    private final ChunkStorage chunkStorage = Chunks.getChunkStorage();
-    private final Message message = Chunks.getMessage();
-    private final FileConfiguration config = Chunks.getInstance().getConfig();
+    private FileConfiguration getConfig() {
+        return Chunks.getInstance().getConfig();
+    }
+    private ChunkStorage getChunkStorage() {
+        return Chunks.getChunkStorage();
+    }
+    private Message getMessage() {
+        return Chunks.getMessage();
+    }
     public DamageEntity(Chunks chunks) {
         chunks.getServer().getPluginManager().registerEvents(this, chunks);
     }
     @EventHandler(priority = EventPriority.NORMAL)
     public void onDamageEntity(EntityDamageByEntityEvent event) {
         if (!event.getDamager().getType().equals(EntityType.PLAYER))return;
-        if (chunkStorage.isProtected(event.getEntity().getLocation().getChunk())) {
-            if (chunkStorage.hasAccess((Player) event.getDamager(), event.getEntity().getLocation().getChunk()))return;
+        if (getChunkStorage().isProtected(event.getEntity().getLocation().getChunk())) {
+            if (getChunkStorage().hasAccess((Player) event.getDamager(), event.getEntity().getLocation().getChunk()))return;
             if (event.getEntity().isInvulnerable())return;
             if (event.getEntity().getType().equals(EntityType.PLAYER))return;
-            if (config.getBoolean("is-hostile." + event.getEntity().getType()))return;
+            if (getConfig().getBoolean("is-hostile." + event.getEntity().getType()))return;
             event.setCancelled(true);
-            message.sendActionBar((Player) event.getDamager(), "&cChunk is protected by&f Server");
+            getMessage().sendActionBar((Player) event.getDamager(), "&cChunk is protected by&f Server");
         }
-        if (chunkStorage.isClaimed(event.getEntity().getLocation().getChunk())) {
-            if (chunkStorage.hasAccess((Player) event.getDamager(), event.getEntity().getLocation().getChunk()))return;
+        if (getChunkStorage().isClaimed(event.getEntity().getLocation().getChunk())) {
+            if (getChunkStorage().hasAccess((Player) event.getDamager(), event.getEntity().getLocation().getChunk()))return;
             if (event.getEntity().isInvulnerable())return;
             if (event.getEntity().getType().equals(EntityType.PLAYER))return;
-            if (config.getBoolean("is-hostile." + event.getEntity().getType()))return;
+            if (getConfig().getBoolean("is-hostile." + event.getEntity().getType()))return;
             event.setCancelled(true);
-            message.sendActionBar((Player) event.getDamager(), "&cChunk is owned by&f " + chunkStorage.getOwner(event.getEntity().getLocation().getChunk()).getName());
+            getMessage().sendActionBar((Player) event.getDamager(), "&cChunk is owned by&f " + getChunkStorage().getOwner(event.getEntity().getLocation().getChunk()).getName());
         }
     }
 }

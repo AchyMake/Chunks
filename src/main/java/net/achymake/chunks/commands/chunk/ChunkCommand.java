@@ -16,8 +16,12 @@ import java.util.List;
 import java.util.UUID;
 
 public class ChunkCommand implements CommandExecutor, TabCompleter {
-    private final Database database = Chunks.getDatabase();
-    private final Message message = Chunks.getMessage();
+    private Database getDatabase() {
+        return Chunks.getDatabase();
+    }
+    private Message getMessage() {
+        return Chunks.getMessage();
+    }
     private final ArrayList<ChunkSubCommand> chunkSubCommands = new ArrayList<>();
 
     public ChunkCommand(){
@@ -31,7 +35,7 @@ public class ChunkCommand implements CommandExecutor, TabCompleter {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         Player player = (Player) sender;
         if (args.length == 0) {
-            message.send(player, "&cUsage: &f/chunk help");
+            getMessage().send(player, "&cUsage: &f/chunk help");
         }else{
             for (ChunkSubCommand commands : getSubCommands()){
                 if (args[0].equals(commands.getName())){
@@ -81,7 +85,7 @@ public class ChunkCommand implements CommandExecutor, TabCompleter {
                         }
                     }
                     if (args[1].equalsIgnoreCase("remove")) {
-                        for (String uuidString : database.get((OfflinePlayer) sender).getStringList("members")) {
+                        for (String uuidString : getDatabase().getConfig((OfflinePlayer) sender).getStringList("members")) {
                             commands.add(sender.getServer().getOfflinePlayer(UUID.fromString(uuidString)).getName());
                         }
                     }

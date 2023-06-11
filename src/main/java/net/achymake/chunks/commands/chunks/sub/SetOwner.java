@@ -11,9 +11,15 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 public class SetOwner extends ChunksSubCommand {
-    private final ChunkStorage chunkStorage = Chunks.getChunkStorage();
-    private final Message message = Chunks.getMessage();
-    private final Database database = Chunks.getDatabase();
+    private ChunkStorage getChunkStorage() {
+        return Chunks.getChunkStorage();
+    }
+    private Database getDatabase() {
+        return Chunks.getDatabase();
+    }
+    private Message getMessage() {
+        return Chunks.getMessage();
+    }
     @Override
     public String getName() {
         return "setowner";
@@ -31,16 +37,16 @@ public class SetOwner extends ChunksSubCommand {
         if (sender.hasPermission("chunks.command.chunks.setowner")) {
             if (sender instanceof Player) {
                 if (args.length == 2) {
-                    if (chunkStorage.isProtected(((Player) sender).getLocation().getChunk())) {
-                        message.send(sender, "&cChunk is protected by&f Server");
+                    if (getChunkStorage().isProtected(((Player) sender).getLocation().getChunk())) {
+                        getMessage().send(sender, "&cChunk is protected by&f Server");
                     } else {
                         OfflinePlayer target = Bukkit.getOfflinePlayer(args[1]);
-                        if (database.exist(target)) {
-                            chunkStorage.setOwner((Player) sender, target, ((Player) sender).getLocation().getChunk());
-                            chunkStorage.claimEffect((Player) sender);
-                            message.send(sender, "&6Chunk is now owned by&f " + chunkStorage.getOwner(((Player) sender).getLocation().getChunk()).getName());
+                        if (getDatabase().exist(target)) {
+                            getChunkStorage().setOwner((Player) sender, target, ((Player) sender).getLocation().getChunk());
+                            getChunkStorage().claimEffect((Player) sender);
+                            getMessage().send(sender, "&6Chunk is now owned by&f " + getChunkStorage().getOwner(((Player) sender).getLocation().getChunk()).getName());
                         } else {
-                            message.send(sender, target.getName() + "&c has never joined");
+                            getMessage().send(sender, target.getName() + "&c has never joined");
                         }
                     }
                 }

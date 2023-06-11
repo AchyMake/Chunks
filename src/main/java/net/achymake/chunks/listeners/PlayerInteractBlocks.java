@@ -13,8 +13,12 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 
 public class PlayerInteractBlocks implements Listener {
-    private final ChunkStorage chunkStorage = Chunks.getChunkStorage();
-    private final Message message = Chunks.getMessage();
+    private ChunkStorage getChunkStorage() {
+        return Chunks.getChunkStorage();
+    }
+    private Message getMessage() {
+        return Chunks.getMessage();
+    }
     public PlayerInteractBlocks(Chunks chunks) {
         chunks.getServer().getPluginManager().registerEvents(this, chunks);
     }
@@ -22,17 +26,17 @@ public class PlayerInteractBlocks implements Listener {
     public void onPlayerInteractBlocks(PlayerInteractEvent event) {
         if (!event.getAction().equals(Action.RIGHT_CLICK_BLOCK))return;
         if (event.getClickedBlock() == null)return;
-        if (chunkStorage.isProtected(event.getClickedBlock().getChunk())) {
-            if (chunkStorage.hasAccess(event.getPlayer(), event.getClickedBlock().getChunk()))return;
+        if (getChunkStorage().isProtected(event.getClickedBlock().getChunk())) {
+            if (getChunkStorage().hasAccess(event.getPlayer(), event.getClickedBlock().getChunk()))return;
             if (!isCancelledProtected(event.getClickedBlock()))return;
             event.setCancelled(true);
-            message.sendActionBar(event.getPlayer(), "&cChunk is protected by&f Server");
+            getMessage().sendActionBar(event.getPlayer(), "&cChunk is protected by&f Server");
         }
-        if (chunkStorage.isClaimed(event.getClickedBlock().getChunk())) {
-            if (chunkStorage.hasAccess(event.getPlayer(), event.getClickedBlock().getChunk()))return;
+        if (getChunkStorage().isClaimed(event.getClickedBlock().getChunk())) {
+            if (getChunkStorage().hasAccess(event.getPlayer(), event.getClickedBlock().getChunk()))return;
             if (!isCancelledClaimed(event.getClickedBlock()))return;
             event.setCancelled(true);
-            message.sendActionBar(event.getPlayer(), "&cChunk is owned by&f " + chunkStorage.getOwner(event.getClickedBlock().getChunk()).getName());
+            getMessage().sendActionBar(event.getPlayer(), "&cChunk is owned by&f " + getChunkStorage().getOwner(event.getClickedBlock().getChunk()).getName());
         }
     }
     public static boolean isCancelledClaimed(Block block) {

@@ -8,8 +8,12 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 public class Edit extends ChunksSubCommand {
-    private final ChunkStorage chunkStorage = Chunks.getChunkStorage();
-    private final Message message = Chunks.getMessage();
+    private ChunkStorage getChunkStorage() {
+        return Chunks.getChunkStorage();
+    }
+    private Message getMessage() {
+        return Chunks.getMessage();
+    }
     @Override
     public String getName() {
         return "edit";
@@ -24,15 +28,16 @@ public class Edit extends ChunksSubCommand {
     }
     @Override
     public void perform(CommandSender sender, String[] args) {
-        if (sender.hasPermission("chunks.command.chunks.edit")) {
+        if (sender instanceof Player) {
             if (args.length == 1) {
-                if (sender instanceof Player) {
-                    if (chunkStorage.hasChunkEdit(((Player) sender))) {
-                        chunkStorage.getChunkEditors().remove((Player) sender);
-                        message.send(sender, "&6You exited chunk edit");
+                Player player = (Player) sender;
+                if (player.hasPermission("chunks.command.chunks.edit")) {
+                    if (getChunkStorage().hasChunkEdit(player)) {
+                        getChunkStorage().getChunkEditors().remove(player);
+                        getMessage().sendActionBar(player, "&6&lChunk Edit:&c Disabled");
                     } else {
-                        chunkStorage.getChunkEditors().add((Player) sender);
-                        message.send(sender, "&6You entered chunk edit");
+                        getChunkStorage().getChunkEditors().add(player);
+                        getMessage().sendActionBar(player, "&6&lChunk Edit:&a Enabled");
                     }
                 }
             }

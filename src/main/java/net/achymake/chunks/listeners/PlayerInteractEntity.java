@@ -10,32 +10,36 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 
 public class PlayerInteractEntity implements Listener {
-    private final ChunkStorage chunkStorage = Chunks.getChunkStorage();
-    private final Message message = Chunks.getMessage();
+    private ChunkStorage getChunkStorage() {
+        return Chunks.getChunkStorage();
+    }
+    private Message getMessage() {
+        return Chunks.getMessage();
+    }
     public PlayerInteractEntity(Chunks chunks) {
         chunks.getServer().getPluginManager().registerEvents(this, chunks);
     }
     @EventHandler(priority = EventPriority.NORMAL)
     public void onPlayerInteractEntity(PlayerInteractEntityEvent event) {
-        if (chunkStorage.isProtected(event.getRightClicked().getLocation().getChunk())) {
+        if (getChunkStorage().isProtected(event.getRightClicked().getLocation().getChunk())) {
             if (event.getRightClicked().getType().equals(EntityType.PLAYER))return;
             if (event.getRightClicked().getType().equals(EntityType.MINECART))return;
             if (event.getRightClicked().getType().equals(EntityType.BOAT))return;
             if (event.getRightClicked().isInvulnerable())return;
-            if (chunkStorage.hasAccess(event.getPlayer(), event.getRightClicked().getLocation().getChunk()))return;
+            if (getChunkStorage().hasAccess(event.getPlayer(), event.getRightClicked().getLocation().getChunk()))return;
             if (Chunks.getInstance().getConfig().getBoolean("is-hostile." + event.getRightClicked().getType()))return;
             event.setCancelled(true);
-            message.sendActionBar(event.getPlayer(), "&cChunk is protected by&f Server");
+            getMessage().sendActionBar(event.getPlayer(), "&cChunk is protected by&f Server");
         }
-        if (chunkStorage.isClaimed(event.getRightClicked().getLocation().getChunk())) {
+        if (getChunkStorage().isClaimed(event.getRightClicked().getLocation().getChunk())) {
             if (event.getRightClicked().getType().equals(EntityType.PLAYER))return;
             if (event.getRightClicked().getType().equals(EntityType.MINECART))return;
             if (event.getRightClicked().getType().equals(EntityType.BOAT))return;
             if (event.getRightClicked().isInvulnerable())return;
-            if (chunkStorage.hasAccess(event.getPlayer(), event.getRightClicked().getLocation().getChunk()))return;
+            if (getChunkStorage().hasAccess(event.getPlayer(), event.getRightClicked().getLocation().getChunk()))return;
             if (Chunks.getInstance().getConfig().getBoolean("is-hostile." + event.getRightClicked().getType()))return;
             event.setCancelled(true);
-            message.sendActionBar(event.getPlayer(), "&cChunk is owned by&f " + chunkStorage.getOwner(event.getRightClicked().getLocation().getChunk()).getName());
+            getMessage().sendActionBar(event.getPlayer(), "&cChunk is owned by&f " + getChunkStorage().getOwner(event.getRightClicked().getLocation().getChunk()).getName());
         }
     }
 }

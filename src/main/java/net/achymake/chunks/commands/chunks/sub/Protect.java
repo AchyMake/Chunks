@@ -9,8 +9,12 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 public class Protect extends ChunksSubCommand {
-    private final ChunkStorage chunkStorage = Chunks.getChunkStorage();
-    private final Message message = Chunks.getMessage();
+    private ChunkStorage getChunkStorage() {
+        return Chunks.getChunkStorage();
+    }
+    private Message getMessage() {
+        return Chunks.getMessage();
+    }
     @Override
     public String getName() {
         return "protect";
@@ -30,14 +34,14 @@ public class Protect extends ChunksSubCommand {
                 Player player = (Player) sender;
                 if (player.hasPermission("chunks.command.chunks.protect")) {
                     Chunk chunk = player.getLocation().getChunk();
-                    if (chunkStorage.isProtected(chunk)) {
-                        message.sendActionBar(player, "&cChunk is already protected");
-                    } else if (chunkStorage.isClaimed(chunk)) {
-                        message.sendActionBar(player, "&cChunk already owned by &f " + chunkStorage.getOwner(chunk).getName());
+                    if (getChunkStorage().isProtected(chunk)) {
+                        getMessage().sendActionBar(player, "&cChunk is already protected");
+                    } else if (getChunkStorage().isClaimed(chunk)) {
+                        getMessage().sendActionBar(player, "&cChunk already owned by &f " + getChunkStorage().getOwner(chunk).getName());
                     } else {
-                        message.sendActionBar(player, "&6Chunk is now protected");
-                        chunkStorage.protect(chunk);
-                        chunkStorage.claimEffect(player);
+                        getMessage().sendActionBar(player, "&6Chunk is now protected");
+                        getChunkStorage().protect(chunk);
+                        getChunkStorage().claimEffect(player);
                     }
                 }
             }

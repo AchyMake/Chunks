@@ -18,7 +18,9 @@ public class UpdateChecker {
         this.plugin = plugin;
         this.resourceId = resourceId;
     }
-    private final Message message = Chunks.getMessage();
+    private Message getMessage() {
+        return Chunks.getMessage();
+    }
     public void getVersion(Consumer<String> consumer) {
         plugin.getServer().getScheduler().runTaskAsynchronously(plugin, () -> {
             try {
@@ -32,7 +34,7 @@ public class UpdateChecker {
                     inputStream.close();
                 }
             } catch (IOException e) {
-                message.sendLog(Level.WARNING, e.getMessage());
+                getMessage().sendLog(Level.WARNING, e.getMessage());
             }
         });
     }
@@ -40,10 +42,10 @@ public class UpdateChecker {
         if (plugin.getConfig().getBoolean("notify-update.enable")) {
             (new UpdateChecker(plugin, resourceId)).getVersion((latest) -> {
                 if (plugin.getDescription().getVersion().equals(latest)) {
-                    message.sendLog(Level.INFO, "You are using the latest version");
+                    getMessage().sendLog(Level.INFO, "You are using the latest version");
                 } else {
-                    message.sendLog(Level.INFO, "New Update: " + latest);
-                    message.sendLog(Level.INFO, "Current Version: " + plugin.getDescription().getVersion());
+                    getMessage().sendLog(Level.INFO, "New Update: " + latest);
+                    getMessage().sendLog(Level.INFO, "Current Version: " + plugin.getDescription().getVersion());
                 }
             });
         }
@@ -52,8 +54,8 @@ public class UpdateChecker {
         if (plugin.getConfig().getBoolean("notify-update.enable")) {
             (new UpdateChecker(plugin, resourceId)).getVersion((latest) -> {
                 if (!plugin.getDescription().getVersion().equalsIgnoreCase(latest)) {
-                    message.send(player, "&6" + plugin.getName() + " Update:&f "+ latest);
-                    message.send(player, "&6Current Version: &f" + plugin.getDescription().getVersion());
+                    getMessage().send(player, "&6" + plugin.getName() + " Update:&f "+ latest);
+                    getMessage().send(player, "&6Current Version: &f" + plugin.getDescription().getVersion());
                 }
             });
         }

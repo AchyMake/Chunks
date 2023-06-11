@@ -8,13 +8,15 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.EntityBlockFormEvent;
 
 public class EntityBlockForm implements Listener {
-    private final ChunkStorage chunkStorage = Chunks.getChunkStorage();
+    private ChunkStorage getChunkStorage() {
+        return Chunks.getChunkStorage();
+    }
     public EntityBlockForm(Chunks chunks) {
         chunks.getServer().getPluginManager().registerEvents(this, chunks);
     }
     @EventHandler(priority = EventPriority.NORMAL)
     public void onEntityBlockForm(EntityBlockFormEvent event) {
-        if (chunkStorage.isProtected(event.getBlock().getChunk())) {
+        if (getChunkStorage().isProtected(event.getBlock().getChunk())) {
             event.setCancelled(true);
         }
     }

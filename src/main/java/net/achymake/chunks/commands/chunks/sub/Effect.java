@@ -8,8 +8,12 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 public class Effect extends ChunksSubCommand {
-    private final ChunkStorage chunkStorage = Chunks.getChunkStorage();
-    private final Message message = Chunks.getMessage();
+    private ChunkStorage getChunkStorage() {
+        return Chunks.getChunkStorage();
+    }
+    private Message getMessage() {
+        return Chunks.getMessage();
+    }
     @Override
     public String getName() {
         return "effect";
@@ -29,12 +33,12 @@ public class Effect extends ChunksSubCommand {
                 if (sender instanceof Player) {
                     Player player = (Player) sender;
                     if (args[1].equalsIgnoreCase("claim")) {
-                        chunkStorage.claimEffect(player);
-                        message.sendActionBar(player, "&6Started the effects of claiming");
+                        getChunkStorage().claimEffect(player);
+                        getMessage().sendActionBar(player, "&6Started the effects of claiming");
                     }
                     if (args[1].equalsIgnoreCase("unclaim")) {
-                        chunkStorage.unclaimEffect(player);
-                        message.sendActionBar(player, "&6Started the effects of unclaiming");
+                        getChunkStorage().unclaimEffect(player);
+                        getMessage().sendActionBar(player, "&6Started the effects of unclaiming");
                     }
                 }
             }

@@ -9,8 +9,12 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 public class Delete extends ChunksSubCommand {
-    private final ChunkStorage chunkStorage = Chunks.getChunkStorage();
-    private final Message message = Chunks.getMessage();
+    private ChunkStorage getChunkStorage() {
+        return Chunks.getChunkStorage();
+    }
+    private Message getMessage() {
+        return Chunks.getMessage();
+    }
     @Override
     public String getName() {
         return "delete";
@@ -30,16 +34,16 @@ public class Delete extends ChunksSubCommand {
                 if (args.length == 1){
                     Player player = (Player) sender;
                     Chunk chunk = player.getLocation().getChunk();
-                    if (chunkStorage.isProtected(chunk)) {
-                        chunkStorage.unprotect(chunk);
-                        chunkStorage.unclaimEffect(player);
-                        message.send(player, "&6Chunk is now unprotected");
-                    } else if (chunkStorage.isClaimed(chunk)) {
-                        message.send(player, "&6You safely unclaimed&f " + chunkStorage.getOwner(chunk).getName() + "&6 chunk");
-                        chunkStorage.unclaim(chunk);
-                        chunkStorage.unclaimEffect(player);
+                    if (getChunkStorage().isProtected(chunk)) {
+                        getChunkStorage().unprotect(chunk);
+                        getChunkStorage().unclaimEffect(player);
+                        getMessage().send(player, "&6Chunk is now unprotected");
+                    } else if (getChunkStorage().isClaimed(chunk)) {
+                        getMessage().send(player, "&6You safely unclaimed&f " + getChunkStorage().getOwner(chunk).getName() + "&6 chunk");
+                        getChunkStorage().unclaim(chunk);
+                        getChunkStorage().unclaimEffect(player);
                     } else {
-                        message.send(player, "&cChunk is already unclaimed");
+                        getMessage().send(player, "&cChunk is already unclaimed");
                     }
                 }
             }

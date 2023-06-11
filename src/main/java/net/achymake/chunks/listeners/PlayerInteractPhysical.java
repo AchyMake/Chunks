@@ -2,6 +2,7 @@ package net.achymake.chunks.listeners;
 
 import net.achymake.chunks.Chunks;
 import net.achymake.chunks.files.ChunkStorage;
+import net.achymake.chunks.files.Message;
 import org.bukkit.Material;
 import org.bukkit.Tag;
 import org.bukkit.block.Block;
@@ -12,7 +13,9 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 
 public class PlayerInteractPhysical implements Listener {
-    private final ChunkStorage chunkStorage = Chunks.getChunkStorage();
+    private ChunkStorage getChunkStorage() {
+        return Chunks.getChunkStorage();
+    }
     public PlayerInteractPhysical(Chunks chunks) {
         chunks.getServer().getPluginManager().registerEvents(this, chunks);
     }
@@ -20,13 +23,13 @@ public class PlayerInteractPhysical implements Listener {
     public void onPlayerInteractPhysical(PlayerInteractEvent event) {
         if (!event.getAction().equals(Action.PHYSICAL))return;
         if (event.getClickedBlock() == null)return;
-        if (chunkStorage.isProtected(event.getClickedBlock().getChunk())) {
-            if (chunkStorage.hasAccess(event.getPlayer(), event.getClickedBlock().getChunk()))return;
+        if (getChunkStorage().isProtected(event.getClickedBlock().getChunk())) {
+            if (getChunkStorage().hasAccess(event.getPlayer(), event.getClickedBlock().getChunk()))return;
             if (!physical(event.getClickedBlock()))return;
             event.setCancelled(true);
         }
-        if (chunkStorage.isClaimed(event.getClickedBlock().getChunk())) {
-            if (chunkStorage.hasAccess(event.getPlayer(), event.getClickedBlock().getChunk()))return;
+        if (getChunkStorage().isClaimed(event.getClickedBlock().getChunk())) {
+            if (getChunkStorage().hasAccess(event.getPlayer(), event.getClickedBlock().getChunk()))return;
             if (!physical(event.getClickedBlock()))return;
             event.setCancelled(true);
         }

@@ -13,9 +13,15 @@ import org.bukkit.entity.Player;
 import java.util.UUID;
 
 public class Info extends ChunksSubCommand {
-    private final ChunkStorage chunkStorage = Chunks.getChunkStorage();
-    private final Database database = Chunks.getDatabase();
-    private final Message message = Chunks.getMessage();
+    private ChunkStorage getChunkStorage() {
+        return Chunks.getChunkStorage();
+    }
+    private Database getDatabase() {
+        return Chunks.getDatabase();
+    }
+    private Message getMessage() {
+        return Chunks.getMessage();
+    }
     @Override
     public String getName() {
         return "info";
@@ -35,35 +41,35 @@ public class Info extends ChunksSubCommand {
                 if (args.length == 1){
                     Player player = (Player) sender;
                     Chunk chunk = player.getLocation().getChunk();
-                    if (chunkStorage.isClaimed(chunk)) {
-                        message.send(player, "&6Chunks Info:&f Chunk");
-                        message.send(player, "&6Owner:&f " + chunkStorage.getOwner(chunk).getName());
-                        message.send(player, "&6Date claimed:&f " + chunkStorage.getDateClaimed(chunk));
-                        message.send(player, "&6Chunks claimed:&f " + chunkStorage.getClaimedCount(chunk));
-                        if (chunkStorage.getMembers(chunk).isEmpty()) {
-                            message.send(player, chunkStorage.getOwner(chunk).getName() + "&6 has no members");
+                    if (getChunkStorage().isClaimed(chunk)) {
+                        getMessage().send(player, "&6Chunks Info:&f Chunk");
+                        getMessage().send(player, "&6Owner:&f " + getChunkStorage().getOwner(chunk).getName());
+                        getMessage().send(player, "&6Date claimed:&f " + getChunkStorage().getDateClaimed(chunk));
+                        getMessage().send(player, "&6Chunks claimed:&f " + getChunkStorage().getClaimedCount(chunk));
+                        if (getChunkStorage().getMembers(chunk).isEmpty()) {
+                            getMessage().send(player, getChunkStorage().getOwner(chunk).getName() + "&6 has no members");
                         } else {
-                            message.send(player, chunkStorage.getOwner(chunk).getName()+"&6 members:");
-                            for (UUID uuid : chunkStorage.getMembersUUID(chunk)) {
-                                message.send(player, "- " + sender.getServer().getOfflinePlayer(uuid).getName());
+                            getMessage().send(player, getChunkStorage().getOwner(chunk).getName()+"&6 members:");
+                            for (UUID uuid : getChunkStorage().getMembersUUID(chunk)) {
+                                getMessage().send(player, "- " + sender.getServer().getOfflinePlayer(uuid).getName());
                             }
                         }
-                    } else if (chunkStorage.isProtected(chunk)) {
-                        message.send(player, "&6Chunks Info:&f Chunk");
-                        message.send(player, "&6Owner:&f Server");
+                    } else if (getChunkStorage().isProtected(chunk)) {
+                        getMessage().send(player, "&6Chunks Info:&f Chunk");
+                        getMessage().send(player, "&6Owner:&f Server");
                     }
                 }
                 if (args.length == 2) {
                     OfflinePlayer target = sender.getServer().getOfflinePlayer(args[1]);
-                    if (database.exist(target)) {
-                        message.send(sender, "&6Chunks Info:&f "+target.getName());
-                        message.send(sender, "&6Chunks claimed:&f " + chunkStorage.getClaimedCount(target));
-                        if (chunkStorage.getMembers(target).isEmpty()) {
-                            message.send(sender, target.getName() + "&6 has no members");
+                    if (getDatabase().exist(target)) {
+                        getMessage().send(sender, "&6Chunks Info:&f "+target.getName());
+                        getMessage().send(sender, "&6Chunks claimed:&f " + getChunkStorage().getClaimedCount(target));
+                        if (getChunkStorage().getMembers(target).isEmpty()) {
+                            getMessage().send(sender, target.getName() + "&6 has no members");
                         } else {
-                            message.send(sender, "&6Members:");
-                            for (UUID uuid : chunkStorage.getMembersUUID(target)) {
-                                message.send(sender, "- " + sender.getServer().getOfflinePlayer(uuid).getName());
+                            getMessage().send(sender, "&6Members:");
+                            for (UUID uuid : getChunkStorage().getMembersUUID(target)) {
+                                getMessage().send(sender, "- " + sender.getServer().getOfflinePlayer(uuid).getName());
                             }
                         }
                     }

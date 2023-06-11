@@ -6,8 +6,12 @@ import net.achymake.chunks.files.Message;
 import org.bukkit.command.CommandSender;
 
 public class Reload extends ChunksSubCommand {
-    private final Chunks chunks = Chunks.getInstance();
-    private final Message message = Chunks.getMessage();
+    private Chunks getPlugin() {
+        return Chunks.getInstance();
+    }
+    private Message getMessage() {
+        return Chunks.getMessage();
+    }
     @Override
     public String getName() {
         return "reload";
@@ -24,13 +28,13 @@ public class Reload extends ChunksSubCommand {
     public void perform(CommandSender sender, String[] args) {
         if (sender.hasPermission("chunks.command.chunks.reload")) {
             if (args.length == 1) {
-                chunks.reload();
-                message.send(sender, "&6Chunks:&f config files reloaded");
+                getPlugin().reload();
+                getMessage().send(sender, "&6Chunks:&f config files reloaded");
             }
             if (args.length == 2) {
                 if (args[1].equalsIgnoreCase("players")) {
-                    chunks.reloadPlayerFiles();
-                    message.send(sender, "&6Chunks:&f player files reloaded");
+                    getPlugin().reloadPlayerFiles();
+                    getMessage().send(sender, "&6Chunks:&f player files reloaded");
                 }
             }
         }

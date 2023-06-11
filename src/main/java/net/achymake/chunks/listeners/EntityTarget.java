@@ -11,8 +11,12 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityTargetEvent;
 
 public class EntityTarget implements Listener {
-    private final ChunkStorage chunkStorage = Chunks.getChunkStorage();
-    private final FileConfiguration config = Chunks.getInstance().getConfig();
+    private FileConfiguration getConfig() {
+        return Chunks.getInstance().getConfig();
+    }
+    private ChunkStorage getChunkStorage() {
+        return Chunks.getChunkStorage();
+    }
     public EntityTarget(Chunks chunks) {
         chunks.getServer().getPluginManager().registerEvents(this, chunks);
     }
@@ -20,14 +24,14 @@ public class EntityTarget implements Listener {
     public void onEntityTarget(EntityTargetEvent event) {
         if (event.getTarget() == null)return;
         if (!event.getTarget().getType().equals(EntityType.PLAYER))return;
-        if (chunkStorage.isProtected(event.getEntity().getLocation().getChunk())) {
-            if (chunkStorage.hasAccess((Player) event.getTarget(), event.getEntity().getLocation().getChunk()))return;
-            if (config.getBoolean("is-hostile." + event.getEntity().getType()))return;
+        if (getChunkStorage().isProtected(event.getEntity().getLocation().getChunk())) {
+            if (getChunkStorage().hasAccess((Player) event.getTarget(), event.getEntity().getLocation().getChunk()))return;
+            if (getConfig().getBoolean("is-hostile." + event.getEntity().getType()))return;
             event.setCancelled(true);
         }
-        if (chunkStorage.isClaimed(event.getEntity().getLocation().getChunk())) {
-            if (chunkStorage.hasAccess((Player) event.getTarget(), event.getEntity().getLocation().getChunk()))return;
-            if (config.getBoolean("is-hostile." + event.getEntity().getType()))return;
+        if (getChunkStorage().isClaimed(event.getEntity().getLocation().getChunk())) {
+            if (getChunkStorage().hasAccess((Player) event.getTarget(), event.getEntity().getLocation().getChunk()))return;
+            if (getConfig().getBoolean("is-hostile." + event.getEntity().getType()))return;
             event.setCancelled(true);
         }
     }

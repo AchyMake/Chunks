@@ -6,12 +6,23 @@ import net.achymake.chunks.files.ChunkStorage;
 import net.achymake.chunks.files.Message;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Chunk;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
 public class Unclaim extends ChunkSubCommand {
-    private final ChunkStorage chunkStorage = Chunks.getChunkStorage();
+    private FileConfiguration getConfig() {
+        return Chunks.getInstance().getConfig();
+    }
+    private ChunkStorage getChunkStorage() {
+        return Chunks.getChunkStorage();
+    }
+    private Economy getEconomy() {
+        return Chunks.getEconomy();
+    }
+    private Message getMessage() {
+        return Chunks.getMessage();
+    }
     private final Economy economy = Chunks.getEconomy();
-    private final Message message = Chunks.getMessage();
     private final Chunks chunks = Chunks.getInstance();
     @Override
     public String getName() {
@@ -29,18 +40,18 @@ public class Unclaim extends ChunkSubCommand {
     public void perform(Player player, String[] args) {
         if (player.hasPermission("chunks.command.chunk.unclaim")) {
             Chunk chunk = player.getLocation().getChunk();
-            if (chunkStorage.isProtected(chunk)) {
-                message.send(player, "&cChunk already owned by&f Server");
-            } else if (chunkStorage.isClaimed(chunk)) {
-                if (chunkStorage.isOwner(player, chunk)){
-                    message.send(player, "&6You unclaimed a chunk and got refunded&a " + economy.currencyNameSingular() + economy.format(chunks.getConfig().getDouble("unclaim.refund")));
-                    chunkStorage.unclaim(chunk);
-                    chunkStorage.unclaimEffect(player);
+            if (getChunkStorage().isProtected(chunk)) {
+                getMessage().send(player, "&cChunk already owned by&f Server");
+            } else if (getChunkStorage().isClaimed(chunk)) {
+                if (getChunkStorage().isOwner(player, chunk)){
+                    getMessage().send(player, "&6You unclaimed a chunk and got refunded&a " + getEconomy().currencyNameSingular() + getEconomy().format(getConfig().getDouble("unclaim.refund")));
+                    getChunkStorage().unclaim(chunk);
+                    getChunkStorage().unclaimEffect(player);
                 } else {
-                    message.send(player, "&cChunk already owned by&f " + chunkStorage.getOwner(chunk).getName());
+                    getMessage().send(player, "&cChunk already owned by&f " + getChunkStorage().getOwner(chunk).getName());
                 }
             } else {
-                message.send(player, "&cChunk already unclaimed");
+                getMessage().send(player, "&cChunk already unclaimed");
             }
         }
     }

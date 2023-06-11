@@ -9,24 +9,26 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityExplodeEvent;
 
 public class EntityExplode implements Listener {
-    private final ChunkStorage chunkStorage = Chunks.getChunkStorage();
+    private ChunkStorage getChunkStorage() {
+        return Chunks.getChunkStorage();
+    }
     public EntityExplode(Chunks chunks) {
         chunks.getServer().getPluginManager().registerEvents(this, chunks);
     }
     @EventHandler(priority = EventPriority.NORMAL)
     public void onEntityExplode(EntityExplodeEvent event) {
-        if (chunkStorage.isProtected(event.getEntity().getLocation().getChunk())) {
+        if (getChunkStorage().isProtected(event.getEntity().getLocation().getChunk())) {
             event.setCancelled(true);
         }
-        if (chunkStorage.isClaimed(event.getEntity().getLocation().getChunk())) {
+        if (getChunkStorage().isClaimed(event.getEntity().getLocation().getChunk())) {
             if (event.getEntity().getType().equals(EntityType.MINECART_TNT)) {
-                if (!chunkStorage.isClaimed(event.getEntity().getLocation().getChunk()))return;
-                if (chunkStorage.TNTAllowed(event.getLocation().getChunk()))return;
+                if (!getChunkStorage().isClaimed(event.getEntity().getLocation().getChunk()))return;
+                if (getChunkStorage().TNTAllowed(event.getLocation().getChunk()))return;
                 event.setCancelled(true);
             }
             if (event.getEntity().getType().equals(EntityType.PRIMED_TNT)) {
-                if (!chunkStorage.isClaimed(event.getEntity().getLocation().getChunk()))return;
-                if (chunkStorage.TNTAllowed(event.getLocation().getChunk()))return;
+                if (!getChunkStorage().isClaimed(event.getEntity().getLocation().getChunk()))return;
+                if (getChunkStorage().TNTAllowed(event.getLocation().getChunk()))return;
                 event.setCancelled(true);
             }
             if (event.getEntity().getType().equals(EntityType.CREEPER)) {

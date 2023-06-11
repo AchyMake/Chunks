@@ -7,14 +7,25 @@ import net.achymake.chunks.files.Database;
 import net.achymake.chunks.files.Message;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Chunk;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
 public class Claim extends ChunkSubCommand {
-    private final ChunkStorage chunkStorage = Chunks.getChunkStorage();
-    private final Database database = Chunks.getDatabase();
-    private final Economy economy = Chunks.getEconomy();
-    private final Message message = Chunks.getMessage();
-    private final Chunks chunks = Chunks.getInstance();
+    private FileConfiguration getConfig() {
+        return Chunks.getInstance().getConfig();
+    }
+    private Economy getEconomy() {
+        return Chunks.getEconomy();
+    }
+    private ChunkStorage getChunkStorage() {
+        return Chunks.getChunkStorage();
+    }
+    private Database getDatabase() {
+        return Chunks.getDatabase();
+    }
+    private Message getMessage() {
+        return Chunks.getMessage();
+    }
     @Override
     public String getName() {
         return "claim";
@@ -32,25 +43,25 @@ public class Claim extends ChunkSubCommand {
         if (player.hasPermission("chunks.command.chunk.claim")) {
             if (args.length == 1) {
                 Chunk chunk = player.getLocation().getChunk();
-                if (chunkStorage.isProtected(chunk)) {
-                    message.send(player, "&cChunk is protected by&f Server");
-                } else if (chunkStorage.isClaimed(chunk)) {
-                    if (chunkStorage.isOwner(player ,chunk)) {
-                        message.send(player, "&cYou already own this chunk");
+                if (getChunkStorage().isProtected(chunk)) {
+                    getMessage().send(player, "&cChunk is protected by&f Server");
+                } else if (getChunkStorage().isClaimed(chunk)) {
+                    if (getChunkStorage().isOwner(player ,chunk)) {
+                        getMessage().send(player, "&cYou already own this chunk");
                     } else {
-                        message.send(player, "&cChunk already owned by " + chunkStorage.getOwner(chunk).getName());
+                        getMessage().send(player, "&cChunk already owned by " + getChunkStorage().getOwner(chunk).getName());
                     }
                 } else {
-                    if (chunks.getConfig().getInt("claim.max-claims") > database.get(player).getInt("chunks.claimed")) {
-                        if (economy.getBalance(player) >= chunks.getConfig().getDouble("claim.cost")) {
-                            chunkStorage.claim(player, chunk);
-                            chunkStorage.claimEffect(player);
-                            message.send(player, "&6You bought a chunk for&a " + economy.currencyNameSingular() + economy.format(chunks.getConfig().getDouble("claim.cost")));
+                    if (getConfig().getInt("claim.max-claims") > getDatabase().getConfig(player).getInt("chunks.claimed")) {
+                        if (getEconomy().getBalance(player) >= getConfig().getDouble("claim.cost")) {
+                            getChunkStorage().claim(player, chunk);
+                            getChunkStorage().claimEffect(player);
+                            getMessage().send(player, "&6You bought a chunk for&a " + getEconomy().currencyNameSingular() + getEconomy().format(getConfig().getDouble("claim.cost")));
                         } else {
-                            message.send(player, "&cYou don't have&a " + economy.currencyNameSingular() + economy.format(chunks.getConfig().getDouble("claim.cost")) + "&c to buy a chunk");
+                            getMessage().send(player, "&cYou don't have&a " + getEconomy().currencyNameSingular() + getEconomy().format(getConfig().getDouble("claim.cost")) + "&c to buy a chunk");
                         }
                     } else {
-                        message.send(player, "&cYou have reach your limit of&f " + database.get(player).getInt("chunks.claimed") + "&c claims");
+                        getMessage().send(player, "&cYou have reach your limit of&f " + getDatabase().getConfig(player).getInt("chunks.claimed") + "&c claims");
                     }
                 }
             }

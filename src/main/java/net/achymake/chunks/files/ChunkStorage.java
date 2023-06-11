@@ -1,6 +1,7 @@
 package net.achymake.chunks.files;
 
 import net.achymake.chunks.Chunks;
+import net.milkbowl.vault.economy.Economy;
 import org.bukkit.*;
 import org.bukkit.entity.Player;
 import org.bukkit.persistence.PersistentDataContainer;
@@ -16,6 +17,12 @@ public class ChunkStorage {
     private final List<Player> chunkEditors = new ArrayList<>();
     public ChunkStorage(Chunks plugin) {
         this.plugin = plugin;
+    }
+    private Database getDatabase() {
+        return Chunks.getDatabase();
+    }
+    private Economy getEconomy() {
+        return Chunks.getEconomy();
     }
     public PersistentDataContainer getData(Chunk chunk) {
         return chunk.getPersistentDataContainer();
@@ -40,14 +47,12 @@ public class ChunkStorage {
     }
     public void setOwner(Player player, OfflinePlayer target, Chunk chunk) {
         if (isClaimed(chunk)) {
-            Database database = Chunks.getDatabase();
-            database.setInt(getOwner(chunk),"claimed", database.get(getOwner(chunk)).getInt("claimed") - 1);
+            getDatabase().setInt(getOwner(chunk),"claimed", getDatabase().getConfig(getOwner(chunk)).getInt("claimed") - 1);
             getData(chunk).set(NamespacedKey.minecraft("owner"), PersistentDataType.STRING, target.getUniqueId().toString());
             getData(chunk).set(NamespacedKey.minecraft("date-claimed"), PersistentDataType.STRING, SimpleDateFormat.getDateInstance().format(player.getLastPlayed()));
-            database.setInt(target,"claimed", database.get(target).getInt("claimed") + 1);
+            getDatabase().setInt(target,"claimed", getDatabase().getConfig(target).getInt("claimed") + 1);
         } else {
-            Database database = Chunks.getDatabase();
-            database.setInt(target,"claimed", database.get(target).getInt("claimed") + 1);
+            getDatabase().setInt(target,"claimed", getDatabase().getConfig(target).getInt("claimed") + 1);
             getData(chunk).set(NamespacedKey.minecraft("owner"), PersistentDataType.STRING, target.getUniqueId().toString());
             getData(chunk).set(NamespacedKey.minecraft("date-claimed"), PersistentDataType.STRING, SimpleDateFormat.getDateInstance().format(player.getLastPlayed()));
         }
@@ -65,36 +70,36 @@ public class ChunkStorage {
         return getMembers(chunk).contains(player.getUniqueId().toString());
     }
     public int getClaimedCount(Chunk chunk) {
-        return Chunks.getDatabase().get(getOwner(chunk)).getInt("claimed");
+        return getDatabase().getConfig(getOwner(chunk)).getInt("claimed");
     }
     public int getClaimedCount(OfflinePlayer offlinePlayer) {
-        return Chunks.getDatabase().get(offlinePlayer).getInt("claimed");
+        return getDatabase().getConfig(offlinePlayer).getInt("claimed");
     }
     public List<String> getMembers(Chunk chunk) {
         if (isClaimed(chunk)){
-            return Chunks.getDatabase().get(getOwner(chunk)).getStringList("members");
+            return getDatabase().getConfig(getOwner(chunk)).getStringList("members");
         } else {
             return new ArrayList<>();
         }
     }
     public List<UUID> getMembersUUID(Chunk chunk) {
         List<UUID> uuids = new ArrayList<>();
-        for (String uuidString : Chunks.getDatabase().get(getOwner(chunk)).getStringList("members")) {
+        for (String uuidString : getDatabase().getConfig(getOwner(chunk)).getStringList("members")) {
             uuids.add(UUID.fromString(uuidString));
         }
         return uuids;
     }
     public List<String> getMembers(OfflinePlayer offlinePlayer) {
         List<String> members = new ArrayList<>();
-        if (Chunks.getDatabase().exist(offlinePlayer)) {
-            return Chunks.getDatabase().get(offlinePlayer).getStringList("members");
+        if (getDatabase().exist(offlinePlayer)) {
+            return getDatabase().getConfig(offlinePlayer).getStringList("members");
         }else{
             return members;
         }
     }
     public List<UUID> getMembersUUID(OfflinePlayer offlinePlayer) {
         List<UUID> uuids = new ArrayList<>();
-        if (Chunks.getDatabase().exist(offlinePlayer)){
+        if (getDatabase().exist(offlinePlayer)){
             for (String uuidString : getMembers(offlinePlayer)) {
                 uuids.add(UUID.fromString(uuidString));
             }
@@ -122,15 +127,15 @@ public class ChunkStorage {
         player.spawnParticle(particle,locationEast.add(0, 0, 1), 250, 4, 12, 0, 0);
     }
     public void claim(Player player, Chunk chunk) {
-        Chunks.getEconomy().withdrawPlayer(player, plugin.getConfig().getDouble("claim.cost"));
+        getEconomy().withdrawPlayer(player, plugin.getConfig().getDouble("claim.cost"));
         getData(chunk).set(NamespacedKey.minecraft("owner"), PersistentDataType.STRING,player.getUniqueId().toString());
         getData(chunk).set(NamespacedKey.minecraft("date-claimed"), PersistentDataType.STRING, SimpleDateFormat.getDateInstance().format(player.getLastPlayed()));
-        Chunks.getDatabase().setInt(player,"claimed", Chunks.getDatabase().get(player).getInt("claimed") + 1);
+        getDatabase().setInt(player,"claimed", getDatabase().getConfig(player).getInt("claimed") + 1);
     }
     public void unclaim(Chunk chunk) {
         OfflinePlayer offlinePlayer = getOwner(chunk);
-        Chunks.getDatabase().setInt(offlinePlayer,"claimed", Chunks.getDatabase().get(offlinePlayer).getInt("claimed") - 1);
-        Chunks.getEconomy().depositPlayer(offlinePlayer, plugin.getConfig().getDouble("unclaim.refund"));
+        getDatabase().setInt(offlinePlayer,"claimed", getDatabase().getConfig(offlinePlayer).getInt("claimed") - 1);
+        getEconomy().depositPlayer(offlinePlayer, plugin.getConfig().getDouble("unclaim.refund"));
         getData(chunk).remove(NamespacedKey.minecraft("date-claimed"));
         getData(chunk).remove(NamespacedKey.minecraft("owner"));
     }

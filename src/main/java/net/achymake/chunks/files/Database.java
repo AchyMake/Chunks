@@ -21,7 +21,7 @@ public class Database {
     }
     public void setup(OfflinePlayer offlinePlayer) {
         if (exist(offlinePlayer)) {
-            if (!get(offlinePlayer).getString("name").equals(offlinePlayer.getName())) {
+            if (!getConfig(offlinePlayer).getString("name").equals(offlinePlayer.getName())) {
                 File file = new File(dataFolder, "userdata/" + offlinePlayer.getUniqueId() + ".yml");
                 FileConfiguration config = YamlConfiguration.loadConfiguration(file);
                 config.set("name", offlinePlayer.getName());
@@ -44,7 +44,7 @@ public class Database {
             }
         }
     }
-    public FileConfiguration get(OfflinePlayer offlinePlayer) {
+    public FileConfiguration getConfig(OfflinePlayer offlinePlayer) {
         return YamlConfiguration.loadConfiguration(new File(dataFolder, "userdata/" + offlinePlayer.getUniqueId() + ".yml"));
     }
     public void setInt(OfflinePlayer offlinePlayer, String path, int value) {

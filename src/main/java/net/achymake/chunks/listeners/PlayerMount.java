@@ -11,8 +11,12 @@ import org.bukkit.event.Listener;
 import org.spigotmc.event.entity.EntityMountEvent;
 
 public class PlayerMount implements Listener {
-    private final ChunkStorage chunkStorage = Chunks.getChunkStorage();
-    private final Message message = Chunks.getMessage();
+    private ChunkStorage getChunkStorage() {
+        return Chunks.getChunkStorage();
+    }
+    private Message getMessage() {
+        return Chunks.getMessage();
+    }
     public PlayerMount(Chunks chunks) {
         chunks.getServer().getPluginManager().registerEvents(this, chunks);
     }
@@ -20,15 +24,15 @@ public class PlayerMount implements Listener {
     public void onPlayerMount(EntityMountEvent event) {
         if (!event.getEntity().getType().equals(EntityType.PLAYER))return;
         if (event.getMount().getType().equals(EntityType.ARMOR_STAND))return;
-        if (chunkStorage.isProtected(event.getMount().getLocation().getChunk())) {
-            if (chunkStorage.hasAccess((Player) event.getEntity(), event.getMount().getLocation().getChunk()))return;
+        if (getChunkStorage().isProtected(event.getMount().getLocation().getChunk())) {
+            if (getChunkStorage().hasAccess((Player) event.getEntity(), event.getMount().getLocation().getChunk()))return;
             event.setCancelled(true);
-            message.sendActionBar((Player) event.getEntity(), "&cChunk is protected by&f Server");
+            getMessage().sendActionBar((Player) event.getEntity(), "&cChunk is protected by&f Server");
         }
-        if (chunkStorage.isClaimed(event.getMount().getLocation().getChunk())) {
-            if (chunkStorage.hasAccess((Player) event.getEntity(), event.getMount().getLocation().getChunk()))return;
+        if (getChunkStorage().isClaimed(event.getMount().getLocation().getChunk())) {
+            if (getChunkStorage().hasAccess((Player) event.getEntity(), event.getMount().getLocation().getChunk()))return;
             event.setCancelled(true);
-            message.sendActionBar((Player) event.getEntity(), "&cChunk is owned by&f " + chunkStorage.getOwner(event.getMount().getLocation().getChunk()).getName());
+            getMessage().sendActionBar((Player) event.getEntity(), "&cChunk is owned by&f " + getChunkStorage().getOwner(event.getMount().getLocation().getChunk()).getName());
         }
     }
 }

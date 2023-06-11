@@ -9,22 +9,27 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockFertilizeEvent;
 
 public class BlockFertilize implements Listener {
-    private final ChunkStorage chunkStorage = Chunks.getChunkStorage();
-    private final Message message = Chunks.getMessage();
+    private ChunkStorage getChunkStorage() {
+        return Chunks.getChunkStorage();
+    }
+    private Message getMessage() {
+        return Chunks.getMessage();
+    }
     public BlockFertilize(Chunks chunks) {
         chunks.getServer().getPluginManager().registerEvents(this, chunks);
     }
     @EventHandler(priority = EventPriority.NORMAL)
     public void onBlockFertilize(BlockFertilizeEvent event) {
-        if (chunkStorage.isProtected(event.getBlock().getChunk())) {
-            if (chunkStorage.hasAccess(event.getPlayer(), event.getBlock().getChunk()))return;
+        if (event.getPlayer() == null)return;
+        if (getChunkStorage().isProtected(event.getBlock().getChunk())) {
+            if (getChunkStorage().hasAccess(event.getPlayer(), event.getBlock().getChunk()))return;
             event.setCancelled(true);
-            message.sendActionBar(event.getPlayer(), "&cChunk is protected by&f Server");
+            getMessage().sendActionBar(event.getPlayer(), "&cChunk is protected by&f Server");
         }
-        if (chunkStorage.isClaimed(event.getBlock().getChunk())) {
-            if (chunkStorage.hasAccess(event.getPlayer(), event.getBlock().getChunk()))return;
+        if (getChunkStorage().isClaimed(event.getBlock().getChunk())) {
+            if (getChunkStorage().hasAccess(event.getPlayer(), event.getBlock().getChunk()))return;
             event.setCancelled(true);
-            message.sendActionBar(event.getPlayer(), "&cChunk is owned by&f " + chunkStorage.getOwner(event.getBlock().getChunk()).getName());
+            getMessage().sendActionBar(event.getPlayer(), "&cChunk is owned by&f " + getChunkStorage().getOwner(event.getBlock().getChunk()).getName());
         }
     }
 }
