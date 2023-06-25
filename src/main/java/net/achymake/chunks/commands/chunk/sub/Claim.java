@@ -12,7 +12,7 @@ import org.bukkit.entity.Player;
 
 public class Claim extends ChunkSubCommand {
     private FileConfiguration getConfig() {
-        return Chunks.getInstance().getConfig();
+        return Chunks.getConfiguration();
     }
     private Economy getEconomy() {
         return Chunks.getEconomy();

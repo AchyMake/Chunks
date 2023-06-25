@@ -12,9 +12,11 @@ import java.util.logging.Level;
 
 public class Database {
     private final File dataFolder;
-    private final Message message = Chunks.getMessage();
     public Database(File dataFolder) {
         this.dataFolder = dataFolder;
+    }
+    private Message getMessage() {
+        return Chunks.getMessage();
     }
     public boolean exist(OfflinePlayer offlinePlayer) {
         return new File(dataFolder, "userdata/" + offlinePlayer.getUniqueId() + ".yml").exists();
@@ -28,7 +30,7 @@ public class Database {
                 try {
                     config.save(file);
                 } catch (IOException e) {
-                    message.sendLog(Level.WARNING, e.getMessage());
+                    getMessage().sendLog(Level.WARNING, e.getMessage());
                 }
             }
         } else {
@@ -40,7 +42,7 @@ public class Database {
             try {
                 config.save(file);
             } catch (IOException e) {
-                message.sendLog(Level.WARNING, e.getMessage());
+                getMessage().sendLog(Level.WARNING, e.getMessage());
             }
         }
     }
@@ -54,7 +56,7 @@ public class Database {
         try {
             config.save(file);
         } catch (IOException e) {
-            message.sendLog(Level.WARNING, e.getMessage());
+            getMessage().sendLog(Level.WARNING, e.getMessage());
         }
     }
     public void setStringList(OfflinePlayer offlinePlayer, String path, List<String> value) {
@@ -64,7 +66,7 @@ public class Database {
         try {
             config.save(file);
         } catch (IOException e) {
-            message.sendLog(Level.WARNING, e.getMessage());
+            getMessage().sendLog(Level.WARNING, e.getMessage());
         }
     }
 }

@@ -11,7 +11,7 @@ import org.bukkit.entity.Player;
 
 public class Unclaim extends ChunkSubCommand {
     private FileConfiguration getConfig() {
-        return Chunks.getInstance().getConfig();
+        return Chunks.getConfiguration();
     }
     private ChunkStorage getChunkStorage() {
         return Chunks.getChunkStorage();
@@ -22,8 +22,6 @@ public class Unclaim extends ChunkSubCommand {
     private Message getMessage() {
         return Chunks.getMessage();
     }
-    private final Economy economy = Chunks.getEconomy();
-    private final Chunks chunks = Chunks.getInstance();
     @Override
     public String getName() {
         return "unclaim";

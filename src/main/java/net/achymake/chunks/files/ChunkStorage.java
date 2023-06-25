@@ -3,6 +3,7 @@ package net.achymake.chunks.files;
 import net.achymake.chunks.Chunks;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.*;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
@@ -17,6 +18,9 @@ public class ChunkStorage {
     private final List<Player> chunkEditors = new ArrayList<>();
     public ChunkStorage(Chunks plugin) {
         this.plugin = plugin;
+    }
+    private FileConfiguration getConfig() {
+        return Chunks.getConfiguration();
     }
     private Database getDatabase() {
         return Chunks.getDatabase();
@@ -107,27 +111,27 @@ public class ChunkStorage {
         return uuids;
     }
     public void claimEffect(Player player) {
-        Particle particle = Particle.valueOf(plugin.getConfig().getString("claim.particle"));
+        Particle particle = Particle.valueOf(getConfig().getString("claim.particle"));
         Location locationSouth = new Location(player.getWorld(), player.getLocation().getChunk().getBlock(15, 0, 8).getX(), player.getLocation().getBlockY()-3, player.getLocation().getChunk().getBlock(15, 0, 8).getZ());
         Location locationEast = new Location(player.getWorld(), player.getLocation().getChunk().getBlock(8, 0, 15).getX(), player.getLocation().getBlockY()-3, player.getLocation().getChunk().getBlock(8, 0, 15).getZ());
-        player.playSound(player.getLocation(), Sound.valueOf(plugin.getConfig().getString("claim.sound.type")), Float.parseFloat(plugin.getConfig().getString("claim.sound.volume")), Float.parseFloat(plugin.getConfig().getString("claim.sound.pitch")));
+        player.playSound(player.getLocation(), Sound.valueOf(getConfig().getString("claim.sound.type")), Float.parseFloat(getConfig().getString("claim.sound.volume")), Float.parseFloat(getConfig().getString("claim.sound.pitch")));
         player.spawnParticle(particle, player.getLocation().getChunk().getBlock(8, 0, 0).getX(), player.getLocation().getBlockY()-3, player.getLocation().getChunk().getBlock(8, 0, 0).getZ(), 250, 4, 12, 0, 0);
         player.spawnParticle(particle, player.getLocation().getChunk().getBlock(0, 0, 8).getX(), player.getLocation().getBlockY()-3, player.getLocation().getChunk().getBlock(0, 0, 8).getZ(), 250, 0, 12, 4, 0);
         player.spawnParticle(particle,locationSouth.add(1, 0, 0), 250, 0, 12, 4, 0);
         player.spawnParticle(particle,locationEast.add(0, 0, 1), 250, 4, 12, 0, 0);
     }
     public void unclaimEffect(Player player) {
-        Particle particle = Particle.valueOf(plugin.getConfig().getString("unclaim.particle"));
+        Particle particle = Particle.valueOf(getConfig().getString("unclaim.particle"));
         Location locationSouth = new Location(player.getWorld(), player.getLocation().getChunk().getBlock(15, 0, 8).getX(), player.getLocation().getBlockY()-3, player.getLocation().getChunk().getBlock(15, 0, 8).getZ());
         Location locationEast = new Location(player.getWorld(), player.getLocation().getChunk().getBlock(8, 0, 15).getX(), player.getLocation().getBlockY()-3, player.getLocation().getChunk().getBlock(8, 0, 15).getZ());
-        player.playSound(player.getLocation(), Sound.valueOf(plugin.getConfig().getString("unclaim.sound.type")),Float.parseFloat(plugin.getConfig().getString("unclaim.sound.volume")), Float.parseFloat(plugin.getConfig().getString("unclaim.sound.pitch")));
+        player.playSound(player.getLocation(), Sound.valueOf(getConfig().getString("unclaim.sound.type")),Float.parseFloat(getConfig().getString("unclaim.sound.volume")), Float.parseFloat(getConfig().getString("unclaim.sound.pitch")));
         player.spawnParticle(particle, player.getLocation().getChunk().getBlock(8, 0, 0).getX(), player.getLocation().getBlockY()-3, player.getLocation().getChunk().getBlock(8, 0, 0).getZ(), 250, 4, 12, 0, 0);
         player.spawnParticle(particle, player.getLocation().getChunk().getBlock(0, 0, 8).getX(), player.getLocation().getBlockY()-3, player.getLocation().getChunk().getBlock(0, 0, 8).getZ(), 250, 0, 12, 4, 0);
         player.spawnParticle(particle,locationSouth.add(1, 0, 0), 250, 0, 12, 4, 0);
         player.spawnParticle(particle,locationEast.add(0, 0, 1), 250, 4, 12, 0, 0);
     }
     public void claim(Player player, Chunk chunk) {
-        getEconomy().withdrawPlayer(player, plugin.getConfig().getDouble("claim.cost"));
+        getEconomy().withdrawPlayer(player, getConfig().getDouble("claim.cost"));
         getData(chunk).set(NamespacedKey.minecraft("owner"), PersistentDataType.STRING,player.getUniqueId().toString());
         getData(chunk).set(NamespacedKey.minecraft("date-claimed"), PersistentDataType.STRING, SimpleDateFormat.getDateInstance().format(player.getLastPlayed()));
         getDatabase().setInt(player,"claimed", getDatabase().getConfig(player).getInt("claimed") + 1);
@@ -135,7 +139,7 @@ public class ChunkStorage {
     public void unclaim(Chunk chunk) {
         OfflinePlayer offlinePlayer = getOwner(chunk);
         getDatabase().setInt(offlinePlayer,"claimed", getDatabase().getConfig(offlinePlayer).getInt("claimed") - 1);
-        getEconomy().depositPlayer(offlinePlayer, plugin.getConfig().getDouble("unclaim.refund"));
+        getEconomy().depositPlayer(offlinePlayer, getConfig().getDouble("unclaim.refund"));
         getData(chunk).remove(NamespacedKey.minecraft("date-claimed"));
         getData(chunk).remove(NamespacedKey.minecraft("owner"));
     }

@@ -27,6 +27,10 @@ public final class Chunks extends JavaPlugin {
     public static Message getMessage() {
         return message;
     }
+    private static FileConfiguration configuration;
+    public static FileConfiguration getConfiguration() {
+        return configuration;
+    }
     private static ChunkStorage chunkStorage;
     public static ChunkStorage getChunkStorage() {
         return chunkStorage;
@@ -39,33 +43,50 @@ public final class Chunks extends JavaPlugin {
     public static Economy getEconomy() {
         return economy;
     }
-    @Override
-    public void onEnable() {
+    private void start() {
         instance = this;
-        message = new Message(this);
+        configuration = getConfig();
+        message = new Message(getLogger());
         if (getServer().getPluginManager().getPlugin("Vault") == null) {
-            message.sendLog(Level.WARNING, "You have to install 'Vault'");
+            getMessage().sendLog(Level.WARNING, "You have to install 'Vault'");
             getServer().getPluginManager().disablePlugin(this);
         } else {
             if (isEconomyInstalled()) {
-                message.sendLog(Level.INFO, "Hooked to 'Vault'");
+                getMessage().sendLog(Level.INFO, "Hooked to 'Vault'");
             } else {
-                message.sendLog(Level.WARNING, "'Vault' does not have any 'Economy' installed");
+                getMessage().sendLog(Level.WARNING, "'Vault' does not have any 'Economy' installed");
                 getServer().getPluginManager().disablePlugin(this);
             }
         }
         if (getServer().getPluginManager().getPlugin("PlaceholderAPI") == null) {
-            message.sendLog(Level.WARNING, "You have to install 'PlaceholderAPI'");
+            getMessage().sendLog(Level.WARNING, "You have to install 'PlaceholderAPI'");
             getServer().getPluginManager().disablePlugin(this);
         } else {
             new PlaceholderProvider().register();
-            message.sendLog(Level.INFO, "Hooked to 'PlaceholderAPI'");
+            getMessage().sendLog(Level.INFO, "Hooked to 'PlaceholderAPI'");
         }
         chunkStorage = new ChunkStorage(this);
         database = new Database(getDataFolder());
+        commands();
+        events();
         reload();
+        getMessage().sendLog(Level.INFO, "Enabled " + getName() + " " + getDescription().getVersion());
+        new UpdateChecker(this, 108772).getUpdate();
+    }
+    private void stop() {
+        if (!getChunkStorage().getChunkEditors().isEmpty()) {
+            getChunkStorage().getChunkEditors().clear();
+        }
+        if (new PlaceholderProvider().isRegistered()) {
+            new PlaceholderProvider().unregister();
+        }
+        getMessage().sendLog(Level.INFO, "Disabled " + getName() + " " + getDescription().getVersion());
+    }
+    private void commands() {
         getCommand("chunk").setExecutor(new ChunkCommand());
         getCommand("chunks").setExecutor(new ChunksCommand());
+    }
+    private void events() {
         new BlockBreak(this);
         new BlockFertilize(this);
         new BlockPlace(this);
@@ -97,18 +118,6 @@ public final class Chunks extends JavaPlugin {
         new PlayerQuit(this);
         new PlayerShearEntity(this);
         new SignChange(this);
-        message.sendLog(Level.INFO, "Enabled " + getName() + " " + getDescription().getVersion());
-        new UpdateChecker(this, 108772).getUpdate();
-    }
-    @Override
-    public void onDisable() {
-        if (!chunkStorage.getChunkEditors().isEmpty()) {
-            chunkStorage.getChunkEditors().clear();
-        }
-        if (new PlaceholderProvider().isRegistered()) {
-            new PlaceholderProvider().unregister();
-        }
-        message.sendLog(Level.INFO, "Disabled " + getName() + " " + getDescription().getVersion());
     }
     private boolean isEconomyInstalled() {
         RegisteredServiceProvider<Economy> rsp = getServer().getServicesManager().getRegistration(Economy.class);
@@ -118,30 +127,41 @@ public final class Chunks extends JavaPlugin {
         economy = rsp.getProvider();
         return economy != null;
     }
+    @Override
+    public void onEnable() {
+        start();
+    }
+    @Override
+    public void onDisable() {
+        stop();
+    }
     public void reload() {
         File file = new File(getDataFolder(), "config.yml");
         if (file.exists()) {
+            getMessage().sendLog(Level.INFO, "reloading config file");
             try {
                 getConfig().load(file);
-                saveConfig();
             } catch (IOException | InvalidConfigurationException e) {
-                message.sendLog(Level.WARNING, e.getMessage());
+                getMessage().sendLog(Level.WARNING, e.getMessage());
             }
+            saveConfig();
+            getMessage().sendLog(Level.INFO, "successfully reloaded config file");
         } else {
+            getMessage().sendLog(Level.INFO, "creating config file");
             getConfig().options().copyDefaults(true);
             saveConfig();
+            getMessage().sendLog(Level.INFO, "successfully created config file");
         }
     }
     public void reloadPlayerFiles() {
         for (OfflinePlayer offlinePlayer : getServer().getOfflinePlayers()) {
-            if (database.exist(offlinePlayer)) {
+            if (getDatabase().exist(offlinePlayer)) {
                 File file = new File(getDataFolder(), "userdata/" + offlinePlayer.getUniqueId() + ".yml");
                 FileConfiguration config = YamlConfiguration.loadConfiguration(file);
                 try {
                     config.load(file);
-                    config.save(file);
                 } catch (IOException | InvalidConfigurationException e) {
-                    message.sendLog(Level.WARNING, e.getMessage());
+                    getMessage().sendLog(Level.WARNING, e.getMessage());
                 }
             }
         }
