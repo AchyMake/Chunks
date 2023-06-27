@@ -23,13 +23,13 @@ public final class Chunks extends JavaPlugin {
     public static Chunks getInstance() {
         return instance;
     }
-    private static Message message;
-    public static Message getMessage() {
-        return message;
-    }
     private static FileConfiguration configuration;
     public static FileConfiguration getConfiguration() {
         return configuration;
+    }
+    private static Message message;
+    public static Message getMessage() {
+        return message;
     }
     private static ChunkStorage chunkStorage;
     public static ChunkStorage getChunkStorage() {
