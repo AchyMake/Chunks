@@ -82,6 +82,22 @@ public final class Chunks extends JavaPlugin {
         }
         getMessage().sendLog(Level.INFO, "Disabled " + getName() + " " + getDescription().getVersion());
     }
+    private boolean isEconomyInstalled() {
+        RegisteredServiceProvider<Economy> rsp = getServer().getServicesManager().getRegistration(Economy.class);
+        if (rsp == null) {
+            return false;
+        }
+        economy = rsp.getProvider();
+        return economy != null;
+    }
+    @Override
+    public void onEnable() {
+        start();
+    }
+    @Override
+    public void onDisable() {
+        stop();
+    }
     private void commands() {
         getCommand("chunk").setExecutor(new ChunkCommand());
         getCommand("chunks").setExecutor(new ChunksCommand());
@@ -119,38 +135,21 @@ public final class Chunks extends JavaPlugin {
         new PlayerShearEntity(this);
         new SignChange(this);
     }
-    private boolean isEconomyInstalled() {
-        RegisteredServiceProvider<Economy> rsp = getServer().getServicesManager().getRegistration(Economy.class);
-        if (rsp == null) {
-            return false;
-        }
-        economy = rsp.getProvider();
-        return economy != null;
-    }
-    @Override
-    public void onEnable() {
-        start();
-    }
-    @Override
-    public void onDisable() {
-        stop();
-    }
     public void reload() {
         File file = new File(getDataFolder(), "config.yml");
         if (file.exists()) {
-            getMessage().sendLog(Level.INFO, "reloading config file");
             try {
                 getConfig().load(file);
+                getMessage().sendLog(Level.INFO, "reloaded config.yml");
             } catch (IOException | InvalidConfigurationException e) {
                 getMessage().sendLog(Level.WARNING, e.getMessage());
             }
             saveConfig();
-            getMessage().sendLog(Level.INFO, "successfully reloaded config file");
         } else {
-            getMessage().sendLog(Level.INFO, "creating config file");
+            getMessage().sendLog(Level.INFO, "creating config.yml");
             getConfig().options().copyDefaults(true);
             saveConfig();
-            getMessage().sendLog(Level.INFO, "successfully created config file");
+            getMessage().sendLog(Level.INFO, "created config.yml");
         }
     }
     public void reloadPlayerFiles() {
