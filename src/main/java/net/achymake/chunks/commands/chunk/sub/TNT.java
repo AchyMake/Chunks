@@ -45,7 +45,7 @@ public class TNT extends ChunkSubCommand {
                             getMessage().send(player, "&6You enabled tnt for this chunk");
                         }
                     } else {
-                        if (player.hasPermission("smpchunks.command.chunks.edit")) {
+                        if (player.hasPermission("chunks.command.chunks.edit")) {
                             if (getChunkStorage().TNTAllowed(chunk)) {
                                 getChunkStorage().getData(chunk).remove(NamespacedKey.minecraft("tnt"));
                                 getMessage().send(player, "&6You disabled tnt for this chunk");
