@@ -15,8 +15,8 @@ public class PlayerBucketEmpty implements Listener {
     private Message getMessage() {
         return Chunks.getMessage();
     }
-    public PlayerBucketEmpty(Chunks chunks) {
-        chunks.getServer().getPluginManager().registerEvents(this, chunks);
+    public PlayerBucketEmpty(Chunks plugin) {
+        plugin.getServer().getPluginManager().registerEvents(this, plugin);
     }
     @EventHandler(priority = EventPriority.NORMAL)
     public void onPlayerBucketEmpty(PlayerBucketEmptyEvent event) {

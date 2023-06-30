@@ -15,8 +15,8 @@ public class BlockPlace implements Listener {
     private Message getMessage() {
         return Chunks.getMessage();
     }
-    public BlockPlace(Chunks chunks) {
-        chunks.getServer().getPluginManager().registerEvents(this, chunks);
+    public BlockPlace(Chunks plugin) {
+        plugin.getServer().getPluginManager().registerEvents(this, plugin);
     }
     @EventHandler(priority = EventPriority.NORMAL)
     public void onBlockPlace(BlockPlaceEvent event) {

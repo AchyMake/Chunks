@@ -15,8 +15,8 @@ public class BlockFertilize implements Listener {
     private Message getMessage() {
         return Chunks.getMessage();
     }
-    public BlockFertilize(Chunks chunks) {
-        chunks.getServer().getPluginManager().registerEvents(this, chunks);
+    public BlockFertilize(Chunks plugin) {
+        plugin.getServer().getPluginManager().registerEvents(this, plugin);
     }
     @EventHandler(priority = EventPriority.NORMAL)
     public void onBlockFertilize(BlockFertilizeEvent event) {

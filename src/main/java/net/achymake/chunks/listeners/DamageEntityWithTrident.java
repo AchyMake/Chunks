@@ -22,8 +22,8 @@ public class DamageEntityWithTrident implements Listener {
     private Message getMessage() {
         return Chunks.getMessage();
     }
-    public DamageEntityWithTrident(Chunks chunks) {
-        chunks.getServer().getPluginManager().registerEvents(this, chunks);
+    public DamageEntityWithTrident(Chunks plugin) {
+        plugin.getServer().getPluginManager().registerEvents(this, plugin);
     }
     @EventHandler(priority = EventPriority.NORMAL)
     public void onDamageEntityWithTrident(EntityDamageByEntityEvent event) {

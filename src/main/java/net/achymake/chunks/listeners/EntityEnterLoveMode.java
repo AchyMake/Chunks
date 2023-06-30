@@ -12,8 +12,8 @@ public class EntityEnterLoveMode implements Listener {
     private ChunkStorage getChunkStorage() {
         return Chunks.getChunkStorage();
     }
-    public EntityEnterLoveMode(Chunks chunks) {
-        chunks.getServer().getPluginManager().registerEvents(this, chunks);
+    public EntityEnterLoveMode(Chunks plugin) {
+        plugin.getServer().getPluginManager().registerEvents(this, plugin);
     }
     @EventHandler(priority = EventPriority.NORMAL)
     public void onEntityEnterLoveMode(EntityEnterLoveModeEvent event) {

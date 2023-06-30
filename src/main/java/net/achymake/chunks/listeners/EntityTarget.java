@@ -17,8 +17,8 @@ public class EntityTarget implements Listener {
     private ChunkStorage getChunkStorage() {
         return Chunks.getChunkStorage();
     }
-    public EntityTarget(Chunks chunks) {
-        chunks.getServer().getPluginManager().registerEvents(this, chunks);
+    public EntityTarget(Chunks plugin) {
+        plugin.getServer().getPluginManager().registerEvents(this, plugin);
     }
     @EventHandler(priority = EventPriority.NORMAL)
     public void onEntityTarget(EntityTargetEvent event) {

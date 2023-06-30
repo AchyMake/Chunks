@@ -13,11 +13,8 @@ import java.util.function.Consumer;
 import java.util.logging.Level;
 
 public class UpdateChecker {
-    private final Chunks plugin;
-    private final int resourceId;
-    public UpdateChecker(Chunks plugin, int resourceId) {
-        this.plugin = plugin;
-        this.resourceId = resourceId;
+    private Chunks getPlugin() {
+        return Chunks.getInstance();
     }
     private Message getMessage() {
         return Chunks.getMessage();
@@ -25,10 +22,10 @@ public class UpdateChecker {
     private FileConfiguration getConfig() {
         return Chunks.getConfiguration();
     }
-    public void getVersion(Consumer<String> consumer) {
-        plugin.getServer().getScheduler().runTaskAsynchronously(plugin, () -> {
+    private void getVersion(Consumer<String> consumer) {
+        getPlugin().getServer().getScheduler().runTaskAsynchronously(getPlugin(), () -> {
             try {
-                InputStream inputStream = (new URL("https://api.spigotmc.org/legacy/update.php?resource=" + resourceId)).openStream();
+                InputStream inputStream = (new URL("https://api.spigotmc.org/legacy/update.php?resource=" + 108772)).openStream();
                 Scanner scanner = new Scanner(inputStream);
                 if (scanner.hasNext()) {
                     consumer.accept(scanner.next());
@@ -44,23 +41,23 @@ public class UpdateChecker {
     }
     public void getUpdate() {
         if (getConfig().getBoolean("notify-update.enable")) {
-            (new UpdateChecker(plugin, resourceId)).getVersion((latest) -> {
-                getMessage().sendLog(Level.INFO, "checking latest release");
-                if (plugin.getDescription().getVersion().equals(latest)) {
+            (new UpdateChecker()).getVersion((latest) -> {
+                getMessage().sendLog(Level.INFO, "Checking latest release");
+                if (getPlugin().getDescription().getVersion().equals(latest)) {
                     getMessage().sendLog(Level.INFO, "You are using the latest version");
                 } else {
                     getMessage().sendLog(Level.INFO, "New Update: " + latest);
-                    getMessage().sendLog(Level.INFO, "Current Version: " + plugin.getDescription().getVersion());
+                    getMessage().sendLog(Level.INFO, "Current Version: " + getPlugin().getDescription().getVersion());
                 }
             });
         }
     }
     public void sendMessage(Player player) {
         if (getConfig().getBoolean("notify-update.enable")) {
-            (new UpdateChecker(plugin, resourceId)).getVersion((latest) -> {
-                if (!plugin.getDescription().getVersion().equalsIgnoreCase(latest)) {
-                    getMessage().send(player, "&6" + plugin.getName() + " Update:&f "+ latest);
-                    getMessage().send(player, "&6Current Version: &f" + plugin.getDescription().getVersion());
+            (new UpdateChecker()).getVersion((latest) -> {
+                if (!getPlugin().getDescription().getVersion().equalsIgnoreCase(latest)) {
+                    getMessage().send(player,"&6" + getPlugin().getName() + " Update:&f " + latest);
+                    getMessage().send(player,"&6Current Version: &f" + getPlugin().getDescription().getVersion());
                 }
             });
         }

@@ -71,7 +71,7 @@ public final class Chunks extends JavaPlugin {
         events();
         reload();
         getMessage().sendLog(Level.INFO, "Enabled " + getName() + " " + getDescription().getVersion());
-        new UpdateChecker(this, 108772).getUpdate();
+        new UpdateChecker().getUpdate();
     }
     private void stop() {
         if (!getChunkStorage().getChunkEditors().isEmpty()) {
@@ -89,14 +89,6 @@ public final class Chunks extends JavaPlugin {
         }
         economy = rsp.getProvider();
         return economy != null;
-    }
-    @Override
-    public void onEnable() {
-        start();
-    }
-    @Override
-    public void onDisable() {
-        stop();
     }
     private void commands() {
         getCommand("chunk").setExecutor(new ChunkCommand());
@@ -120,6 +112,7 @@ public final class Chunks extends JavaPlugin {
         new EntityEnterLoveMode(this);
         new EntityExplode(this);
         new EntityTarget(this);
+        new NotifyUpdate(this);
         new PlayerBucketEmpty(this);
         new PlayerBucketEntity(this);
         new PlayerBucketFill(this);
@@ -127,26 +120,33 @@ public final class Chunks extends JavaPlugin {
         new PlayerInteractBlocks(this);
         new PlayerInteractEntity(this);
         new PlayerInteractPhysical(this);
-        new PlayerJoin(this);
         new PlayerLeashEntity(this);
+        new PlayerLogin(this);
         new PlayerMount(this);
         new PlayerMove(this);
         new PlayerQuit(this);
         new PlayerShearEntity(this);
         new SignChange(this);
     }
+    @Override
+    public void onEnable() {
+        start();
+    }
+    @Override
+    public void onDisable() {
+        stop();
+    }
     public void reload() {
         File file = new File(getDataFolder(), "config.yml");
         if (file.exists()) {
             try {
                 getConfig().load(file);
-                getMessage().sendLog(Level.INFO, "reloaded config.yml");
+                getMessage().sendLog(Level.INFO, "loaded config.yml");
             } catch (IOException | InvalidConfigurationException e) {
                 getMessage().sendLog(Level.WARNING, e.getMessage());
             }
             saveConfig();
         } else {
-            getMessage().sendLog(Level.INFO, "creating config.yml");
             getConfig().options().copyDefaults(true);
             saveConfig();
             getMessage().sendLog(Level.INFO, "created config.yml");

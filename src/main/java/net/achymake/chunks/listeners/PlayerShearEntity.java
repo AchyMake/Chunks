@@ -15,8 +15,8 @@ public class PlayerShearEntity implements Listener {
     private Message getMessage() {
         return Chunks.getMessage();
     }
-    public PlayerShearEntity(Chunks chunks) {
-        chunks.getServer().getPluginManager().registerEvents(this, chunks);
+    public PlayerShearEntity(Chunks plugin) {
+        plugin.getServer().getPluginManager().registerEvents(this, plugin);
     }
     @EventHandler(priority = EventPriority.NORMAL)
     public void onPlayerShearEntity(PlayerShearEntityEvent event) {

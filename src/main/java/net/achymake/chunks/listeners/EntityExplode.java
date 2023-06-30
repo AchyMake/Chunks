@@ -12,8 +12,8 @@ public class EntityExplode implements Listener {
     private ChunkStorage getChunkStorage() {
         return Chunks.getChunkStorage();
     }
-    public EntityExplode(Chunks chunks) {
-        chunks.getServer().getPluginManager().registerEvents(this, chunks);
+    public EntityExplode(Chunks plugin) {
+        plugin.getServer().getPluginManager().registerEvents(this, plugin);
     }
     @EventHandler(priority = EventPriority.NORMAL)
     public void onEntityExplode(EntityExplodeEvent event) {

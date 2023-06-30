@@ -22,8 +22,8 @@ public class DamageEntityWithSpectralArrow implements Listener {
     private Message getMessage() {
         return Chunks.getMessage();
     }
-    public DamageEntityWithSpectralArrow(Chunks chunks) {
-        chunks.getServer().getPluginManager().registerEvents(this, chunks);
+    public DamageEntityWithSpectralArrow(Chunks plugin) {
+        plugin.getServer().getPluginManager().registerEvents(this, plugin);
     }
     @EventHandler(priority = EventPriority.NORMAL)
     public void onDamageEntityWithSpectralArrow(EntityDamageByEntityEvent event) {

@@ -16,8 +16,8 @@ public class CauldronLevelChange implements Listener {
     private Message getMessage() {
         return Chunks.getMessage();
     }
-    public CauldronLevelChange(Chunks chunks) {
-        chunks.getServer().getPluginManager().registerEvents(this, chunks);
+    public CauldronLevelChange(Chunks plugin) {
+        plugin.getServer().getPluginManager().registerEvents(this, plugin);
     }
     @EventHandler(priority = EventPriority.NORMAL)
     public void onCauldronLevelChange(CauldronLevelChangeEvent event) {

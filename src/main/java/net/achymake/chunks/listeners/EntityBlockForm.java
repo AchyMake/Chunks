@@ -11,8 +11,8 @@ public class EntityBlockForm implements Listener {
     private ChunkStorage getChunkStorage() {
         return Chunks.getChunkStorage();
     }
-    public EntityBlockForm(Chunks chunks) {
-        chunks.getServer().getPluginManager().registerEvents(this, chunks);
+    public EntityBlockForm(Chunks plugin) {
+        plugin.getServer().getPluginManager().registerEvents(this, plugin);
     }
     @EventHandler(priority = EventPriority.NORMAL)
     public void onEntityBlockForm(EntityBlockFormEvent event) {

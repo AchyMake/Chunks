@@ -17,8 +17,8 @@ public class PlayerMount implements Listener {
     private Message getMessage() {
         return Chunks.getMessage();
     }
-    public PlayerMount(Chunks chunks) {
-        chunks.getServer().getPluginManager().registerEvents(this, chunks);
+    public PlayerMount(Chunks plugin) {
+        plugin.getServer().getPluginManager().registerEvents(this, plugin);
     }
     @EventHandler(priority = EventPriority.NORMAL)
     public void onPlayerMount(EntityMountEvent event) {

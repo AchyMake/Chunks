@@ -19,8 +19,8 @@ public class PlayerInteractBlocks implements Listener {
     private Message getMessage() {
         return Chunks.getMessage();
     }
-    public PlayerInteractBlocks(Chunks chunks) {
-        chunks.getServer().getPluginManager().registerEvents(this, chunks);
+    public PlayerInteractBlocks(Chunks plugin) {
+        plugin.getServer().getPluginManager().registerEvents(this, plugin);
     }
     @EventHandler(priority = EventPriority.NORMAL)
     public void onPlayerInteractBlocks(PlayerInteractEvent event) {

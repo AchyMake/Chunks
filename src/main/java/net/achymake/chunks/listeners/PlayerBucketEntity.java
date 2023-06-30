@@ -15,8 +15,8 @@ public class PlayerBucketEntity implements Listener {
     private Message getMessage() {
         return Chunks.getMessage();
     }
-    public PlayerBucketEntity(Chunks chunks) {
-        chunks.getServer().getPluginManager().registerEvents(this, chunks);
+    public PlayerBucketEntity(Chunks plugin) {
+        plugin.getServer().getPluginManager().registerEvents(this, plugin);
     }
     @EventHandler(priority = EventPriority.NORMAL)
     public void onPlayerBucketEntity(PlayerBucketEntityEvent event) {

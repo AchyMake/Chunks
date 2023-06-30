@@ -15,8 +15,8 @@ public class EntityChangeBlock implements Listener {
     private ChunkStorage getChunkStorage() {
         return Chunks.getChunkStorage();
     }
-    public EntityChangeBlock(Chunks chunks) {
-        chunks.getServer().getPluginManager().registerEvents(this, chunks);
+    public EntityChangeBlock(Chunks plugin) {
+        plugin.getServer().getPluginManager().registerEvents(this, plugin);
     }
     @EventHandler(priority = EventPriority.NORMAL)
     public void onEntityChangeBlock(EntityChangeBlockEvent event) {

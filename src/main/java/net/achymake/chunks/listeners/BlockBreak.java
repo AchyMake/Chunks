@@ -15,8 +15,8 @@ public class BlockBreak implements Listener {
     private Message getMessage() {
         return Chunks.getMessage();
     }
-    public BlockBreak(Chunks chunks) {
-        chunks.getServer().getPluginManager().registerEvents(this, chunks);
+    public BlockBreak(Chunks plugin) {
+        plugin.getServer().getPluginManager().registerEvents(this, plugin);
     }
     @EventHandler(priority = EventPriority.NORMAL)
     public void onBlockBreak(BlockBreakEvent event) {

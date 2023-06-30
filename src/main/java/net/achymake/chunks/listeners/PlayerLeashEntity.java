@@ -15,8 +15,8 @@ public class PlayerLeashEntity implements Listener {
     private Message getMessage() {
         return Chunks.getMessage();
     }
-    public PlayerLeashEntity(Chunks chunks) {
-        chunks.getServer().getPluginManager().registerEvents(this, chunks);
+    public PlayerLeashEntity(Chunks plugin) {
+        plugin.getServer().getPluginManager().registerEvents(this, plugin);
     }
     @EventHandler(priority = EventPriority.NORMAL)
     public void onPlayerLeashEntity(PlayerLeashEntityEvent event) {

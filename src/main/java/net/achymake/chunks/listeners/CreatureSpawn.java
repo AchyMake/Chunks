@@ -11,8 +11,8 @@ public class CreatureSpawn implements Listener {
     private ChunkStorage getChunkStorage() {
         return Chunks.getChunkStorage();
     }
-    public CreatureSpawn(Chunks chunks) {
-        chunks.getServer().getPluginManager().registerEvents(this, chunks);
+    public CreatureSpawn(Chunks plugin) {
+        plugin.getServer().getPluginManager().registerEvents(this, plugin);
     }
     @EventHandler(priority = EventPriority.NORMAL)
     public void onCreatureSpawn(CreatureSpawnEvent event) {

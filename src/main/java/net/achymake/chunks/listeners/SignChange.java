@@ -15,8 +15,8 @@ public class SignChange implements Listener {
     private Message getMessage() {
         return Chunks.getMessage();
     }
-    public SignChange(Chunks chunks) {
-        chunks.getServer().getPluginManager().registerEvents(this, chunks);
+    public SignChange(Chunks plugin) {
+        plugin.getServer().getPluginManager().registerEvents(this, plugin);
     }
     @EventHandler(priority = EventPriority.NORMAL)
     public void onSignChange(SignChangeEvent event) {

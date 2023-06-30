@@ -17,8 +17,8 @@ public class PlayerMove implements Listener {
     private Message getMessage() {
         return Chunks.getMessage();
     }
-    public PlayerMove(Chunks chunks) {
-        chunks.getServer().getPluginManager().registerEvents(this, chunks);
+    public PlayerMove(Chunks plugin) {
+        plugin.getServer().getPluginManager().registerEvents(this, plugin);
     }
     @EventHandler(priority = EventPriority.NORMAL)
     public void onPlayerMove(PlayerMoveEvent event) {
