@@ -18,21 +18,25 @@ public class EntityExplode implements Listener {
     @EventHandler(priority = EventPriority.NORMAL)
     public void onEntityExplode(EntityExplodeEvent event) {
         if (getChunkStorage().isProtected(event.getEntity().getLocation().getChunk())) {
-            event.setCancelled(true);
+            if (event.blockList().isEmpty())return;
+            event.blockList().clear();
         }
         if (getChunkStorage().isClaimed(event.getEntity().getLocation().getChunk())) {
             if (event.getEntity().getType().equals(EntityType.MINECART_TNT)) {
                 if (!getChunkStorage().isClaimed(event.getEntity().getLocation().getChunk()))return;
                 if (getChunkStorage().TNTAllowed(event.getLocation().getChunk()))return;
-                event.setCancelled(true);
+                if (event.blockList().isEmpty())return;
+                event.blockList().clear();
             }
             if (event.getEntity().getType().equals(EntityType.PRIMED_TNT)) {
                 if (!getChunkStorage().isClaimed(event.getEntity().getLocation().getChunk()))return;
                 if (getChunkStorage().TNTAllowed(event.getLocation().getChunk()))return;
-                event.setCancelled(true);
+                if (event.blockList().isEmpty())return;
+                event.blockList().clear();
             }
             if (event.getEntity().getType().equals(EntityType.CREEPER)) {
-                event.setCancelled(true);
+                if (event.blockList().isEmpty())return;
+                event.blockList().clear();
             }
         }
     }
