@@ -4,6 +4,7 @@ import net.achymake.chunks.Chunks;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.Player;
 
 import java.io.File;
 import java.io.IOException;
@@ -17,6 +18,9 @@ public class Database {
     }
     private Message getMessage() {
         return Chunks.getMessage();
+    }
+    private FileConfiguration getConfig() {
+        return Chunks.getConfiguration();
     }
     public boolean exist(OfflinePlayer offlinePlayer) {
         return new File(dataFolder, "userdata/" + offlinePlayer.getUniqueId() + ".yml").exists();
@@ -68,5 +72,13 @@ public class Database {
         } catch (IOException e) {
             getMessage().sendLog(Level.WARNING, e.getMessage());
         }
+    }
+    public int getMaxClaims(Player player) {
+        for (String rank : getConfig().getConfigurationSection("claim.max-claims").getKeys(false)) {
+            if (player.hasPermission("chunks.command.claim.multiple." + rank)) {
+                return getConfig().getInt("claim.max-claims." + rank);
+            }
+        }
+        return getConfig().getInt("claim.max-claims.default");
     }
 }
