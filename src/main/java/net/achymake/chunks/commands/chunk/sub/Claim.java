@@ -52,7 +52,7 @@ public class Claim extends ChunkSubCommand {
                         getMessage().send(player, "&cChunk already owned by " + getChunkStorage().getOwner(chunk).getName());
                     }
                 } else {
-                    if (getConfig().getInt("claim.max-claims") > getDatabase().getConfig(player).getInt("chunks.claimed")) {
+                    if (canClaim(player)) {
                         if (getEconomy().getBalance(player) >= getConfig().getDouble("claim.cost")) {
                             getChunkStorage().claim(player, chunk);
                             getChunkStorage().claimEffect(player);
@@ -66,5 +66,15 @@ public class Claim extends ChunkSubCommand {
                 }
             }
         }
+    }
+    private boolean canClaim(Player player) {
+        for (String rank : getConfig().getConfigurationSection("claim.max-claims").getKeys(false)) {
+            if (player.hasPermission("chunks.command.claim.multiple." + rank)) {
+                if (getConfig().getInt("claim.max-claims." + rank) > getDatabase().getConfig(player).getInt("claimed")) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 }
