@@ -38,7 +38,7 @@ public class Unclaim extends ChunkSubCommand {
                 Chunks.send(player, "&cChunk already owned by&f Server");
             } else if (getChunkStorage().isClaimed(chunk)) {
                 if (getChunkStorage().isOwner(player, chunk)){
-                    Chunks.send(player, "&6You unclaimed a chunk and got refunded&a " + getEconomy().currencyNameSingular() + getEconomy().format(getConfig().getDouble("unclaim.refund")));
+                    Chunks.send(player, "&6You unclaimed a chunk and got refunded&a " + getEconomy().format(getConfig().getDouble("unclaim.refund")));
                     getChunkStorage().unclaim(chunk);
                     getChunkStorage().unclaimEffect(player);
                 } else {

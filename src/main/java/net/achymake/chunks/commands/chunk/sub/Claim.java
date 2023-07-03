@@ -52,9 +52,9 @@ public class Claim extends ChunkSubCommand {
                         if (getEconomy().getBalance(player) >= getConfig().getDouble("claim.cost")) {
                             getChunkStorage().claim(player, chunk);
                             getChunkStorage().claimEffect(player);
-                            Chunks.send(player, "&6You bought a chunk for&a " + getEconomy().currencyNameSingular() + getEconomy().format(getConfig().getDouble("claim.cost")));
+                            Chunks.send(player, "&6You bought a chunk for&a " + getEconomy().format(getConfig().getDouble("claim.cost")));
                         } else {
-                            Chunks.send(player, "&cYou don't have&a " + getEconomy().currencyNameSingular() + getEconomy().format(getConfig().getDouble("claim.cost")) + "&c to buy a chunk");
+                            Chunks.send(player, "&cYou don't have&a " + getEconomy().format(getConfig().getDouble("claim.cost")) + "&c to buy a chunk");
                         }
                     } else {
                         Chunks.send(player, "&cYou have reach your limit of&f " + getDatabase().getConfig(player).getInt("chunks.claimed") + "&c claims");
