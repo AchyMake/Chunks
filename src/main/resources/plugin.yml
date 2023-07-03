@@ -66,9 +66,3 @@ permissions:
   chunks.command.chunks.setowner:
     description: chunks commands
     default: op
-  chunks.max-claims.default:
-    description: chunk commands
-    default: false
-  chunks.max-claims.[maxClaims]:
-    description: chunk commands
-    default: false

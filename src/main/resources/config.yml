@@ -2,10 +2,7 @@ notify-update:
   enable: true
 claim:
   cost: 1250.0
-  max-claims:
-    default: 32
-    vip: 45
-    staff: 64
+  max-claims: 32
   redstone-only-inside: false
   particle: TOTEM
   sound:

@@ -2,7 +2,12 @@ package net.achymake.chunks.files;
 
 import net.achymake.chunks.Chunks;
 import net.milkbowl.vault.economy.Economy;
-import org.bukkit.*;
+import org.bukkit.Chunk;
+import org.bukkit.NamespacedKey;
+import org.bukkit.Particle;
+import org.bukkit.Location;
+import org.bukkit.Sound;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.persistence.PersistentDataContainer;
@@ -32,7 +37,7 @@ public class ChunkStorage {
             return hasChunkEdit(player);
         }
         if (isClaimed(chunk)) {
-            return isOwner(player, chunk) || isMember(player, chunk) || chunkEditors.contains(player);
+            return isOwner(player, chunk) || isMember(player, chunk) || hasChunkEdit(player);
         }
         return true;
     }

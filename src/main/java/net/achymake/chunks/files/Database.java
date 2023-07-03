@@ -5,7 +5,6 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.entity.Player;
 
 import java.io.File;
 import java.io.IOException;
@@ -70,16 +69,6 @@ public class Database {
         } catch (IOException e) {
             Chunks.sendLog(Level.WARNING, e.getMessage());
         }
-    }
-    public int getMaxClaims(Player player) {
-        if (getConfig().isConfigurationSection("claim.max-claims")) {
-            for (String rank : getConfig().getConfigurationSection("claim.max-claims").getKeys(false)) {
-                if (player.hasPermission("chunks.max-claims." + rank)) {
-                    return getConfig().getInt("claim.max-claims." + rank);
-                }
-            }
-        }
-        return getMaxClaims(player);
     }
     public void reload(OfflinePlayer[] offlinePlayers) {
         for (OfflinePlayer offlinePlayer : offlinePlayers) {
