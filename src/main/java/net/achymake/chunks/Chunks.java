@@ -59,8 +59,9 @@ public final class Chunks extends JavaPlugin {
             sendLog(Level.WARNING, "You have to install 'Vault'");
             getServer().getPluginManager().disablePlugin(this);
         } else {
+            sendLog(Level.INFO, "Hooked to 'Vault'");
             if (isEconomyInstalled()) {
-                sendLog(Level.INFO, "Hooked to 'Vault'");
+                sendLog(Level.INFO, "Economy hooked from 'Vault'");
             } else {
                 sendLog(Level.WARNING, "'Vault' does not have any 'Economy' installed");
                 getServer().getPluginManager().disablePlugin(this);
