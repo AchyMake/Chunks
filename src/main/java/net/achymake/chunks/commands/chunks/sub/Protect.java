@@ -3,7 +3,6 @@ package net.achymake.chunks.commands.chunks.sub;
 import net.achymake.chunks.Chunks;
 import net.achymake.chunks.commands.chunks.ChunksSubCommand;
 import net.achymake.chunks.files.ChunkStorage;
-import net.achymake.chunks.files.Message;
 import org.bukkit.Chunk;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -11,9 +10,6 @@ import org.bukkit.entity.Player;
 public class Protect extends ChunksSubCommand {
     private ChunkStorage getChunkStorage() {
         return Chunks.getChunkStorage();
-    }
-    private Message getMessage() {
-        return Chunks.getMessage();
     }
     @Override
     public String getName() {
@@ -35,11 +31,11 @@ public class Protect extends ChunksSubCommand {
                 if (player.hasPermission("chunks.command.chunks.protect")) {
                     Chunk chunk = player.getLocation().getChunk();
                     if (getChunkStorage().isProtected(chunk)) {
-                        getMessage().sendActionBar(player, "&cChunk is already protected");
+                        Chunks.sendActionBar(player, "&cChunk is already protected");
                     } else if (getChunkStorage().isClaimed(chunk)) {
-                        getMessage().sendActionBar(player, "&cChunk already owned by &f " + getChunkStorage().getOwner(chunk).getName());
+                        Chunks.sendActionBar(player, "&cChunk already owned by &f " + getChunkStorage().getOwner(chunk).getName());
                     } else {
-                        getMessage().sendActionBar(player, "&6Chunk is now protected");
+                        Chunks.sendActionBar(player, "&6Chunk is now protected");
                         getChunkStorage().protect(chunk);
                         getChunkStorage().claimEffect(player);
                     }

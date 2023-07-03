@@ -3,16 +3,12 @@ package net.achymake.chunks.commands.chunks.sub;
 import net.achymake.chunks.Chunks;
 import net.achymake.chunks.commands.chunks.ChunksSubCommand;
 import net.achymake.chunks.files.ChunkStorage;
-import net.achymake.chunks.files.Message;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 public class Edit extends ChunksSubCommand {
     private ChunkStorage getChunkStorage() {
         return Chunks.getChunkStorage();
-    }
-    private Message getMessage() {
-        return Chunks.getMessage();
     }
     @Override
     public String getName() {
@@ -34,10 +30,10 @@ public class Edit extends ChunksSubCommand {
                 if (player.hasPermission("chunks.command.chunks.edit")) {
                     if (getChunkStorage().hasChunkEdit(player)) {
                         getChunkStorage().getChunkEditors().remove(player);
-                        getMessage().sendActionBar(player, "&6&lChunk Edit:&c Disabled");
+                        Chunks.sendActionBar(player, "&6&lChunk Edit:&c Disabled");
                     } else {
                         getChunkStorage().getChunkEditors().add(player);
-                        getMessage().sendActionBar(player, "&6&lChunk Edit:&a Enabled");
+                        Chunks.sendActionBar(player, "&6&lChunk Edit:&a Enabled");
                     }
                 }
             }

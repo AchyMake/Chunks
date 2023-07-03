@@ -2,7 +2,6 @@ package net.achymake.chunks.listeners;
 
 import net.achymake.chunks.Chunks;
 import net.achymake.chunks.files.ChunkStorage;
-import net.achymake.chunks.files.Message;
 import org.bukkit.entity.EntityType;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -12,9 +11,6 @@ import org.bukkit.event.player.PlayerInteractEntityEvent;
 public class PlayerInteractEntity implements Listener {
     private ChunkStorage getChunkStorage() {
         return Chunks.getChunkStorage();
-    }
-    private Message getMessage() {
-        return Chunks.getMessage();
     }
     public PlayerInteractEntity(Chunks plugin) {
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
@@ -29,7 +25,7 @@ public class PlayerInteractEntity implements Listener {
             if (getChunkStorage().hasAccess(event.getPlayer(), event.getRightClicked().getLocation().getChunk()))return;
             if (Chunks.getInstance().getConfig().getBoolean("is-hostile." + event.getRightClicked().getType()))return;
             event.setCancelled(true);
-            getMessage().sendActionBar(event.getPlayer(), "&cChunk is protected by&f Server");
+            Chunks.sendActionBar(event.getPlayer(), "&cChunk is protected by&f Server");
         }
         if (getChunkStorage().isClaimed(event.getRightClicked().getLocation().getChunk())) {
             if (event.getRightClicked().getType().equals(EntityType.PLAYER))return;
@@ -39,7 +35,7 @@ public class PlayerInteractEntity implements Listener {
             if (getChunkStorage().hasAccess(event.getPlayer(), event.getRightClicked().getLocation().getChunk()))return;
             if (Chunks.getInstance().getConfig().getBoolean("is-hostile." + event.getRightClicked().getType()))return;
             event.setCancelled(true);
-            getMessage().sendActionBar(event.getPlayer(), "&cChunk is owned by&f " + getChunkStorage().getOwner(event.getRightClicked().getLocation().getChunk()).getName());
+            Chunks.sendActionBar(event.getPlayer(), "&cChunk is owned by&f " + getChunkStorage().getOwner(event.getRightClicked().getLocation().getChunk()).getName());
         }
     }
 }

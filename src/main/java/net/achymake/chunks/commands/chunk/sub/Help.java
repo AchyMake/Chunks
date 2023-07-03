@@ -2,13 +2,9 @@ package net.achymake.chunks.commands.chunk.sub;
 
 import net.achymake.chunks.Chunks;
 import net.achymake.chunks.commands.chunk.ChunkSubCommand;
-import net.achymake.chunks.files.Message;
 import org.bukkit.entity.Player;
 
 public class Help extends ChunkSubCommand {
-    private Message getMessage() {
-        return Chunks.getMessage();
-    }
     @Override
     public String getName() {
         return "help";
@@ -25,21 +21,21 @@ public class Help extends ChunkSubCommand {
     public void perform(Player player, String[] args) {
         if (player.hasPermission("chunks.command.chunk.help")) {
             if (args.length == 1){
-                getMessage().send(player, "&6Chunk Help:");
+                Chunks.send(player, "&6Chunk Help:");
                 if (player.hasPermission("chunks.command.chunk.claim")) {
-                    getMessage().send(player, "/chunk claim&7 - claims current chunk");
+                    Chunks.send(player, "/chunk claim&7 - claims current chunk");
                 }
-                getMessage().send(player, "/chunk help&7 - show this list");
+                Chunks.send(player, "/chunk help&7 - show this list");
                 if (player.hasPermission("chunks.command.chunk.members")) {
-                    getMessage().send(player, "/chunk members&7 - check member list");
-                    getMessage().send(player, "/chunk members add target&7 - add member");
-                    getMessage().send(player, "/chunk members remove target&7 - remove member");
+                    Chunks.send(player, "/chunk members&7 - check member list");
+                    Chunks.send(player, "/chunk members add target&7 - add member");
+                    Chunks.send(player, "/chunk members remove target&7 - remove member");
                 }
                 if (player.hasPermission("chunks.command.chunk.tnt")) {
-                    getMessage().send(player, "/chunk tnt&7 - toggle tnt for the chunk");
+                    Chunks.send(player, "/chunk tnt&7 - toggle tnt for the chunk");
                 }
                 if (player.hasPermission("chunks.command.chunk.unclaim")) {
-                    getMessage().send(player, "/chunk unclaim&7 - unclaims current chunk");
+                    Chunks.send(player, "/chunk unclaim&7 - unclaims current chunk");
                 }
             }
         }

@@ -3,7 +3,6 @@ package net.achymake.chunks.commands.chunks.sub;
 import net.achymake.chunks.Chunks;
 import net.achymake.chunks.commands.chunks.ChunksSubCommand;
 import net.achymake.chunks.files.ChunkStorage;
-import net.achymake.chunks.files.Message;
 import org.bukkit.Chunk;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -11,9 +10,6 @@ import org.bukkit.entity.Player;
 public class Delete extends ChunksSubCommand {
     private ChunkStorage getChunkStorage() {
         return Chunks.getChunkStorage();
-    }
-    private Message getMessage() {
-        return Chunks.getMessage();
     }
     @Override
     public String getName() {
@@ -37,13 +33,13 @@ public class Delete extends ChunksSubCommand {
                     if (getChunkStorage().isProtected(chunk)) {
                         getChunkStorage().unprotect(chunk);
                         getChunkStorage().unclaimEffect(player);
-                        getMessage().send(player, "&6Chunk is now unprotected");
+                        Chunks.send(player, "&6Chunk is now unprotected");
                     } else if (getChunkStorage().isClaimed(chunk)) {
-                        getMessage().send(player, "&6You safely unclaimed&f " + getChunkStorage().getOwner(chunk).getName() + "&6 chunk");
+                        Chunks.send(player, "&6You safely unclaimed&f " + getChunkStorage().getOwner(chunk).getName() + "&6 chunk");
                         getChunkStorage().unclaim(chunk);
                         getChunkStorage().unclaimEffect(player);
                     } else {
-                        getMessage().send(player, "&cChunk is already unclaimed");
+                        Chunks.send(player, "&cChunk is already unclaimed");
                     }
                 }
             }

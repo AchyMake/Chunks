@@ -2,7 +2,6 @@ package net.achymake.chunks.listeners;
 
 import net.achymake.chunks.Chunks;
 import net.achymake.chunks.files.ChunkStorage;
-import net.achymake.chunks.files.Message;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
@@ -18,9 +17,6 @@ public class DamageEntity implements Listener {
     private ChunkStorage getChunkStorage() {
         return Chunks.getChunkStorage();
     }
-    private Message getMessage() {
-        return Chunks.getMessage();
-    }
     public DamageEntity(Chunks plugin) {
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
     }
@@ -33,7 +29,7 @@ public class DamageEntity implements Listener {
             if (event.getEntity().getType().equals(EntityType.PLAYER))return;
             if (getConfig().getBoolean("is-hostile." + event.getEntity().getType()))return;
             event.setCancelled(true);
-            getMessage().sendActionBar((Player) event.getDamager(), "&cChunk is protected by&f Server");
+            Chunks.sendActionBar((Player) event.getDamager(), "&cChunk is protected by&f Server");
         }
         if (getChunkStorage().isClaimed(event.getEntity().getLocation().getChunk())) {
             if (getChunkStorage().hasAccess((Player) event.getDamager(), event.getEntity().getLocation().getChunk()))return;
@@ -41,7 +37,7 @@ public class DamageEntity implements Listener {
             if (event.getEntity().getType().equals(EntityType.PLAYER))return;
             if (getConfig().getBoolean("is-hostile." + event.getEntity().getType()))return;
             event.setCancelled(true);
-            getMessage().sendActionBar((Player) event.getDamager(), "&cChunk is owned by&f " + getChunkStorage().getOwner(event.getEntity().getLocation().getChunk()).getName());
+            Chunks.sendActionBar((Player) event.getDamager(), "&cChunk is owned by&f " + getChunkStorage().getOwner(event.getEntity().getLocation().getChunk()).getName());
         }
     }
 }

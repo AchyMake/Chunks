@@ -4,7 +4,6 @@ import net.achymake.chunks.Chunks;
 import net.achymake.chunks.commands.chunk.ChunkSubCommand;
 import net.achymake.chunks.files.ChunkStorage;
 import net.achymake.chunks.files.Database;
-import net.achymake.chunks.files.Message;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Chunk;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -22,9 +21,6 @@ public class Claim extends ChunkSubCommand {
     }
     private Database getDatabase() {
         return Chunks.getDatabase();
-    }
-    private Message getMessage() {
-        return Chunks.getMessage();
     }
     @Override
     public String getName() {
@@ -44,24 +40,24 @@ public class Claim extends ChunkSubCommand {
             if (args.length == 1) {
                 Chunk chunk = player.getLocation().getChunk();
                 if (getChunkStorage().isProtected(chunk)) {
-                    getMessage().send(player, "&cChunk is protected by&f Server");
+                    Chunks.send(player, "&cChunk is protected by&f Server");
                 } else if (getChunkStorage().isClaimed(chunk)) {
                     if (getChunkStorage().isOwner(player ,chunk)) {
-                        getMessage().send(player, "&cYou already own this chunk");
+                        Chunks.send(player, "&cYou already own this chunk");
                     } else {
-                        getMessage().send(player, "&cChunk already owned by " + getChunkStorage().getOwner(chunk).getName());
+                        Chunks.send(player, "&cChunk already owned by " + getChunkStorage().getOwner(chunk).getName());
                     }
                 } else {
                     if (canClaim(player)) {
                         if (getEconomy().getBalance(player) >= getConfig().getDouble("claim.cost")) {
                             getChunkStorage().claim(player, chunk);
                             getChunkStorage().claimEffect(player);
-                            getMessage().send(player, "&6You bought a chunk for&a " + getEconomy().currencyNameSingular() + getEconomy().format(getConfig().getDouble("claim.cost")));
+                            Chunks.send(player, "&6You bought a chunk for&a " + getEconomy().currencyNameSingular() + getEconomy().format(getConfig().getDouble("claim.cost")));
                         } else {
-                            getMessage().send(player, "&cYou don't have&a " + getEconomy().currencyNameSingular() + getEconomy().format(getConfig().getDouble("claim.cost")) + "&c to buy a chunk");
+                            Chunks.send(player, "&cYou don't have&a " + getEconomy().currencyNameSingular() + getEconomy().format(getConfig().getDouble("claim.cost")) + "&c to buy a chunk");
                         }
                     } else {
-                        getMessage().send(player, "&cYou have reach your limit of&f " + getDatabase().getConfig(player).getInt("chunks.claimed") + "&c claims");
+                        Chunks.send(player, "&cYou have reach your limit of&f " + getDatabase().getConfig(player).getInt("chunks.claimed") + "&c claims");
                     }
                 }
             }
@@ -69,7 +65,7 @@ public class Claim extends ChunkSubCommand {
     }
     private boolean canClaim(Player player) {
         for (String rank : getConfig().getConfigurationSection("claim.max-claims").getKeys(false)) {
-            if (player.hasPermission("chunks.command.claim.multiple." + rank)) {
+            if (player.hasPermission("chunks.max-claims." + rank)) {
                 if (getConfig().getInt("claim.max-claims." + rank) > getDatabase().getConfig(player).getInt("claimed")) {
                     return true;
                 }

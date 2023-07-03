@@ -3,7 +3,6 @@ package net.achymake.chunks.commands.chunk.sub;
 import net.achymake.chunks.Chunks;
 import net.achymake.chunks.commands.chunk.ChunkSubCommand;
 import net.achymake.chunks.files.Database;
-import net.achymake.chunks.files.Message;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
@@ -14,9 +13,6 @@ import java.util.UUID;
 public class Members extends ChunkSubCommand {
     private Database getDatabase() {
         return Chunks.getDatabase();
-    }
-    private Message getMessage() {
-        return Chunks.getMessage();
     }
     @Override
     public String getName() {
@@ -35,11 +31,11 @@ public class Members extends ChunkSubCommand {
         if (player.hasPermission("chunks.command.chunk.members")) {
             if (args.length == 1) {
                 if (getDatabase().getConfig(player).getStringList("members").isEmpty()){
-                    getMessage().send(player, "&cYou don't have any members");
+                    Chunks.send(player, "&cYou don't have any members");
                 } else {
-                    getMessage().send(player, "&6Chunk Members:");
+                    Chunks.send(player, "&6Chunk Members:");
                     for (String uuidListed : getDatabase().getConfig(player).getStringList("members")) {
-                        getMessage().send(player, "- " + player.getServer().getOfflinePlayer(UUID.fromString(uuidListed)).getName());
+                        Chunks.send(player, "- " + player.getServer().getOfflinePlayer(UUID.fromString(uuidListed)).getName());
                     }
                 }
             }
@@ -47,13 +43,13 @@ public class Members extends ChunkSubCommand {
                 OfflinePlayer target = Bukkit.getOfflinePlayer(args[2]);
                 if (args[1].equalsIgnoreCase("add")) {
                     if (getDatabase().getConfig(player).getStringList("members").contains(target.getUniqueId().toString())) {
-                        getMessage().send(player, "&cYou already have&f " + target.getName() + "&c as member");
+                        Chunks.send(player, "&cYou already have&f " + target.getName() + "&c as member");
                     } else {
 
                         List<String> members = getDatabase().getConfig(player).getStringList("members");
                         members.add(target.getUniqueId().toString());
                         getDatabase().setStringList(player, "members", members);
-                        getMessage().send(player, "&6You added&f " + target.getName() + "&6 to members");
+                        Chunks.send(player, "&6You added&f " + target.getName() + "&6 to members");
                     }
                 }
                 if (args[1].equalsIgnoreCase("remove")) {
@@ -61,9 +57,9 @@ public class Members extends ChunkSubCommand {
                         List<String> members = getDatabase().getConfig(player).getStringList("members");
                         members.remove(target.getUniqueId().toString());
                         getDatabase().setStringList(player, "members", members);
-                        getMessage().send(player, "&6You removed&f " + target.getName() + "&6 from members");
+                        Chunks.send(player, "&6You removed&f " + target.getName() + "&6 from members");
                     } else {
-                        getMessage().send(player, "&6You don't have&f " + target.getName() + "&6 as member");
+                        Chunks.send(player, "&6You don't have&f " + target.getName() + "&6 as member");
                     }
                 }
             }

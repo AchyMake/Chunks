@@ -3,7 +3,6 @@ package net.achymake.chunks.commands.chunk;
 import net.achymake.chunks.Chunks;
 import net.achymake.chunks.commands.chunk.sub.*;
 import net.achymake.chunks.files.Database;
-import net.achymake.chunks.files.Message;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -19,12 +18,9 @@ public class ChunkCommand implements CommandExecutor, TabCompleter {
     private Database getDatabase() {
         return Chunks.getDatabase();
     }
-    private Message getMessage() {
-        return Chunks.getMessage();
-    }
     private final ArrayList<ChunkSubCommand> chunkSubCommands = new ArrayList<>();
 
-    public ChunkCommand(){
+    public ChunkCommand() {
         chunkSubCommands.add(new Claim());
         chunkSubCommands.add(new Help());
         chunkSubCommands.add(new Members());
@@ -35,10 +31,10 @@ public class ChunkCommand implements CommandExecutor, TabCompleter {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         Player player = (Player) sender;
         if (args.length == 0) {
-            getMessage().send(player, "&cUsage: &f/chunk help");
-        }else{
-            for (ChunkSubCommand commands : getSubCommands()){
-                if (args[0].equals(commands.getName())){
+            Chunks.send(player, "&cUsage: &f/chunk help");
+        } else {
+            for (ChunkSubCommand commands : getSubCommands()) {
+                if (args[0].equals(commands.getName())) {
                     commands.perform(player, args);
                 }
             }
@@ -51,7 +47,7 @@ public class ChunkCommand implements CommandExecutor, TabCompleter {
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String label, String[] args) {
         List<String> commands = new ArrayList<>();
-        if (args.length == 1){
+        if (args.length == 1) {
             if (sender.hasPermission("chunks.command.chunk.claim")) {
                 commands.add("claim");
             }
@@ -79,7 +75,7 @@ public class ChunkCommand implements CommandExecutor, TabCompleter {
         if (args.length == 3) {
             if (sender.hasPermission("chunks.command.chunk.members")) {
                 if (args[0].equalsIgnoreCase("members")) {
-                    if (args[1].equalsIgnoreCase("add")){
+                    if (args[1].equalsIgnoreCase("add")) {
                         for (OfflinePlayer players : sender.getServer().getOfflinePlayers()) {
                             commands.add(players.getName());
                         }

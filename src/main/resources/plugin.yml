@@ -27,12 +27,6 @@ permissions:
   chunks.command.chunk.claim:
     description: chunk commands
     default: op
-  chunks.command.chunk.claim.multiple.default:
-    description: chunk commands
-    default: op
-  chunks.command.chunk.claim.multiple.[maxClaims]:
-    description: chunk commands
-    default: op
   chunks.command.chunk.help:
     description: chunk commands
     default: op
@@ -72,3 +66,9 @@ permissions:
   chunks.command.chunks.setowner:
     description: chunks commands
     default: op
+  chunks.max-claims.default:
+    description: chunk commands
+    default: false
+  chunks.max-claims.[maxClaims]:
+    description: chunk commands
+    default: false

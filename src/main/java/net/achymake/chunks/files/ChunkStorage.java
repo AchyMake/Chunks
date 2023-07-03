@@ -14,12 +14,8 @@ import java.util.List;
 import java.util.UUID;
 
 public class ChunkStorage {
-    private final Chunks plugin;
     private final List<Player> chunkEditors = new ArrayList<>();
-    public ChunkStorage(Chunks plugin) {
-        this.plugin = plugin;
-    }
-    private FileConfiguration getConfig() {
+    public FileConfiguration getConfig() {
         return Chunks.getConfiguration();
     }
     private Database getDatabase() {
@@ -65,7 +61,7 @@ public class ChunkStorage {
         return getData(chunk).has(NamespacedKey.minecraft("tnt"), PersistentDataType.STRING);
     }
     public OfflinePlayer getOwner(Chunk chunk) {
-        return plugin.getServer().getOfflinePlayer(UUID.fromString(getData(chunk).get(NamespacedKey.minecraft("owner"), PersistentDataType.STRING)));
+        return Chunks.getInstance().getServer().getOfflinePlayer(UUID.fromString(getData(chunk).get(NamespacedKey.minecraft("owner"), PersistentDataType.STRING)));
     }
     public String getDateClaimed(Chunk chunk) {
         return getData(chunk).get(NamespacedKey.minecraft("date-claimed"), PersistentDataType.STRING);
@@ -80,7 +76,7 @@ public class ChunkStorage {
         return getDatabase().getConfig(offlinePlayer).getInt("claimed");
     }
     public List<String> getMembers(Chunk chunk) {
-        if (isClaimed(chunk)){
+        if (isClaimed(chunk)) {
             return getDatabase().getConfig(getOwner(chunk)).getStringList("members");
         } else {
             return new ArrayList<>();

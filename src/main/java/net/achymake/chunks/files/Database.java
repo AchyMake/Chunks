@@ -2,6 +2,7 @@ package net.achymake.chunks.files;
 
 import net.achymake.chunks.Chunks;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
@@ -15,9 +16,6 @@ public class Database {
     private final File dataFolder;
     public Database(File dataFolder) {
         this.dataFolder = dataFolder;
-    }
-    private Message getMessage() {
-        return Chunks.getMessage();
     }
     private FileConfiguration getConfig() {
         return Chunks.getConfiguration();
@@ -34,7 +32,7 @@ public class Database {
                 try {
                     config.save(file);
                 } catch (IOException e) {
-                    getMessage().sendLog(Level.WARNING, e.getMessage());
+                    Chunks.sendLog(Level.WARNING, e.getMessage());
                 }
             }
         } else {
@@ -46,7 +44,7 @@ public class Database {
             try {
                 config.save(file);
             } catch (IOException e) {
-                getMessage().sendLog(Level.WARNING, e.getMessage());
+                Chunks.sendLog(Level.WARNING, e.getMessage());
             }
         }
     }
@@ -60,7 +58,7 @@ public class Database {
         try {
             config.save(file);
         } catch (IOException e) {
-            getMessage().sendLog(Level.WARNING, e.getMessage());
+            Chunks.sendLog(Level.WARNING, e.getMessage());
         }
     }
     public void setStringList(OfflinePlayer offlinePlayer, String path, List<String> value) {
@@ -70,15 +68,30 @@ public class Database {
         try {
             config.save(file);
         } catch (IOException e) {
-            getMessage().sendLog(Level.WARNING, e.getMessage());
+            Chunks.sendLog(Level.WARNING, e.getMessage());
         }
     }
     public int getMaxClaims(Player player) {
-        for (String rank : getConfig().getConfigurationSection("claim.max-claims").getKeys(false)) {
-            if (player.hasPermission("chunks.command.claim.multiple." + rank)) {
-                return getConfig().getInt("claim.max-claims." + rank);
+        if (getConfig().isConfigurationSection("claim.max-claims")) {
+            for (String rank : getConfig().getConfigurationSection("claim.max-claims").getKeys(false)) {
+                if (player.hasPermission("chunks.max-claims." + rank)) {
+                    return getConfig().getInt("claim.max-claims." + rank);
+                }
             }
         }
-        return getConfig().getInt("claim.max-claims.default");
+        return getMaxClaims(player);
+    }
+    public void reload(OfflinePlayer[] offlinePlayers) {
+        for (OfflinePlayer offlinePlayer : offlinePlayers) {
+            if (exist(offlinePlayer)) {
+                File file = new File(dataFolder, "userdata/" + offlinePlayer.getUniqueId() + ".yml");
+                FileConfiguration config = YamlConfiguration.loadConfiguration(file);
+                try {
+                    config.load(file);
+                } catch (IOException | InvalidConfigurationException e) {
+                    Chunks.sendLog(Level.WARNING, e.getMessage());
+                }
+            }
+        }
     }
 }

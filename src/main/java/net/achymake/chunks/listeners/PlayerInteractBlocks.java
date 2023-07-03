@@ -2,7 +2,6 @@ package net.achymake.chunks.listeners;
 
 import net.achymake.chunks.Chunks;
 import net.achymake.chunks.files.ChunkStorage;
-import net.achymake.chunks.files.Message;
 import org.bukkit.Material;
 import org.bukkit.Tag;
 import org.bukkit.block.Block;
@@ -16,9 +15,6 @@ public class PlayerInteractBlocks implements Listener {
     private ChunkStorage getChunkStorage() {
         return Chunks.getChunkStorage();
     }
-    private Message getMessage() {
-        return Chunks.getMessage();
-    }
     public PlayerInteractBlocks(Chunks plugin) {
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
     }
@@ -30,13 +26,13 @@ public class PlayerInteractBlocks implements Listener {
             if (getChunkStorage().hasAccess(event.getPlayer(), event.getClickedBlock().getChunk()))return;
             if (!isCancelledProtected(event.getClickedBlock()))return;
             event.setCancelled(true);
-            getMessage().sendActionBar(event.getPlayer(), "&cChunk is protected by&f Server");
+            Chunks.sendActionBar(event.getPlayer(), "&cChunk is protected by&f Server");
         }
         if (getChunkStorage().isClaimed(event.getClickedBlock().getChunk())) {
             if (getChunkStorage().hasAccess(event.getPlayer(), event.getClickedBlock().getChunk()))return;
             if (!isCancelledClaimed(event.getClickedBlock()))return;
             event.setCancelled(true);
-            getMessage().sendActionBar(event.getPlayer(), "&cChunk is owned by&f " + getChunkStorage().getOwner(event.getClickedBlock().getChunk()).getName());
+            Chunks.sendActionBar(event.getPlayer(), "&cChunk is owned by&f " + getChunkStorage().getOwner(event.getClickedBlock().getChunk()).getName());
         }
     }
     public static boolean isCancelledClaimed(Block block) {
