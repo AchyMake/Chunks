@@ -33,6 +33,11 @@ public class Ban extends ChunkSubCommand {
                 if (getDatabase().getBanned(player).contains(target.getUniqueId().toString())) {
                     Chunks.send(player, "&cError:&7 You already banned&f " + target.getName());
                 } else {
+                    if (getDatabase().getMembers(player).contains(target.getUniqueId().toString())) {
+                        List<String> members = getDatabase().getMembers(player);
+                        members.remove(target.getUniqueId().toString());
+                        getDatabase().setStringList(player, "members", members);
+                    }
                     List<String> banned = getDatabase().getBanned(player);
                     banned.add(target.getUniqueId().toString());
                     getDatabase().setStringList(player, "banned", banned);
