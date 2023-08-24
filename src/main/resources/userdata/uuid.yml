@@ -2,3 +2,5 @@ name: name
 members:
   - uuid
 claimed: 0
+banned:
+  - uuid

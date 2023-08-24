@@ -24,6 +24,12 @@ permissions:
   chunks.command.chunk:
     description: chunk commands
     default: op
+  chunks.command.chunk.ban:
+    description: chunk commands
+    default: op
+  chunks.command.chunk.banned:
+    description: chunk commands
+    default: op
   chunks.command.chunk.claim:
     description: chunk commands
     default: op
@@ -34,6 +40,9 @@ permissions:
     description: chunk commands
     default: op
   chunks.command.chunk.tnt:
+    description: chunk commands
+    default: op
+  chunks.command.chunk.unban:
     description: chunk commands
     default: op
   chunks.command.chunk.unclaim:

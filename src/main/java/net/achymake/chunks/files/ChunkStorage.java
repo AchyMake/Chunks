@@ -82,24 +82,48 @@ public class ChunkStorage {
     }
     public List<String> getMembers(Chunk chunk) {
         if (isClaimed(chunk)) {
-            return getDatabase().getConfig(getOwner(chunk)).getStringList("members");
+            return getDatabase().getMembers(getOwner(chunk));
+        } else {
+            return new ArrayList<>();
+        }
+    }
+    public List<String> getBanned(Chunk chunk) {
+        if (isClaimed(chunk)) {
+            return getDatabase().getBanned(getOwner(chunk));
         } else {
             return new ArrayList<>();
         }
     }
     public List<UUID> getMembersUUID(Chunk chunk) {
         List<UUID> uuids = new ArrayList<>();
-        for (String uuidString : getDatabase().getConfig(getOwner(chunk)).getStringList("members")) {
-            uuids.add(UUID.fromString(uuidString));
+        if (isClaimed(chunk)){
+            for (String uuidString : getMembers(chunk)) {
+                uuids.add(UUID.fromString(uuidString));
+            }
+        }
+        return uuids;
+    }
+    public List<UUID> getBannedUUID(Chunk chunk) {
+        List<UUID> uuids = new ArrayList<>();
+        if (isClaimed(chunk)){
+            for (String uuidString : getBanned(chunk)) {
+                uuids.add(UUID.fromString(uuidString));
+            }
         }
         return uuids;
     }
     public List<String> getMembers(OfflinePlayer offlinePlayer) {
-        List<String> members = new ArrayList<>();
         if (getDatabase().exist(offlinePlayer)) {
-            return getDatabase().getConfig(offlinePlayer).getStringList("members");
-        }else{
-            return members;
+            return getDatabase().getMembers(offlinePlayer);
+        } else {
+            return new ArrayList<>();
+        }
+    }
+    public List<String> getBanned(OfflinePlayer offlinePlayer) {
+        if (getDatabase().exist(offlinePlayer)) {
+            return getDatabase().getBanned(offlinePlayer);
+        } else {
+            return new ArrayList<>();
         }
     }
     public List<UUID> getMembersUUID(OfflinePlayer offlinePlayer) {
@@ -152,6 +176,9 @@ public class ChunkStorage {
     }
     public void unprotect(Chunk chunk) {
         getData(chunk).remove(NamespacedKey.minecraft("protected"));
+    }
+    public boolean isBanned(Chunk chunk, Player player) {
+        return getBanned(chunk).contains(player.getUniqueId().toString());
     }
     public List<Player> getChunkEditors() {
         return chunkEditors;

@@ -54,3 +54,4 @@ is-hostile:
   ZOMBIE_VILLAGER: true
   ENDER_DRAGON: true
   WITHER: true
+  WITHER_SKULL: true

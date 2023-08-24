@@ -21,10 +21,12 @@ public class ChunkCommand implements CommandExecutor, TabCompleter {
     private final ArrayList<ChunkSubCommand> chunkSubCommands = new ArrayList<>();
 
     public ChunkCommand() {
+        chunkSubCommands.add(new Ban());
         chunkSubCommands.add(new Claim());
         chunkSubCommands.add(new Help());
         chunkSubCommands.add(new Members());
         chunkSubCommands.add(new TNT());
+        chunkSubCommands.add(new UnBan());
         chunkSubCommands.add(new Unclaim());
     }
     @Override
@@ -48,6 +50,12 @@ public class ChunkCommand implements CommandExecutor, TabCompleter {
     public List<String> onTabComplete(CommandSender sender, Command command, String label, String[] args) {
         List<String> commands = new ArrayList<>();
         if (args.length == 1) {
+            if (sender.hasPermission("chunks.command.chunk.ban")) {
+                commands.add("ban");
+            }
+            if (sender.hasPermission("chunks.command.chunk.banned")) {
+                commands.add("banned");
+            }
             if (sender.hasPermission("chunks.command.chunk.claim")) {
                 commands.add("claim");
             }
@@ -59,6 +67,9 @@ public class ChunkCommand implements CommandExecutor, TabCompleter {
             }
             if (sender.hasPermission("chunks.command.chunk.tnt")) {
                 commands.add("tnt");
+            }
+            if (sender.hasPermission("chunks.command.chunk.unban")) {
+                commands.add("unban");
             }
             if (sender.hasPermission("chunks.command.chunk.unclaim")) {
                 commands.add("unclaim");

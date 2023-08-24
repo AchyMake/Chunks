@@ -70,6 +70,12 @@ public class Database {
             Chunks.sendLog(Level.WARNING, e.getMessage());
         }
     }
+    public List<String> getMembers(OfflinePlayer offlinePlayer) {
+        return getConfig(offlinePlayer).getStringList("members");
+    }
+    public List<String> getBanned(OfflinePlayer offlinePlayer) {
+        return getConfig(offlinePlayer).getStringList("banned");
+    }
     public void reload(OfflinePlayer[] offlinePlayers) {
         for (OfflinePlayer offlinePlayer : offlinePlayers) {
             if (exist(offlinePlayer)) {
