@@ -82,6 +82,20 @@ public class ChunkCommand implements CommandExecutor, TabCompleter {
                     commands.add("remove");
                 }
             }
+            if (sender.hasPermission("chunks.command.chunk.ban")) {
+                if (args[0].equalsIgnoreCase("ban")) {
+                    for (OfflinePlayer players : sender.getServer().getOfflinePlayers()) {
+                        commands.add(players.getName());
+                    }
+                }
+            }
+            if (sender.hasPermission("chunks.command.chunk.unban")) {
+                if (args[0].equalsIgnoreCase("unban")) {
+                    for (OfflinePlayer players : sender.getServer().getOfflinePlayers()) {
+                        commands.add(players.getName());
+                    }
+                }
+            }
         }
         if (args.length == 3) {
             if (sender.hasPermission("chunks.command.chunk.members")) {

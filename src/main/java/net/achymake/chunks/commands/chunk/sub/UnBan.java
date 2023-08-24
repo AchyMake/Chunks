@@ -34,7 +34,7 @@ public class UnBan extends ChunkSubCommand {
                     List<String> banned = getDatabase().getBanned(player);
                     banned.remove(target.getUniqueId().toString());
                     getDatabase().setStringList(player, "banned", banned);
-                    Chunks.send(player, "&6You banned&f " + target.getName());
+                    Chunks.send(player, "&6You unbanned&f " + target.getName());
                 } else {
                     Chunks.send(player, "&cError:&7 You already banned&f " + target.getName());
                 }
