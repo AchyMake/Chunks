@@ -103,25 +103,9 @@ public class ChunkStorage {
         }
         return uuids;
     }
-    public List<UUID> getBannedUUID(Chunk chunk) {
-        List<UUID> uuids = new ArrayList<>();
-        if (isClaimed(chunk)){
-            for (String uuidString : getBanned(chunk)) {
-                uuids.add(UUID.fromString(uuidString));
-            }
-        }
-        return uuids;
-    }
     public List<String> getMembers(OfflinePlayer offlinePlayer) {
         if (getDatabase().exist(offlinePlayer)) {
             return getDatabase().getMembers(offlinePlayer);
-        } else {
-            return new ArrayList<>();
-        }
-    }
-    public List<String> getBanned(OfflinePlayer offlinePlayer) {
-        if (getDatabase().exist(offlinePlayer)) {
-            return getDatabase().getBanned(offlinePlayer);
         } else {
             return new ArrayList<>();
         }
