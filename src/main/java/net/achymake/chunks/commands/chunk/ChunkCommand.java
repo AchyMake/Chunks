@@ -22,6 +22,7 @@ public class ChunkCommand implements CommandExecutor, TabCompleter {
 
     public ChunkCommand() {
         chunkSubCommands.add(new Ban());
+        chunkSubCommands.add(new Banned());
         chunkSubCommands.add(new Claim());
         chunkSubCommands.add(new Help());
         chunkSubCommands.add(new Members());
