@@ -34,7 +34,7 @@ public class PlayerMove implements Listener {
         } else if (getChunkStorage().isClaimed(chunk)) {
             if (getChunkStorage().isBanned(chunk, event.getPlayer())) {
                 event.setCancelled(true);
-                Chunks.send(event.getPlayer(), "&cError:&7 You are banned from&f " + getChunkStorage().getOwner(chunk));
+                Chunks.sendActionBar(event.getPlayer(), "&cError:&7 You are banned from&f " + getChunkStorage().getOwner(chunk).getName());
             }
             if (event.getPlayer().getPersistentDataContainer().has(NamespacedKey.minecraft("chunk-visitor"), PersistentDataType.STRING)) {
                 if (!event.getPlayer().getPersistentDataContainer().get(NamespacedKey.minecraft("chunk-visitor"), PersistentDataType.STRING).equals(getChunkStorage().getOwner(chunk).getName())) {
