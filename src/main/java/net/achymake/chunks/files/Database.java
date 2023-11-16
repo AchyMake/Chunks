@@ -16,9 +16,6 @@ public class Database {
     public Database(File dataFolder) {
         this.dataFolder = dataFolder;
     }
-    private FileConfiguration getConfig() {
-        return Chunks.getConfiguration();
-    }
     public boolean exist(OfflinePlayer offlinePlayer) {
         return new File(dataFolder, "userdata/" + offlinePlayer.getUniqueId() + ".yml").exists();
     }

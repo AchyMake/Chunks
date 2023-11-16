@@ -45,7 +45,6 @@ public class Members extends ChunkSubCommand {
                     if (getDatabase().getConfig(player).getStringList("members").contains(target.getUniqueId().toString())) {
                         Chunks.send(player, "&cYou already have&f " + target.getName() + "&c as member");
                     } else {
-
                         List<String> members = getDatabase().getConfig(player).getStringList("members");
                         members.add(target.getUniqueId().toString());
                         getDatabase().setStringList(player, "members", members);
