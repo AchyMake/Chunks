@@ -30,18 +30,22 @@ public class Ban extends ChunkSubCommand {
         if (player.hasPermission("chunks.command.chunk.ban")) {
             if (args.length == 2) {
                 OfflinePlayer target = Bukkit.getOfflinePlayer(args[1]);
-                if (getDatabase().getBanned(player).contains(target.getUniqueId().toString())) {
-                    Chunks.send(player, "&cError:&7 You already banned&f " + target.getName());
+                if (target == null) {
+                    Chunks.send(player, "&cError:&f " + args[1] + "&7 does not exist.");
                 } else {
-                    if (getDatabase().getMembers(player).contains(target.getUniqueId().toString())) {
-                        List<String> members = getDatabase().getMembers(player);
-                        members.remove(target.getUniqueId().toString());
-                        getDatabase().setStringList(player, "members", members);
+                    if (getDatabase().getBanned(player).contains(target.getUniqueId().toString())) {
+                        Chunks.send(player, "&cError:&7 You already banned&f " + target.getName());
+                    } else {
+                        if (getDatabase().getMembers(player).contains(target.getUniqueId().toString())) {
+                            List<String> members = getDatabase().getMembers(player);
+                            members.remove(target.getUniqueId().toString());
+                            getDatabase().setStringList(player, "members", members);
+                        }
+                        List<String> banned = getDatabase().getBanned(player);
+                        banned.add(target.getUniqueId().toString());
+                        getDatabase().setStringList(player, "banned", banned);
+                        Chunks.send(player, "&6You banned&f " + target.getName());
                     }
-                    List<String> banned = getDatabase().getBanned(player);
-                    banned.add(target.getUniqueId().toString());
-                    getDatabase().setStringList(player, "banned", banned);
-                    Chunks.send(player, "&6You banned&f " + target.getName());
                 }
             }
         }
