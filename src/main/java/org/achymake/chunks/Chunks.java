@@ -142,9 +142,6 @@ public final class Chunks extends JavaPlugin {
         new PlayerShearEntity(this);
         new SignChange(this);
     }
-    public boolean hasChunkEdit(Player player) {
-        return chunkEditors.contains(player);
-    }
     public void getUpdate(Player player) {
         if (notifyUpdate()) {
             getLatest((latest) -> {
