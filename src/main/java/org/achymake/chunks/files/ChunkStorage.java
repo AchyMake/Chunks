@@ -35,14 +35,17 @@ public class ChunkStorage {
         }
         return true;
     }
+    public boolean isOwner(Player player, Chunk chunk) {
+        return getOwner(chunk) == player;
+    }
+    public boolean isMember(Player player, Chunk chunk) {
+        return getMembers(chunk).contains(player.getUniqueId().toString());
+    }
     public boolean hasChunkEdit(Player player) {
-        return Chunks.getChunkEditors().contains(player);
+        return getDatabase().getConfig(player).getBoolean("settings.chunk-edit");
     }
     public boolean isClaimed(Chunk chunk) {
         return getData(chunk).has(NamespacedKey.minecraft("owner"), PersistentDataType.STRING);
-    }
-    public boolean isOwner(Player player, Chunk chunk) {
-        return getOwner(chunk) == player;
     }
     public void setOwner(Player player, OfflinePlayer target, Chunk chunk) {
         if (isClaimed(chunk)) {
@@ -64,9 +67,6 @@ public class ChunkStorage {
     }
     public String getDateClaimed(Chunk chunk) {
         return getData(chunk).get(NamespacedKey.minecraft("date-claimed"), PersistentDataType.STRING);
-    }
-    public boolean isMember(Player player, Chunk chunk) {
-        return getMembers(chunk).contains(player.getUniqueId().toString());
     }
     public int getClaimedCount(Chunk chunk) {
         return getDatabase().getConfig(getOwner(chunk)).getInt("claimed");

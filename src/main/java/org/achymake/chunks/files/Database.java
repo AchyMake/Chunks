@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.logging.Level;
 
 public class Database {
-    private File getFolder() {
+    private static File getFolder() {
         return Chunks.getFolder();
     }
     public boolean exist(OfflinePlayer offlinePlayer) {
@@ -45,6 +45,16 @@ public class Database {
     }
     public FileConfiguration getConfig(OfflinePlayer offlinePlayer) {
         return YamlConfiguration.loadConfiguration(new File(getFolder(), "userdata/" + offlinePlayer.getUniqueId() + ".yml"));
+    }
+    public void setBoolean(OfflinePlayer offlinePlayer, String path, boolean value) {
+        File file = new File(getFolder(), "userdata/" + offlinePlayer.getUniqueId() + ".yml");
+        FileConfiguration config = YamlConfiguration.loadConfiguration(file);
+        config.set(path, value);
+        try {
+            config.save(file);
+        } catch (IOException e) {
+            Chunks.sendLog(Level.WARNING, e.getMessage());
+        }
     }
     public void setInt(OfflinePlayer offlinePlayer, String path, int value) {
         File file = new File(getFolder(), "userdata/" + offlinePlayer.getUniqueId() + ".yml");

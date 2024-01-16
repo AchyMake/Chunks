@@ -9,15 +9,10 @@ import org.achymake.chunks.commands.chunks.ChunksCommand;
 import org.achymake.chunks.files.*;
 import org.achymake.chunks.listeners.*;
 import org.bukkit.ChatColor;
-import org.bukkit.Chunk;
-import org.bukkit.NamespacedKey;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
-import org.bukkit.persistence.PersistentDataContainer;
-import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -25,10 +20,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Scanner;
-import java.util.UUID;
 import java.util.function.Consumer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -61,10 +53,6 @@ public final class Chunks extends JavaPlugin {
     private static Economy economy = null;
     public static Economy getEconomy() {
         return economy;
-    }
-    private static final List<Player> chunkEditors = new ArrayList<>();
-    public static List<Player> getChunkEditors() {
-        return chunkEditors;
     }
     @Override
     public void onEnable() {
@@ -101,9 +89,6 @@ public final class Chunks extends JavaPlugin {
     }
     @Override
     public void onDisable() {
-        if (!getChunkEditors().isEmpty()) {
-            getChunkEditors().clear();
-        }
         if (new PlaceholderProvider().isRegistered()) {
             new PlaceholderProvider().unregister();
         }
@@ -220,63 +205,5 @@ public final class Chunks extends JavaPlugin {
     }
     public static String addColor(String message) {
         return ChatColor.translateAlternateColorCodes('&', message);
-    }
-    private static PersistentDataContainer getData(Chunk chunk) {
-        return chunk.getPersistentDataContainer();
-    }
-    public static boolean hasAccess(Player player, Chunk chunk) {
-        if (isProtected(chunk)) {
-            return hasChunkEdit(player);
-        }
-        if (isClaimed(chunk)) {
-            return isOwner(player, chunk) || isMember(player, chunk) || hasChunkEdit(player);
-        }
-        return true;
-    }
-    public static boolean hasChunkEdit(Player player) {
-        return chunkEditors.contains(player);
-    }
-    public static boolean isClaimed(Chunk chunk) {
-        return getData(chunk).has(NamespacedKey.minecraft("owner"), PersistentDataType.STRING);
-    }
-    public static boolean isOwner(Player player, Chunk chunk) {
-        return getOwner(chunk) == player;
-    }
-    public static boolean TNTAllowed(Chunk chunk) {
-        return getData(chunk).has(NamespacedKey.minecraft("tnt"), PersistentDataType.STRING);
-    }
-    public static OfflinePlayer getOwner(Chunk chunk) {
-        return getInstance().getServer().getOfflinePlayer(UUID.fromString(getData(chunk).get(NamespacedKey.minecraft("owner"), PersistentDataType.STRING)));
-    }
-    public static String getDateClaimed(Chunk chunk) {
-        return getData(chunk).get(NamespacedKey.minecraft("date-claimed"), PersistentDataType.STRING);
-    }
-    public static boolean isMember(Player player, Chunk chunk) {
-        return getMembers(chunk).contains(player.getUniqueId().toString());
-    }
-    public static int getClaimedCount(Chunk chunk) {
-        return getDatabase().getConfig(getOwner(chunk)).getInt("claimed");
-    }
-    public static int getClaimedCount(OfflinePlayer offlinePlayer) {
-        return getDatabase().getConfig(offlinePlayer).getInt("claimed");
-    }
-    public static List<String> getMembers(Chunk chunk) {
-        if (isClaimed(chunk)) {
-            return getDatabase().getMembers(getOwner(chunk));
-        } else {
-            return new ArrayList<>();
-        }
-    }
-    public static List<UUID> getMembersUUID(Chunk chunk) {
-        List<UUID> uuids = new ArrayList<>();
-        if (isClaimed(chunk)){
-            for (String uuidString : getMembers(chunk)) {
-                uuids.add(UUID.fromString(uuidString));
-            }
-        }
-        return uuids;
-    }
-    public static boolean isProtected(Chunk chunk) {
-        return getData(chunk).has(NamespacedKey.minecraft("protected"), PersistentDataType.STRING);
     }
 }
