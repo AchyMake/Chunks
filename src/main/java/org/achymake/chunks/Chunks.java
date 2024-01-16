@@ -207,7 +207,6 @@ public final class Chunks extends JavaPlugin {
         player.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent(addColor(message)));
     }
     public static String addColor(String message) {
-        //test
         return ChatColor.translateAlternateColorCodes('&', message);
     }
 }
