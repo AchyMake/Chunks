@@ -4,6 +4,7 @@ import org.achymake.chunks.Chunks;
 import org.achymake.chunks.files.ChunkStorage;
 import org.bukkit.Chunk;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -23,10 +24,20 @@ public class EntityChangeBlock implements Listener {
     public void onEntityChangeBlock(EntityChangeBlockEvent event) {
         Chunk chunk = event.getBlock().getChunk();
         if (getChunkStorage().isProtected(chunk)) {
+            if (event.getEntity() instanceof Player player) {
+                if (getChunkStorage().hasAccess(player, chunk))return;
+                event.setCancelled(true);
+            } else {
+                event.setCancelled(true);
+            }
             event.setCancelled(true);
         } else if (getChunkStorage().isClaimed(chunk)) {
-            if (!getConfig().getBoolean("hostile." + event.getEntity()))return;
-            event.setCancelled(true);
+            if (event.getEntity() instanceof Player player) {
+                if (getChunkStorage().hasAccess(player, chunk))return;
+                event.setCancelled(true);
+            } else if (getConfig().getBoolean("hostile." + event.getEntity().getType())) {
+                event.setCancelled(true);
+            }
         }
     }
 }

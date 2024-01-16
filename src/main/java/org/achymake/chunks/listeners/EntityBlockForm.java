@@ -2,6 +2,7 @@ package org.achymake.chunks.listeners;
 
 import org.achymake.chunks.Chunks;
 import org.achymake.chunks.files.ChunkStorage;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -17,6 +18,11 @@ public class EntityBlockForm implements Listener {
     @EventHandler(priority = EventPriority.NORMAL)
     public void onEntityBlockForm(EntityBlockFormEvent event) {
         if (!getChunkStorage().isProtected(event.getBlock().getChunk()))return;
-        event.setCancelled(true);
+        if (event.getEntity() instanceof Player player) {
+            if (getChunkStorage().hasAccess(player, event.getBlock().getChunk()))return;
+            event.setCancelled(true);
+        } else {
+            event.setCancelled(true);
+        }
     }
 }

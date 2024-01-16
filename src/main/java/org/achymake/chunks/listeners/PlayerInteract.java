@@ -60,9 +60,6 @@ public class PlayerInteract implements Listener {
         if (Tag.BEDS.isTagged(block.getType())) {
             return true;
         }
-        if (Tag.CROPS.isTagged(block.getType())) {
-            return true;
-        }
         if (Tag.SHULKER_BOXES.isTagged(block.getType())) {
             return true;
         }
@@ -174,9 +171,6 @@ public class PlayerInteract implements Listener {
         return false;
     }
     private boolean isCancelledProtected(Block block) {
-        if (Tag.CROPS.isTagged(block.getType())) {
-            return true;
-        }
         if (Tag.FENCE_GATES.isTagged(block.getType())) {
             return true;
         }

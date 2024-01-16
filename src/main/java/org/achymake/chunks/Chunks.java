@@ -20,6 +20,8 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 import java.util.function.Consumer;
 import java.util.logging.Level;
@@ -53,6 +55,10 @@ public final class Chunks extends JavaPlugin {
     private static Economy economy = null;
     public static Economy getEconomy() {
         return economy;
+    }
+    private static final List<Player> chunkEditors = new ArrayList<>();
+    public static List<Player> getChunkEditors() {
+        return chunkEditors;
     }
     @Override
     public void onEnable() {
@@ -89,8 +95,8 @@ public final class Chunks extends JavaPlugin {
     }
     @Override
     public void onDisable() {
-        if (!getChunkStorage().getChunkEditors().isEmpty()) {
-            getChunkStorage().getChunkEditors().clear();
+        if (!getChunkEditors().isEmpty()) {
+            getChunkEditors().clear();
         }
         if (new PlaceholderProvider().isRegistered()) {
             new PlaceholderProvider().unregister();
@@ -135,6 +141,9 @@ public final class Chunks extends JavaPlugin {
         new PlayerQuit(this);
         new PlayerShearEntity(this);
         new SignChange(this);
+    }
+    public boolean hasChunkEdit(Player player) {
+        return chunkEditors.contains(player);
     }
     public void getUpdate(Player player) {
         if (notifyUpdate()) {

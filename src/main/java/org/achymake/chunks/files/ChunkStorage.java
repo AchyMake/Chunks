@@ -14,7 +14,6 @@ import java.util.List;
 import java.util.UUID;
 
 public class ChunkStorage {
-    private final List<Player> chunkEditors = new ArrayList<>();
     public FileConfiguration getConfig() {
         return Chunks.getConfiguration();
     }
@@ -37,7 +36,7 @@ public class ChunkStorage {
         return true;
     }
     public boolean hasChunkEdit(Player player) {
-        return chunkEditors.contains(player);
+        return Chunks.getChunkEditors().contains(player);
     }
     public boolean isClaimed(Chunk chunk) {
         return getData(chunk).has(NamespacedKey.minecraft("owner"), PersistentDataType.STRING);
@@ -158,8 +157,5 @@ public class ChunkStorage {
     }
     public boolean isBanned(Chunk chunk, Player player) {
         return getBanned(chunk).contains(player.getUniqueId().toString());
-    }
-    public List<Player> getChunkEditors() {
-        return chunkEditors;
     }
 }

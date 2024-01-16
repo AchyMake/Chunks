@@ -28,10 +28,10 @@ public class EditCommand extends ChunksSubCommand {
             if (args.length == 1) {
                 if (player.hasPermission("chunks.command.chunks.edit")) {
                     if (getChunkStorage().hasChunkEdit(player)) {
-                        getChunkStorage().getChunkEditors().remove(player);
+                        Chunks.getChunkEditors().remove(player);
                         Chunks.sendActionBar(player, "&6&lChunk Edit:&c Disabled");
                     } else {
-                        getChunkStorage().getChunkEditors().add(player);
+                        Chunks.getChunkEditors().add(player);
                         Chunks.sendActionBar(player, "&6&lChunk Edit:&a Enabled");
                     }
                 }
