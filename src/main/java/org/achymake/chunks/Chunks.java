@@ -9,6 +9,7 @@ import org.achymake.chunks.commands.chunks.ChunksCommand;
 import org.achymake.chunks.files.*;
 import org.achymake.chunks.listeners.*;
 import org.bukkit.ChatColor;
+import org.bukkit.Chunk;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -23,32 +24,21 @@ import java.net.URL;
 import java.util.Scanner;
 import java.util.function.Consumer;
 import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public final class Chunks extends JavaPlugin {
     private static Chunks instance;
-    public static Chunks getInstance() {
-        return instance;
-    }
-    public static FileConfiguration getConfiguration() {
-        return getInstance().getConfig();
-    }
-    public static File getFolder() {
-        return getInstance().getDataFolder();
-    }
-    public static void sendLog(Level level, String message) {
-        getInstance().getLogger().log(level, message);
-    }
+    private static FileConfiguration configuration;
+    private static File folder;
+    private static Logger logger;
     private static Database database;
-    public static Database getDatabase() {
-        return database;
-    }
     private static Economy economy = null;
-    public static Economy getEconomy() {
-        return economy;
-    }
     @Override
     public void onEnable() {
         instance = this;
+        folder = getDataFolder();
+        logger = getLogger();
+        configuration = getConfig();
         if (getServer().getPluginManager().getPlugin("Vault") == null) {
             sendLog(Level.WARNING, "You have to install 'Vault'");
             getServer().getPluginManager().disablePlugin(this);
@@ -120,6 +110,15 @@ public final class Chunks extends JavaPlugin {
         new PlayerQuit(this);
         new PlayerShearEntity(this);
         new SignChange(this);
+    }
+    public boolean hasAccess(Player player, Chunk chunk) {
+        if (getDatabase().isProtected(chunk)) {
+            return getDatabase().hasChunkEdit(player);
+        }
+        if (getDatabase().isClaimed(chunk)) {
+            return getDatabase().isOwner(player, chunk) || getDatabase().isMember(player, chunk) || getDatabase().hasChunkEdit(player);
+        }
+        return true;
     }
     public void getUpdate(Player player) {
         if (notifyUpdate()) {
@@ -193,5 +192,23 @@ public final class Chunks extends JavaPlugin {
     }
     public static String addColor(String message) {
         return ChatColor.translateAlternateColorCodes('&', message);
+    }
+    public static void sendLog(Level level, String message) {
+        logger.log(level, message);
+    }
+    public static Economy getEconomy() {
+        return economy;
+    }
+    public static Database getDatabase() {
+        return database;
+    }
+    public static File getFolder() {
+        return folder;
+    }
+    public static FileConfiguration getConfiguration() {
+        return configuration;
+    }
+    public static Chunks getInstance() {
+        return instance;
     }
 }

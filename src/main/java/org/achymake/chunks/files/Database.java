@@ -20,7 +20,7 @@ import java.util.logging.Level;
 
 public class Database {
 
-    private static File getFolder() {
+    private File getFolder() {
         return Chunks.getFolder();
     }
     public boolean exist(OfflinePlayer offlinePlayer) {
