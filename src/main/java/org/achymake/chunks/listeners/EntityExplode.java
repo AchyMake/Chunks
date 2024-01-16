@@ -1,7 +1,7 @@
 package org.achymake.chunks.listeners;
 
 import org.achymake.chunks.Chunks;
-import org.achymake.chunks.files.ChunkStorage;
+import org.achymake.chunks.files.Database;
 import org.bukkit.entity.EntityType;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -9,27 +9,27 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityExplodeEvent;
 
 public class EntityExplode implements Listener {
-    private ChunkStorage getChunkStorage() {
-        return Chunks.getChunkStorage();
+    private Database getDatabase() {
+        return Chunks.getDatabase();
     }
     public EntityExplode(Chunks plugin) {
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
     }
     @EventHandler(priority = EventPriority.NORMAL)
     public void onEntityExplode(EntityExplodeEvent event) {
-        if (getChunkStorage().isProtected(event.getEntity().getLocation().getChunk())) {
+        if (getDatabase().isProtected(event.getEntity().getLocation().getChunk())) {
             if (event.blockList().isEmpty())return;
             event.blockList().clear();
-        } else if (getChunkStorage().isClaimed(event.getEntity().getLocation().getChunk())) {
+        } else if (getDatabase().isClaimed(event.getEntity().getLocation().getChunk())) {
             if (event.getEntity().getType().equals(EntityType.MINECART_TNT)) {
-                if (!getChunkStorage().isClaimed(event.getEntity().getLocation().getChunk()))return;
-                if (getChunkStorage().TNTAllowed(event.getLocation().getChunk()))return;
+                if (!getDatabase().isClaimed(event.getEntity().getLocation().getChunk()))return;
+                if (getDatabase().TNTAllowed(event.getLocation().getChunk()))return;
                 if (event.blockList().isEmpty())return;
                 event.blockList().clear();
             }
             if (event.getEntity().getType().equals(EntityType.PRIMED_TNT)) {
-                if (!getChunkStorage().isClaimed(event.getEntity().getLocation().getChunk()))return;
-                if (getChunkStorage().TNTAllowed(event.getLocation().getChunk()))return;
+                if (!getDatabase().isClaimed(event.getEntity().getLocation().getChunk()))return;
+                if (getDatabase().TNTAllowed(event.getLocation().getChunk()))return;
                 if (event.blockList().isEmpty())return;
                 event.blockList().clear();
             }

@@ -3,7 +3,7 @@ package org.achymake.chunks.commands.chunk.sub;
 import net.milkbowl.vault.economy.Economy;
 import org.achymake.chunks.Chunks;
 import org.achymake.chunks.commands.chunk.ChunkSubCommand;
-import org.achymake.chunks.files.ChunkStorage;
+import org.achymake.chunks.files.Database;
 import org.bukkit.Chunk;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
@@ -12,8 +12,8 @@ public class UnClaimCommand extends ChunkSubCommand {
     private FileConfiguration getConfig() {
         return Chunks.getConfiguration();
     }
-    private ChunkStorage getChunkStorage() {
-        return Chunks.getChunkStorage();
+    private Database getDatabase() {
+        return Chunks.getDatabase();
     }
     private Economy getEconomy() {
         return Chunks.getEconomy();
@@ -34,15 +34,15 @@ public class UnClaimCommand extends ChunkSubCommand {
     public void perform(Player player, String[] args) {
         if (player.hasPermission("chunks.command.chunk.unclaim")) {
             Chunk chunk = player.getLocation().getChunk();
-            if (getChunkStorage().isProtected(chunk)) {
+            if (getDatabase().isProtected(chunk)) {
                 Chunks.send(player, "&cChunk already owned by&f Server");
-            } else if (getChunkStorage().isClaimed(chunk)) {
-                if (getChunkStorage().isOwner(player, chunk)){
+            } else if (getDatabase().isClaimed(chunk)) {
+                if (getDatabase().isOwner(player, chunk)){
                     Chunks.send(player, "&6You unclaimed a chunk and got refunded&a " + getEconomy().format(getConfig().getDouble("unclaim.refund")));
-                    getChunkStorage().unclaim(chunk);
-                    getChunkStorage().unclaimEffect(player);
+                    getDatabase().unclaim(chunk);
+                    getDatabase().unclaimEffect(player);
                 } else {
-                    Chunks.send(player, "&cChunk already owned by&f " + getChunkStorage().getOwner(chunk).getName());
+                    Chunks.send(player, "&cChunk already owned by&f " + getDatabase().getOwner(chunk).getName());
                 }
             } else {
                 Chunks.send(player, "&cChunk already unclaimed");

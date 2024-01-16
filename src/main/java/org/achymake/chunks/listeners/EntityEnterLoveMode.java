@@ -1,7 +1,7 @@
 package org.achymake.chunks.listeners;
 
 import org.achymake.chunks.Chunks;
-import org.achymake.chunks.files.ChunkStorage;
+import org.achymake.chunks.files.Database;
 import org.bukkit.Chunk;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -10,8 +10,8 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityEnterLoveModeEvent;
 
 public class EntityEnterLoveMode implements Listener {
-    private ChunkStorage getChunkStorage() {
-        return Chunks.getChunkStorage();
+    private Database getDatabase() {
+        return Chunks.getDatabase();
     }
     public EntityEnterLoveMode(Chunks plugin) {
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
@@ -20,11 +20,11 @@ public class EntityEnterLoveMode implements Listener {
     public void onEntityEnterLoveMode(EntityEnterLoveModeEvent event) {
         if (event.getHumanEntity() instanceof Player player) {
             Chunk chunk = event.getEntity().getLocation().getChunk();
-            if (getChunkStorage().isProtected(chunk)) {
-                if (getChunkStorage().hasAccess(player, chunk))return;
+            if (getDatabase().isProtected(chunk)) {
+                if (getDatabase().hasAccess(player, chunk))return;
                 event.setCancelled(true);
-            } else if (getChunkStorage().isClaimed(chunk)) {
-                if (getChunkStorage().hasAccess(player, chunk))return;
+            } else if (getDatabase().isClaimed(chunk)) {
+                if (getDatabase().hasAccess(player, chunk))return;
                 event.setCancelled(true);
             }
         }

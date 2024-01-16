@@ -2,14 +2,14 @@ package org.achymake.chunks.commands.chunks.sub;
 
 import org.achymake.chunks.Chunks;
 import org.achymake.chunks.commands.chunks.ChunksSubCommand;
-import org.achymake.chunks.files.ChunkStorage;
+import org.achymake.chunks.files.Database;
 import org.bukkit.Chunk;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 public class DeleteCommand extends ChunksSubCommand {
-    private ChunkStorage getChunkStorage() {
-        return Chunks.getChunkStorage();
+    private Database getDatabase() {
+        return Chunks.getDatabase();
     }
     @Override
     public String getName() {
@@ -29,14 +29,14 @@ public class DeleteCommand extends ChunksSubCommand {
             if (sender instanceof Player player) {
                 if (args.length == 1){
                     Chunk chunk = player.getLocation().getChunk();
-                    if (getChunkStorage().isProtected(chunk)) {
-                        getChunkStorage().unprotect(chunk);
-                        getChunkStorage().unclaimEffect(player);
+                    if (getDatabase().isProtected(chunk)) {
+                        getDatabase().unprotect(chunk);
+                        getDatabase().unclaimEffect(player);
                         Chunks.send(player, "&6Chunk is now unprotected");
-                    } else if (getChunkStorage().isClaimed(chunk)) {
-                        Chunks.send(player, "&6You safely unclaimed&f " + getChunkStorage().getOwner(chunk).getName() + "&6 chunk");
-                        getChunkStorage().unclaim(chunk);
-                        getChunkStorage().unclaimEffect(player);
+                    } else if (getDatabase().isClaimed(chunk)) {
+                        Chunks.send(player, "&6You safely unclaimed&f " + getDatabase().getOwner(chunk).getName() + "&6 chunk");
+                        getDatabase().unclaim(chunk);
+                        getDatabase().unclaimEffect(player);
                     } else {
                         Chunks.send(player, "&cChunk is already unclaimed");
                     }

@@ -1,7 +1,7 @@
 package org.achymake.chunks.listeners;
 
 import org.achymake.chunks.Chunks;
-import org.achymake.chunks.files.ChunkStorage;
+import org.achymake.chunks.files.Database;
 import org.bukkit.Chunk;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
@@ -14,8 +14,8 @@ public class EntityChangeBlock implements Listener {
     private FileConfiguration getConfig() {
         return Chunks.getInstance().getConfig();
     }
-    private ChunkStorage getChunkStorage() {
-        return Chunks.getChunkStorage();
+    private Database getDatabase() {
+        return Chunks.getDatabase();
     }
     public EntityChangeBlock(Chunks plugin) {
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
@@ -23,17 +23,17 @@ public class EntityChangeBlock implements Listener {
     @EventHandler(priority = EventPriority.NORMAL)
     public void onEntityChangeBlock(EntityChangeBlockEvent event) {
         Chunk chunk = event.getBlock().getChunk();
-        if (getChunkStorage().isProtected(chunk)) {
+        if (getDatabase().isProtected(chunk)) {
             if (event.getEntity() instanceof Player player) {
-                if (getChunkStorage().hasAccess(player, chunk))return;
+                if (getDatabase().hasAccess(player, chunk))return;
                 event.setCancelled(true);
             } else {
                 event.setCancelled(true);
             }
             event.setCancelled(true);
-        } else if (getChunkStorage().isClaimed(chunk)) {
+        } else if (getDatabase().isClaimed(chunk)) {
             if (event.getEntity() instanceof Player player) {
-                if (getChunkStorage().hasAccess(player, chunk))return;
+                if (getDatabase().hasAccess(player, chunk))return;
                 event.setCancelled(true);
             } else if (getConfig().getBoolean("hostile." + event.getEntity().getType())) {
                 event.setCancelled(true);

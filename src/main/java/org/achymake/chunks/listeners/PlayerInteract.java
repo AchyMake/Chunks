@@ -1,7 +1,7 @@
 package org.achymake.chunks.listeners;
 
 import org.achymake.chunks.Chunks;
-import org.achymake.chunks.files.ChunkStorage;
+import org.achymake.chunks.files.Database;
 import org.bukkit.Chunk;
 import org.bukkit.Material;
 import org.bukkit.Tag;
@@ -14,8 +14,8 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 
 public class PlayerInteract implements Listener {
-    private ChunkStorage getChunkStorage() {
-        return Chunks.getChunkStorage();
+    private Database getDatabase() {
+        return Chunks.getDatabase();
     }
     public PlayerInteract(Chunks plugin) {
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
@@ -26,28 +26,28 @@ public class PlayerInteract implements Listener {
             if (event.getClickedBlock() == null)return;
             Player player = event.getPlayer();
             Chunk chunk = event.getClickedBlock().getChunk();
-            if (getChunkStorage().isProtected(chunk)) {
-                if (getChunkStorage().hasAccess(player, chunk))return;
+            if (getDatabase().isProtected(chunk)) {
+                if (getDatabase().hasAccess(player, chunk))return;
                 if (!isCancelledProtected(event.getClickedBlock()))return;
                 event.setCancelled(true);
                 Chunks.sendActionBar(player, "&cChunk is protected by&f Server");
-            } else if (getChunkStorage().isClaimed(chunk)) {
-                if (getChunkStorage().hasAccess(player, chunk))return;
+            } else if (getDatabase().isClaimed(chunk)) {
+                if (getDatabase().hasAccess(player, chunk))return;
                 if (!isCancelledClaimed(event.getClickedBlock()))return;
                 event.setCancelled(true);
-                Chunks.sendActionBar(player, "&cChunk is owned by&f " + getChunkStorage().getOwner(chunk).getName());
+                Chunks.sendActionBar(player, "&cChunk is owned by&f " + getDatabase().getOwner(chunk).getName());
 
             }
         } else if (event.getAction().equals(Action.PHYSICAL)) {
             if (event.getClickedBlock() == null)return;
             Player player = event.getPlayer();
             Chunk chunk = event.getClickedBlock().getChunk();
-            if (getChunkStorage().isProtected(chunk)) {
-                if (getChunkStorage().hasAccess(player, chunk))return;
+            if (getDatabase().isProtected(chunk)) {
+                if (getDatabase().hasAccess(player, chunk))return;
                 if (!physical(event.getClickedBlock()))return;
                 event.setCancelled(true);
-            } else if (getChunkStorage().isClaimed(chunk)) {
-                if (getChunkStorage().hasAccess(player, chunk))return;
+            } else if (getDatabase().isClaimed(chunk)) {
+                if (getDatabase().hasAccess(player, chunk))return;
                 if (!physical(event.getClickedBlock()))return;
                 event.setCancelled(true);
             }

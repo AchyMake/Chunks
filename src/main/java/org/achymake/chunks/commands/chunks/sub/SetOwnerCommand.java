@@ -2,7 +2,6 @@ package org.achymake.chunks.commands.chunks.sub;
 
 import org.achymake.chunks.Chunks;
 import org.achymake.chunks.commands.chunks.ChunksSubCommand;
-import org.achymake.chunks.files.ChunkStorage;
 import org.achymake.chunks.files.Database;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
@@ -10,9 +9,6 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 public class SetOwnerCommand extends ChunksSubCommand {
-    private ChunkStorage getChunkStorage() {
-        return Chunks.getChunkStorage();
-    }
     private Database getDatabase() {
         return Chunks.getDatabase();
     }
@@ -33,14 +29,14 @@ public class SetOwnerCommand extends ChunksSubCommand {
         if (sender instanceof Player player) {
             if (player.hasPermission("chunks.command.chunks.setowner")) {
                 if (args.length == 2) {
-                    if (getChunkStorage().isProtected(player.getLocation().getChunk())) {
+                    if (getDatabase().isProtected(player.getLocation().getChunk())) {
                         Chunks.send(player, "&cChunk is protected by&f Server");
                     } else {
                         OfflinePlayer target = Bukkit.getOfflinePlayer(args[1]);
                         if (getDatabase().exist(target)) {
-                            getChunkStorage().setOwner(player, target, player.getLocation().getChunk());
-                            getChunkStorage().claimEffect(player);
-                            Chunks.send(player, "&6Chunk is now owned by&f " + getChunkStorage().getOwner(player.getLocation().getChunk()).getName());
+                            getDatabase().setOwner(player, target, player.getLocation().getChunk());
+                            getDatabase().claimEffect(player);
+                            Chunks.send(player, "&6Chunk is now owned by&f " + getDatabase().getOwner(player.getLocation().getChunk()).getName());
                         } else {
                             Chunks.send(player, target.getName() + "&c has never joined");
                         }

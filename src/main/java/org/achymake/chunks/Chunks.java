@@ -42,10 +42,6 @@ public final class Chunks extends JavaPlugin {
     public static void sendLog(Level level, String message) {
         logger.log(level, message);
     }
-    private static ChunkStorage chunkStorage;
-    public static ChunkStorage getChunkStorage() {
-        return chunkStorage;
-    }
     private static Database database;
     public static Database getDatabase() {
         return database;
@@ -79,7 +75,6 @@ public final class Chunks extends JavaPlugin {
             new PlaceholderProvider().register();
             sendLog(Level.INFO, "Hooked to 'PlaceholderAPI'");
         }
-        chunkStorage = new ChunkStorage();
         database = new Database();
         commands();
         events();

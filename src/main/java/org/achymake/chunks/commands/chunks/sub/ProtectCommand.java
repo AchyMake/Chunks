@@ -2,14 +2,14 @@ package org.achymake.chunks.commands.chunks.sub;
 
 import org.achymake.chunks.Chunks;
 import org.achymake.chunks.commands.chunks.ChunksSubCommand;
-import org.achymake.chunks.files.ChunkStorage;
+import org.achymake.chunks.files.Database;
 import org.bukkit.Chunk;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 public class ProtectCommand extends ChunksSubCommand {
-    private ChunkStorage getChunkStorage() {
-        return Chunks.getChunkStorage();
+    private Database getDatabase() {
+        return Chunks.getDatabase();
     }
     @Override
     public String getName() {
@@ -29,14 +29,14 @@ public class ProtectCommand extends ChunksSubCommand {
             if (player.hasPermission("chunks.command.chunks.protect")) {
                 if (args.length == 1) {
                     Chunk chunk = player.getLocation().getChunk();
-                    if (getChunkStorage().isProtected(chunk)) {
+                    if (getDatabase().isProtected(chunk)) {
                         Chunks.sendActionBar(player, "&cChunk is already protected");
-                    } else if (getChunkStorage().isClaimed(chunk)) {
-                        Chunks.sendActionBar(player, "&cChunk already owned by &f " + getChunkStorage().getOwner(chunk).getName());
+                    } else if (getDatabase().isClaimed(chunk)) {
+                        Chunks.sendActionBar(player, "&cChunk already owned by &f " + getDatabase().getOwner(chunk).getName());
                     } else {
                         Chunks.sendActionBar(player, "&6Chunk is now protected");
-                        getChunkStorage().protect(chunk);
-                        getChunkStorage().claimEffect(player);
+                        getDatabase().protect(chunk);
+                        getDatabase().claimEffect(player);
                     }
                 }
             }
