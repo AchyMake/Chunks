@@ -1,0 +1,77 @@
+name: Chunks
+version: '${project.version}'
+main: org.achymake.chunks.Chunks
+api-version: '1.19'
+prefix: '${project.name}'
+load: STARTUP
+author: AchyMake
+description: '${project.description}'
+softdepend:
+  - Vault
+  - PlaceholderAPI
+commands:
+  chunk:
+    usage: /chunk help
+    description: chunk commands
+    permission-message: You are do not have the permission to execute the command
+    permission: chunks.command.chunk
+  chunks:
+    usage: /chunks help
+    description: chunks commands
+    permission-message: You are do not have the permission to execute the command
+    permission: chunks.command.chunks
+permissions:
+  chunks.command.chunk:
+    description: chunk commands
+    default: op
+  chunks.command.chunk.ban:
+    description: chunk commands
+    default: op
+  chunks.command.chunk.banned:
+    description: chunk commands
+    default: op
+  chunks.command.chunk.claim:
+    description: chunk commands
+    default: op
+  chunks.command.chunk.help:
+    description: chunk commands
+    default: op
+  chunks.command.chunk.members:
+    description: chunk commands
+    default: op
+  chunks.command.chunk.tnt:
+    description: chunk commands
+    default: op
+  chunks.command.chunk.unban:
+    description: chunk commands
+    default: op
+  chunks.command.chunk.unclaim:
+    description: chunk commands
+    default: op
+  chunks.command.chunks:
+    description: chunks commands
+    default: op
+  chunks.command.chunks.delete:
+    description: chunks commands
+    default: op
+  chunks.command.chunks.edit:
+    description: chunks commands
+    default: op
+  chunks.command.chunks.effect:
+    description: chunks commands
+    default: op
+  chunks.command.chunks.help:
+    description: chunks commands
+    default: op
+  chunks.command.chunks.info:
+    description: chunks commands
+    default: op
+  chunks.command.chunks.protect:
+    description: chunks commands
+    default: op
+  chunks.command.chunks.reload:
+    description: chunks commands
+    default: op
+  chunks.command.chunks.setowner:
+    description: chunks commands
+    default: op

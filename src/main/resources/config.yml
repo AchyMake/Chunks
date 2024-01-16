@@ -1,0 +1,56 @@
+notify-update: true
+claim:
+  cost: 1250.0
+  max-claims: 32
+  redstone-only-inside: false
+  particle: TOTEM
+  sound:
+    type: BLOCK_AMETHYST_BLOCK_BREAK
+    volume: 0.75F
+    pitch: 1.0F
+unclaim:
+  refund: 750.0
+  particle: SPELL_INSTANT
+  sound:
+    type: BLOCK_AMETHYST_BLOCK_BREAK
+    volume: 0.75F
+    pitch: 1.0F
+hostile:
+  PUFFERFISH: true
+  CAVE_SPIDER: true
+  ENDERMAN: true
+  IRON_GOLEM: true
+  PIGLIN: true
+  SPIDER: true
+  PIG_ZOMBIE: true
+  BLAZE: true
+  CREEPER: true
+  DROWNED: true
+  ELDER_GUARDIAN: true
+  ENDERMITE: true
+  EVOKER: true
+  GHAST: true
+  GUARDIAN: true
+  HOGLIN: true
+  HUSK: true
+  MAGMA_CUBE: true
+  PHANTOM: true
+  PIGLIN_BRUTE: true
+  PILLAGER: true
+  RAVAGER: true
+  SHULKER: true
+  SILVERFISH: true
+  SKELETON: true
+  SLIME: true
+  STRAY: true
+  VEX: true
+  VINDICATOR: true
+  WARDEN: true
+  WITCH: true
+  WITHER_SKELETON: true
+  ZOGLIN: true
+  ZOMBIE: true
+  ZOMBIE_VILLAGER: true
+  ENDER_DRAGON: true
+  WITHER: true
+  WITHER_SKULL: true
