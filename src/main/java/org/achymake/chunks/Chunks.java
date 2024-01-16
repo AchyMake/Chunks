@@ -23,24 +23,20 @@ import java.net.URL;
 import java.util.Scanner;
 import java.util.function.Consumer;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public final class Chunks extends JavaPlugin {
     private static Chunks instance;
     public static Chunks getInstance() {
         return instance;
     }
-    private static FileConfiguration configuration;
     public static FileConfiguration getConfiguration() {
-        return configuration;
+        return getInstance().getConfig();
     }
-    private static File folder;
     public static File getFolder() {
-        return folder;
+        return getInstance().getDataFolder();
     }
-    private static Logger logger;
     public static void sendLog(Level level, String message) {
-        logger.log(level, message);
+        getInstance().getLogger().log(level, message);
     }
     private static Database database;
     public static Database getDatabase() {
@@ -53,9 +49,6 @@ public final class Chunks extends JavaPlugin {
     @Override
     public void onEnable() {
         instance = this;
-        configuration = getConfig();
-        folder = getDataFolder();
-        logger = getLogger();
         if (getServer().getPluginManager().getPlugin("Vault") == null) {
             sendLog(Level.WARNING, "You have to install 'Vault'");
             getServer().getPluginManager().disablePlugin(this);

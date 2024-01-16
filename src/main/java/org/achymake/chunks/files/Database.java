@@ -19,6 +19,7 @@ import java.util.UUID;
 import java.util.logging.Level;
 
 public class Database {
+
     private static File getFolder() {
         return Chunks.getFolder();
     }
