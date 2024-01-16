@@ -24,7 +24,7 @@ public class Database {
         this.plugin = plugin;
     }
     private File getFolder() {
-        return plugin.getFolder();
+        return plugin.getDataFolder();
     }
     public boolean exist(OfflinePlayer offlinePlayer) {
         return new File(getFolder(), "userdata/" + offlinePlayer.getUniqueId() + ".yml").exists();

@@ -13,7 +13,6 @@ import org.bukkit.Chunk;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.configuration.InvalidConfigurationException;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -29,17 +28,13 @@ import java.util.logging.Logger;
 
 public final class Chunks extends JavaPlugin {
     private static Chunks instance;
-    private static FileConfiguration configuration;
-    private static File folder;
     private static Logger logger;
     private static Database database;
     private static Economy economy = null;
     @Override
     public void onEnable() {
         instance = this;
-        folder = getDataFolder();
         logger = getLogger();
-        configuration = getConfig();
         if (getServer().getPluginManager().getPlugin("Vault") == null) {
             sendLog(Level.WARNING, "You have to install 'Vault'");
             getServer().getPluginManager().disablePlugin(this);
@@ -211,12 +206,6 @@ public final class Chunks extends JavaPlugin {
     }
     public Database getDatabase() {
         return database;
-    }
-    public File getFolder() {
-        return folder;
-    }
-    public FileConfiguration getConfiguration() {
-        return configuration;
     }
     public static Chunks getInstance() {
         return instance;
