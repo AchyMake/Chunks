@@ -60,7 +60,7 @@ public class PlaceholderProvider extends PlaceholderExpansion {
                 return String.valueOf(chunks.getDatabase().getClaimedCount(player));
             }
             if (params.equals("max_claims")) {
-                return String.valueOf(chunks.getConfiguration().getInt("claim.max-claims"));
+                return String.valueOf(chunks.getConfig().getInt("claim.max-claims"));
             }
         }
         return super.onPlaceholderRequest(player, params);

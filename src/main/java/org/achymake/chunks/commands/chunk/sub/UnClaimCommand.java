@@ -13,7 +13,7 @@ public class UnClaimCommand extends ChunkSubCommand {
         return Chunks.getInstance();
     }
     private FileConfiguration getConfig() {
-        return getPlugin().getConfiguration();
+        return getPlugin().getConfig();
     }
     private Database getDatabase() {
         return getPlugin().getDatabase();

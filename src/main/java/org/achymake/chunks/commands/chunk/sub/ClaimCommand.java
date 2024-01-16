@@ -13,7 +13,7 @@ public class ClaimCommand extends ChunkSubCommand {
         return Chunks.getInstance();
     }
     private FileConfiguration getConfig() {
-        return getPlugin().getConfiguration();
+        return getPlugin().getConfig();
     }
     private Economy getEconomy() {
         return getPlugin().getEconomy();
