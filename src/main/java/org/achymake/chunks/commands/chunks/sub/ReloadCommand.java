@@ -6,6 +6,9 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 public class ReloadCommand extends ChunksSubCommand {
+    private Chunks getPlugin() {
+        return Chunks.getInstance();
+    }
     @Override
     public String getName() {
         return "reload";
@@ -23,8 +26,8 @@ public class ReloadCommand extends ChunksSubCommand {
         if (sender instanceof Player player) {
             if (player.hasPermission("chunks.command.chunks.reload")) {
                 if (args.length == 1) {
-                    Chunks.getInstance().reload();
-                    Chunks.send(player, "&6Chunks:&f reloaded");
+                    getPlugin().reload();
+                    getPlugin().send(player, "&6Chunks:&f reloaded");
                 }
             }
         }

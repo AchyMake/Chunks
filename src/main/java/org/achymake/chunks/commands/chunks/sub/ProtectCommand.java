@@ -8,8 +8,11 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 public class ProtectCommand extends ChunksSubCommand {
+    private Chunks getPlugin() {
+        return Chunks.getInstance();
+    }
     private Database getDatabase() {
-        return Chunks.getDatabase();
+        return getPlugin().getDatabase();
     }
     @Override
     public String getName() {
@@ -30,11 +33,11 @@ public class ProtectCommand extends ChunksSubCommand {
                 if (args.length == 1) {
                     Chunk chunk = player.getLocation().getChunk();
                     if (getDatabase().isProtected(chunk)) {
-                        Chunks.sendActionBar(player, "&cChunk is already protected");
+                        getPlugin().sendActionBar(player, "&cChunk is already protected");
                     } else if (getDatabase().isClaimed(chunk)) {
-                        Chunks.sendActionBar(player, "&cChunk already owned by &f " + getDatabase().getOwner(chunk).getName());
+                        getPlugin().sendActionBar(player, "&cChunk already owned by &f " + getDatabase().getOwner(chunk).getName());
                     } else {
-                        Chunks.sendActionBar(player, "&6Chunk is now protected");
+                        getPlugin().sendActionBar(player, "&6Chunk is now protected");
                         getDatabase().protect(chunk);
                         getDatabase().claimEffect(player);
                     }

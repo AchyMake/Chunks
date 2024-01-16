@@ -9,14 +9,16 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockRedstoneEvent;
 
 public class BlockRedstone implements Listener {
+    private final Chunks plugin;
     private FileConfiguration getConfig() {
         return Chunks.getInstance().getConfig();
     }
     private Database getDatabase() {
-        return Chunks.getDatabase();
+        return plugin.getDatabase();
     }
     public BlockRedstone(Chunks plugin) {
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
+        this.plugin = plugin;
     }
     @EventHandler(priority = EventPriority.NORMAL)
     public void onBlockRedstone(BlockRedstoneEvent event) {

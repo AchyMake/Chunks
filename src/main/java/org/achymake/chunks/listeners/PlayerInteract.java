@@ -14,11 +14,13 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 
 public class PlayerInteract implements Listener {
+    private final Chunks plugin;
     private Database getDatabase() {
-        return Chunks.getDatabase();
+        return plugin.getDatabase();
     }
     public PlayerInteract(Chunks plugin) {
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
+        this.plugin = plugin;
     }
     @EventHandler(priority = EventPriority.NORMAL)
     public void onPlayerInteract(PlayerInteractEvent event) {
@@ -30,12 +32,12 @@ public class PlayerInteract implements Listener {
                 if (getDatabase().hasAccess(player, chunk))return;
                 if (!isCancelledProtected(event.getClickedBlock()))return;
                 event.setCancelled(true);
-                Chunks.sendActionBar(player, "&cChunk is protected by&f Server");
+                plugin.sendActionBar(player, "&cChunk is protected by&f Server");
             } else if (getDatabase().isClaimed(chunk)) {
                 if (getDatabase().hasAccess(player, chunk))return;
                 if (!isCancelledClaimed(event.getClickedBlock()))return;
                 event.setCancelled(true);
-                Chunks.sendActionBar(player, "&cChunk is owned by&f " + getDatabase().getOwner(chunk).getName());
+                plugin.sendActionBar(player, "&cChunk is owned by&f " + getDatabase().getOwner(chunk).getName());
 
             }
         } else if (event.getAction().equals(Action.PHYSICAL)) {

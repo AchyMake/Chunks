@@ -9,11 +9,13 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.EntityBlockFormEvent;
 
 public class EntityBlockForm implements Listener {
+    private final Chunks plugin;
     private Database getDatabase() {
-        return Chunks.getDatabase();
+        return plugin.getDatabase();
     }
     public EntityBlockForm(Chunks plugin) {
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
+        this.plugin = plugin;
     }
     @EventHandler(priority = EventPriority.NORMAL)
     public void onEntityBlockForm(EntityBlockFormEvent event) {

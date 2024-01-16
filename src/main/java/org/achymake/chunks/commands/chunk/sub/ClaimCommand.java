@@ -9,14 +9,17 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
 public class ClaimCommand extends ChunkSubCommand {
+    private Chunks getPlugin() {
+        return Chunks.getInstance();
+    }
     private FileConfiguration getConfig() {
-        return Chunks.getConfiguration();
+        return getPlugin().getConfiguration();
     }
     private Economy getEconomy() {
-        return Chunks.getEconomy();
+        return getPlugin().getEconomy();
     }
     private Database getDatabase() {
-        return Chunks.getDatabase();
+        return getPlugin().getDatabase();
     }
     @Override
     public String getName() {
@@ -36,24 +39,24 @@ public class ClaimCommand extends ChunkSubCommand {
             if (args.length == 1) {
                 Chunk chunk = player.getLocation().getChunk();
                 if (getDatabase().isProtected(chunk)) {
-                    Chunks.send(player, "&cChunk is protected by&f Server");
+                    getPlugin().send(player, "&cChunk is protected by&f Server");
                 } else if (getDatabase().isClaimed(chunk)) {
                     if (getDatabase().isOwner(player ,chunk)) {
-                        Chunks.send(player, "&cYou already own this chunk");
+                        getPlugin().send(player, "&cYou already own this chunk");
                     } else {
-                        Chunks.send(player, "&cChunk already owned by " + getDatabase().getOwner(chunk).getName());
+                        getPlugin().send(player, "&cChunk already owned by " + getDatabase().getOwner(chunk).getName());
                     }
                 } else {
                     if (getConfig().getInt("claim.max-claims") > getDatabase().getConfig(player).getInt("claimed")) {
                         if (getEconomy().getBalance(player) >= getConfig().getDouble("claim.cost")) {
                             getDatabase().claim(player, chunk);
                             getDatabase().claimEffect(player);
-                            Chunks.send(player, "&6You bought a chunk for&a " + getEconomy().format(getConfig().getDouble("claim.cost")));
+                            getPlugin().send(player, "&6You bought a chunk for&a " + getEconomy().format(getConfig().getDouble("claim.cost")));
                         } else {
-                            Chunks.send(player, "&cYou don't have&a " + getEconomy().format(getConfig().getDouble("claim.cost")) + "&c to buy a chunk");
+                            getPlugin().send(player, "&cYou don't have&a " + getEconomy().format(getConfig().getDouble("claim.cost")) + "&c to buy a chunk");
                         }
                     } else {
-                        Chunks.send(player, "&cYou have reach your limit of&f " + getDatabase().getConfig(player).getInt("chunks.claimed") + "&c claims");
+                        getPlugin().send(player, "&cYou have reach your limit of&f " + getDatabase().getConfig(player).getInt("chunks.claimed") + "&c claims");
                     }
                 }
             }

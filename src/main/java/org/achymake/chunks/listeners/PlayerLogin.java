@@ -8,11 +8,13 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerLoginEvent;
 
 public class PlayerLogin implements Listener {
+    private final Chunks plugin;
     private Database getDatabase() {
-        return Chunks.getDatabase();
+        return plugin.getDatabase();
     }
     public PlayerLogin(Chunks plugin) {
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
+        this.plugin = plugin;
     }
     @EventHandler(priority = EventPriority.NORMAL)
     public void onPlayerLogin(PlayerLoginEvent event) {

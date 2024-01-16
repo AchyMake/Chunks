@@ -7,8 +7,11 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 public class EffectCommand extends ChunksSubCommand {
+    private Chunks getPlugin() {
+        return Chunks.getInstance();
+    }
     private Database getDatabase() {
-        return Chunks.getDatabase();
+        return getPlugin().getDatabase();
     }
     @Override
     public String getName() {
@@ -29,11 +32,11 @@ public class EffectCommand extends ChunksSubCommand {
                 if (args.length == 2) {
                     if (args[1].equalsIgnoreCase("claim")) {
                         getDatabase().claimEffect(player);
-                        Chunks.sendActionBar(player, "&6Started the effects of claiming");
+                        getPlugin().sendActionBar(player, "&6Started the effects of claiming");
                     }
                     if (args[1].equalsIgnoreCase("unclaim")) {
                         getDatabase().unclaimEffect(player);
-                        Chunks.sendActionBar(player, "&6Started the effects of unclaiming");
+                        getPlugin().sendActionBar(player, "&6Started the effects of unclaiming");
                     }
                 }
             }

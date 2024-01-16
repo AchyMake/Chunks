@@ -10,11 +10,13 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityEnterLoveModeEvent;
 
 public class EntityEnterLoveMode implements Listener {
+    private final Chunks plugin;
     private Database getDatabase() {
-        return Chunks.getDatabase();
+        return plugin.getDatabase();
     }
     public EntityEnterLoveMode(Chunks plugin) {
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
+        this.plugin = plugin;
     }
     @EventHandler(priority = EventPriority.NORMAL)
     public void onEntityEnterLoveMode(EntityEnterLoveModeEvent event) {

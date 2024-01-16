@@ -11,11 +11,13 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityMountEvent;
 
 public class EntityMount implements Listener {
+    private final Chunks plugin;
     private Database getDatabase() {
-        return Chunks.getDatabase();
+        return plugin.getDatabase();
     }
     public EntityMount(Chunks plugin) {
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
+        this.plugin = plugin;
     }
     @EventHandler(priority = EventPriority.NORMAL)
     public void onEntityMount(EntityMountEvent event) {
@@ -25,11 +27,11 @@ public class EntityMount implements Listener {
             if (getDatabase().isProtected(chunk)) {
                 if (getDatabase().hasAccess(player, chunk))return;
                 event.setCancelled(true);
-                Chunks.sendActionBar(player, "&cChunk is protected by&f Server");
+                plugin.sendActionBar(player, "&cChunk is protected by&f Server");
             } else if (getDatabase().isClaimed(chunk)) {
                 if (getDatabase().hasAccess(player, chunk))return;
                 event.setCancelled(true);
-                Chunks.sendActionBar(player, "&cChunk is owned by&f " + getDatabase().getOwner(chunk).getName());
+                plugin.sendActionBar(player, "&cChunk is owned by&f " + getDatabase().getOwner(chunk).getName());
             }
         }
     }

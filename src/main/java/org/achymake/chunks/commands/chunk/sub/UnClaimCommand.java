@@ -9,14 +9,17 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
 public class UnClaimCommand extends ChunkSubCommand {
+    private Chunks getPlugin() {
+        return Chunks.getInstance();
+    }
     private FileConfiguration getConfig() {
-        return Chunks.getConfiguration();
+        return getPlugin().getConfiguration();
     }
     private Database getDatabase() {
-        return Chunks.getDatabase();
+        return getPlugin().getDatabase();
     }
     private Economy getEconomy() {
-        return Chunks.getEconomy();
+        return getPlugin().getEconomy();
     }
     @Override
     public String getName() {
@@ -35,17 +38,17 @@ public class UnClaimCommand extends ChunkSubCommand {
         if (player.hasPermission("chunks.command.chunk.unclaim")) {
             Chunk chunk = player.getLocation().getChunk();
             if (getDatabase().isProtected(chunk)) {
-                Chunks.send(player, "&cChunk already owned by&f Server");
+                getPlugin().send(player, "&cChunk already owned by&f Server");
             } else if (getDatabase().isClaimed(chunk)) {
                 if (getDatabase().isOwner(player, chunk)){
-                    Chunks.send(player, "&6You unclaimed a chunk and got refunded&a " + getEconomy().format(getConfig().getDouble("unclaim.refund")));
+                    getPlugin().send(player, "&6You unclaimed a chunk and got refunded&a " + getEconomy().format(getConfig().getDouble("unclaim.refund")));
                     getDatabase().unclaim(chunk);
                     getDatabase().unclaimEffect(player);
                 } else {
-                    Chunks.send(player, "&cChunk already owned by&f " + getDatabase().getOwner(chunk).getName());
+                    getPlugin().send(player, "&cChunk already owned by&f " + getDatabase().getOwner(chunk).getName());
                 }
             } else {
-                Chunks.send(player, "&cChunk already unclaimed");
+                getPlugin().send(player, "&cChunk already unclaimed");
             }
         }
     }

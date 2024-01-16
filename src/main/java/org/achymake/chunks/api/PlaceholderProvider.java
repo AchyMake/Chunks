@@ -35,31 +35,33 @@ public class PlaceholderProvider extends PlaceholderExpansion {
     public @Nullable String onPlaceholderRequest(Player player, @NotNull String params) {
         if (player == null) {
             return "";
-        }
-        if (params.equals("owner")) {
-            if (Chunks.getDatabase().isProtected(player.getLocation().getChunk())) {
-                return "Server";
-            }
-            if (Chunks.getDatabase().isClaimed(player.getLocation().getChunk())) {
-                return Chunks.getDatabase().getOwner(player.getLocation().getChunk()).getName();
-            }
-            return "None";
-        }
-        if (params.equals("access")) {
-            if (Chunks.getDatabase().isProtected(player.getLocation().getChunk()) || Chunks.getDatabase().isClaimed(player.getLocation().getChunk())) {
-                if (Chunks.getDatabase().hasAccess(player, player.getLocation().getChunk())) {
-                    return "True";
-                }else {
-                    return "False";
+        } else {
+            Chunks chunks = Chunks.getInstance();
+            if (params.equals("owner")) {
+                if (chunks.getDatabase().isProtected(player.getLocation().getChunk())) {
+                    return "Server";
                 }
+                if (chunks.getDatabase().isClaimed(player.getLocation().getChunk())) {
+                    return chunks.getDatabase().getOwner(player.getLocation().getChunk()).getName();
+                }
+                return "None";
             }
-            return "True";
-        }
-        if (params.equals("claimed")) {
-            return String.valueOf(Chunks.getDatabase().getClaimedCount(player));
-        }
-        if (params.equals("max_claims")) {
-            return String.valueOf(Chunks.getConfiguration().getInt("claim.max-claims"));
+            if (params.equals("access")) {
+                if (chunks.getDatabase().isProtected(player.getLocation().getChunk()) || chunks.getDatabase().isClaimed(player.getLocation().getChunk())) {
+                    if (chunks.getDatabase().hasAccess(player, player.getLocation().getChunk())) {
+                        return "True";
+                    }else {
+                        return "False";
+                    }
+                }
+                return "True";
+            }
+            if (params.equals("claimed")) {
+                return String.valueOf(chunks.getDatabase().getClaimedCount(player));
+            }
+            if (params.equals("max_claims")) {
+                return String.valueOf(chunks.getConfiguration().getInt("claim.max-claims"));
+            }
         }
         return super.onPlaceholderRequest(player, params);
     }

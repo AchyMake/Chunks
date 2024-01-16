@@ -8,8 +8,11 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 public class DeleteCommand extends ChunksSubCommand {
+    private Chunks getPlugin() {
+        return Chunks.getInstance();
+    }
     private Database getDatabase() {
-        return Chunks.getDatabase();
+        return getPlugin().getDatabase();
     }
     @Override
     public String getName() {
@@ -32,13 +35,13 @@ public class DeleteCommand extends ChunksSubCommand {
                     if (getDatabase().isProtected(chunk)) {
                         getDatabase().unprotect(chunk);
                         getDatabase().unclaimEffect(player);
-                        Chunks.send(player, "&6Chunk is now unprotected");
+                        getPlugin().send(player, "&6Chunk is now unprotected");
                     } else if (getDatabase().isClaimed(chunk)) {
-                        Chunks.send(player, "&6You safely unclaimed&f " + getDatabase().getOwner(chunk).getName() + "&6 chunk");
+                        getPlugin().send(player, "&6You safely unclaimed&f " + getDatabase().getOwner(chunk).getName() + "&6 chunk");
                         getDatabase().unclaim(chunk);
                         getDatabase().unclaimEffect(player);
                     } else {
-                        Chunks.send(player, "&cChunk is already unclaimed");
+                        getPlugin().send(player, "&cChunk is already unclaimed");
                     }
                 }
             }

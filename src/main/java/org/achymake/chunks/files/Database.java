@@ -19,9 +19,12 @@ import java.util.UUID;
 import java.util.logging.Level;
 
 public class Database {
-
+    private final Chunks plugin;
+    public Database(Chunks plugin) {
+        this.plugin = plugin;
+    }
     private File getFolder() {
-        return Chunks.getFolder();
+        return plugin.getFolder();
     }
     public boolean exist(OfflinePlayer offlinePlayer) {
         return new File(getFolder(), "userdata/" + offlinePlayer.getUniqueId() + ".yml").exists();
@@ -35,7 +38,7 @@ public class Database {
                 try {
                     config.save(file);
                 } catch (IOException e) {
-                    Chunks.sendLog(Level.WARNING, e.getMessage());
+                    plugin.sendLog(Level.WARNING, e.getMessage());
                 }
             }
         } else {
@@ -47,7 +50,7 @@ public class Database {
             try {
                 config.save(file);
             } catch (IOException e) {
-                Chunks.sendLog(Level.WARNING, e.getMessage());
+                plugin.sendLog(Level.WARNING, e.getMessage());
             }
         }
     }
@@ -61,7 +64,7 @@ public class Database {
         try {
             config.save(file);
         } catch (IOException e) {
-            Chunks.sendLog(Level.WARNING, e.getMessage());
+            plugin.sendLog(Level.WARNING, e.getMessage());
         }
     }
     public void setInt(OfflinePlayer offlinePlayer, String path, int value) {
@@ -71,7 +74,7 @@ public class Database {
         try {
             config.save(file);
         } catch (IOException e) {
-            Chunks.sendLog(Level.WARNING, e.getMessage());
+            plugin.sendLog(Level.WARNING, e.getMessage());
         }
     }
     public void setStringList(OfflinePlayer offlinePlayer, String path, List<String> value) {
@@ -81,7 +84,7 @@ public class Database {
         try {
             config.save(file);
         } catch (IOException e) {
-            Chunks.sendLog(Level.WARNING, e.getMessage());
+            plugin.sendLog(Level.WARNING, e.getMessage());
         }
     }
     public List<String> getBanned(OfflinePlayer offlinePlayer) {
@@ -95,16 +98,16 @@ public class Database {
                 try {
                     config.load(file);
                 } catch (IOException | InvalidConfigurationException e) {
-                    Chunks.sendLog(Level.WARNING, e.getMessage());
+                    plugin.sendLog(Level.WARNING, e.getMessage());
                 }
             }
         }
     }
     public FileConfiguration getConfig() {
-        return Chunks.getConfiguration();
+        return plugin.getConfig();
     }
     private Economy getEconomy() {
-        return Chunks.getEconomy();
+        return plugin.getEconomy();
     }
     public PersistentDataContainer getData(Chunk chunk) {
         return chunk.getPersistentDataContainer();

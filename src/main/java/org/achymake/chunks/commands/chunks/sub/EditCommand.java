@@ -7,8 +7,11 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 public class EditCommand extends ChunksSubCommand {
+    private Chunks getPlugin() {
+        return Chunks.getInstance();
+    }
     private Database getDatabase() {
-        return Chunks.getDatabase();
+        return getPlugin().getDatabase();
     }
     @Override
     public String getName() {
@@ -29,10 +32,10 @@ public class EditCommand extends ChunksSubCommand {
                 if (player.hasPermission("chunks.command.chunks.edit")) {
                     if (getDatabase().hasChunkEdit(player)) {
                         getDatabase().setBoolean(player, "settings.chunk-edit", false);
-                        Chunks.sendActionBar(player, "&6&lChunk Edit:&c Disabled");
+                        getPlugin().sendActionBar(player, "&6&lChunk Edit:&c Disabled");
                     } else {
                         getDatabase().setBoolean(player, "settings.chunk-edit", true);
-                        Chunks.sendActionBar(player, "&6&lChunk Edit:&a Enabled");
+                        getPlugin().sendActionBar(player, "&6&lChunk Edit:&a Enabled");
                     }
                 }
             }

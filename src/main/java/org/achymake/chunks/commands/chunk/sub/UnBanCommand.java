@@ -10,8 +10,11 @@ import org.bukkit.entity.Player;
 import java.util.List;
 
 public class UnBanCommand extends ChunkSubCommand {
+    private Chunks getPlugin() {
+        return Chunks.getInstance();
+    }
     private Database getDatabase() {
-        return Chunks.getDatabase();
+        return getPlugin().getDatabase();
     }
     @Override
     public String getName() {
@@ -34,9 +37,9 @@ public class UnBanCommand extends ChunkSubCommand {
                     List<String> banned = getDatabase().getBanned(player);
                     banned.remove(target.getUniqueId().toString());
                     getDatabase().setStringList(player, "banned", banned);
-                    Chunks.send(player, "&6You unbanned&f " + target.getName());
+                    getPlugin().send(player, "&6You unbanned&f " + target.getName());
                 } else {
-                    Chunks.send(player, "&cError:&7 You already banned&f " + target.getName());
+                    getPlugin().send(player, "&cError:&7 You already banned&f " + target.getName());
                 }
             }
         }

@@ -10,11 +10,13 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 
 public class BlockBreak implements Listener {
+    private final Chunks plugin;
     private Database getDatabase() {
-        return Chunks.getDatabase();
+        return plugin.getDatabase();
     }
     public BlockBreak(Chunks plugin) {
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
+        this.plugin = plugin;
     }
     @EventHandler(priority = EventPriority.NORMAL)
     public void onBlockBreak(BlockBreakEvent event) {
@@ -23,11 +25,11 @@ public class BlockBreak implements Listener {
         if (getDatabase().isProtected(chunk)) {
             if (getDatabase().hasAccess(player, chunk))return;
             event.setCancelled(true);
-            Chunks.sendActionBar(player, "&cChunk is protected by&f Server");
+            plugin.sendActionBar(player, "&cChunk is protected by&f Server");
         } else if (getDatabase().isClaimed(chunk)) {
             if (getDatabase().hasAccess(player, chunk))return;
             event.setCancelled(true);
-            Chunks.sendActionBar(player, "&cChunk is owned by&f " + getDatabase().getOwner(chunk).getName());
+            plugin.sendActionBar(player, "&cChunk is owned by&f " + getDatabase().getOwner(chunk).getName());
         }
     }
 }

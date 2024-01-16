@@ -11,14 +11,16 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityChangeBlockEvent;
 
 public class EntityChangeBlock implements Listener {
+    private final Chunks plugin;
     private FileConfiguration getConfig() {
-        return Chunks.getInstance().getConfig();
+        return plugin.getConfig();
     }
     private Database getDatabase() {
-        return Chunks.getDatabase();
+        return plugin.getDatabase();
     }
     public EntityChangeBlock(Chunks plugin) {
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
+        this.plugin = plugin;
     }
     @EventHandler(priority = EventPriority.NORMAL)
     public void onEntityChangeBlock(EntityChangeBlockEvent event) {

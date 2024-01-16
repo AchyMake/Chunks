@@ -8,8 +8,11 @@ import org.bukkit.entity.Player;
 import java.util.UUID;
 
 public class BannedCommand extends ChunkSubCommand {
+    private Chunks getPlugin() {
+        return Chunks.getInstance();
+    }
     private Database getDatabase() {
-        return Chunks.getDatabase();
+        return getPlugin().getDatabase();
     }
     @Override
     public String getName() {
@@ -28,11 +31,11 @@ public class BannedCommand extends ChunkSubCommand {
         if (player.hasPermission("chunks.command.chunk.banned")) {
             if (args.length == 1) {
                 if (getDatabase().getConfig(player).getStringList("banned").isEmpty()){
-                    Chunks.send(player, "&cYou don't have any banned players");
+                    getPlugin().send(player, "&cYou don't have any banned players");
                 } else {
-                    Chunks.send(player, "&6Banned:");
+                    getPlugin().send(player, "&6Banned:");
                     for (String uuidListed : getDatabase().getConfig(player).getStringList("banned")) {
-                        Chunks.send(player, "- " + player.getServer().getOfflinePlayer(UUID.fromString(uuidListed)).getName());
+                        getPlugin().send(player, "- " + player.getServer().getOfflinePlayer(UUID.fromString(uuidListed)).getName());
                     }
                 }
             }

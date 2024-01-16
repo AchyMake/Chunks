@@ -10,11 +10,13 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockFertilizeEvent;
 
 public class BlockFertilize implements Listener {
+    private final Chunks plugin;
     private Database getDatabase() {
-        return Chunks.getDatabase();
+        return plugin.getDatabase();
     }
     public BlockFertilize(Chunks plugin) {
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
+        this.plugin = plugin;
     }
     @EventHandler(priority = EventPriority.NORMAL)
     public void onBlockFertilize(BlockFertilizeEvent event) {
@@ -24,11 +26,11 @@ public class BlockFertilize implements Listener {
         if (getDatabase().isProtected(chunk)) {
             if (getDatabase().hasAccess(player, chunk))return;
             event.setCancelled(true);
-            Chunks.sendActionBar(player, "&cChunk is protected by&f Server");
+            plugin.sendActionBar(player, "&cChunk is protected by&f Server");
         } else if (getDatabase().isClaimed(chunk)) {
             if (getDatabase().hasAccess(event.getPlayer(), event.getBlock().getChunk()))return;
             event.setCancelled(true);
-            Chunks.sendActionBar(event.getPlayer(), "&cChunk is owned by&f " + getDatabase().getOwner(event.getBlock().getChunk()).getName());
+            plugin.sendActionBar(event.getPlayer(), "&cChunk is owned by&f " + getDatabase().getOwner(event.getBlock().getChunk()).getName());
         }
     }
 }

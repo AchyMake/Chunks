@@ -10,6 +10,7 @@ import org.achymake.chunks.files.*;
 import org.achymake.chunks.listeners.*;
 import org.bukkit.ChatColor;
 import org.bukkit.Chunk;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -58,7 +59,7 @@ public final class Chunks extends JavaPlugin {
             new PlaceholderProvider().register();
             sendLog(Level.INFO, "Hooked to 'PlaceholderAPI'");
         }
-        database = new Database();
+        database = new Database(this);
         commands();
         events();
         reload();
@@ -119,6 +120,15 @@ public final class Chunks extends JavaPlugin {
             return getDatabase().isOwner(player, chunk) || getDatabase().isMember(player, chunk) || getDatabase().hasChunkEdit(player);
         }
         return true;
+    }
+    public boolean isClaimed(Chunk chunk) {
+        return getDatabase().isClaimed(chunk);
+    }
+    public boolean isProtected(Chunk chunk) {
+        return getDatabase().isProtected(chunk);
+    }
+    public OfflinePlayer getOwner(Chunk chunk) {
+        return getDatabase().getOwner(chunk);
     }
     public void getUpdate(Player player) {
         if (notifyUpdate()) {
@@ -181,31 +191,31 @@ public final class Chunks extends JavaPlugin {
         }
         getDatabase().reload(getServer().getOfflinePlayers());
     }
-    public static void send(ConsoleCommandSender sender, String message) {
+    public void send(ConsoleCommandSender sender, String message) {
         sender.sendMessage(message);
     }
-    public static void send(Player player, String message) {
+    public void send(Player player, String message) {
         player.sendMessage(addColor(message));
     }
-    public static void sendActionBar(Player player, String message) {
+    public void sendActionBar(Player player, String message) {
         player.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent(addColor(message)));
     }
-    public static String addColor(String message) {
+    public String addColor(String message) {
         return ChatColor.translateAlternateColorCodes('&', message);
     }
-    public static void sendLog(Level level, String message) {
+    public void sendLog(Level level, String message) {
         logger.log(level, message);
     }
-    public static Economy getEconomy() {
+    public Economy getEconomy() {
         return economy;
     }
-    public static Database getDatabase() {
+    public Database getDatabase() {
         return database;
     }
-    public static File getFolder() {
+    public File getFolder() {
         return folder;
     }
-    public static FileConfiguration getConfiguration() {
+    public FileConfiguration getConfiguration() {
         return configuration;
     }
     public static Chunks getInstance() {

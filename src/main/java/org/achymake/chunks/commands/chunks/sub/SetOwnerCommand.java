@@ -9,8 +9,11 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 public class SetOwnerCommand extends ChunksSubCommand {
+    private Chunks getPlugin() {
+        return Chunks.getInstance();
+    }
     private Database getDatabase() {
-        return Chunks.getDatabase();
+        return getPlugin().getDatabase();
     }
     @Override
     public String getName() {
@@ -30,15 +33,15 @@ public class SetOwnerCommand extends ChunksSubCommand {
             if (player.hasPermission("chunks.command.chunks.setowner")) {
                 if (args.length == 2) {
                     if (getDatabase().isProtected(player.getLocation().getChunk())) {
-                        Chunks.send(player, "&cChunk is protected by&f Server");
+                        getPlugin().send(player, "&cChunk is protected by&f Server");
                     } else {
                         OfflinePlayer target = Bukkit.getOfflinePlayer(args[1]);
                         if (getDatabase().exist(target)) {
                             getDatabase().setOwner(player, target, player.getLocation().getChunk());
                             getDatabase().claimEffect(player);
-                            Chunks.send(player, "&6Chunk is now owned by&f " + getDatabase().getOwner(player.getLocation().getChunk()).getName());
+                            getPlugin().send(player, "&6Chunk is now owned by&f " + getDatabase().getOwner(player.getLocation().getChunk()).getName());
                         } else {
-                            Chunks.send(player, target.getName() + "&c has never joined");
+                            getPlugin().send(player, target.getName() + "&c has never joined");
                         }
                     }
                 }

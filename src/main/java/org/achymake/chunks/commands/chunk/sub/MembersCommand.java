@@ -11,8 +11,11 @@ import java.util.List;
 import java.util.UUID;
 
 public class MembersCommand extends ChunkSubCommand {
+    private Chunks getPlugin() {
+        return Chunks.getInstance();
+    }
     private Database getDatabase() {
-        return Chunks.getDatabase();
+        return getPlugin().getDatabase();
     }
     @Override
     public String getName() {
@@ -31,11 +34,11 @@ public class MembersCommand extends ChunkSubCommand {
         if (player.hasPermission("chunks.command.chunk.members")) {
             if (args.length == 1) {
                 if (getDatabase().getConfig(player).getStringList("members").isEmpty()){
-                    Chunks.send(player, "&cYou don't have any members");
+                    getPlugin().send(player, "&cYou don't have any members");
                 } else {
-                    Chunks.send(player, "&6Chunk Members:");
+                    getPlugin().send(player, "&6Chunk Members:");
                     for (String uuidListed : getDatabase().getConfig(player).getStringList("members")) {
-                        Chunks.send(player, "- " + player.getServer().getOfflinePlayer(UUID.fromString(uuidListed)).getName());
+                        getPlugin().send(player, "- " + player.getServer().getOfflinePlayer(UUID.fromString(uuidListed)).getName());
                     }
                 }
             }
@@ -43,12 +46,12 @@ public class MembersCommand extends ChunkSubCommand {
                 OfflinePlayer target = Bukkit.getOfflinePlayer(args[2]);
                 if (args[1].equalsIgnoreCase("add")) {
                     if (getDatabase().getConfig(player).getStringList("members").contains(target.getUniqueId().toString())) {
-                        Chunks.send(player, "&cYou already have&f " + target.getName() + "&c as member");
+                        getPlugin().send(player, "&cYou already have&f " + target.getName() + "&c as member");
                     } else {
                         List<String> members = getDatabase().getConfig(player).getStringList("members");
                         members.add(target.getUniqueId().toString());
                         getDatabase().setStringList(player, "members", members);
-                        Chunks.send(player, "&6You added&f " + target.getName() + "&6 to members");
+                        getPlugin().send(player, "&6You added&f " + target.getName() + "&6 to members");
                     }
                 }
                 if (args[1].equalsIgnoreCase("remove")) {
@@ -56,9 +59,9 @@ public class MembersCommand extends ChunkSubCommand {
                         List<String> members = getDatabase().getConfig(player).getStringList("members");
                         members.remove(target.getUniqueId().toString());
                         getDatabase().setStringList(player, "members", members);
-                        Chunks.send(player, "&6You removed&f " + target.getName() + "&6 from members");
+                        getPlugin().send(player, "&6You removed&f " + target.getName() + "&6 from members");
                     } else {
-                        Chunks.send(player, "&6You don't have&f " + target.getName() + "&6 as member");
+                        getPlugin().send(player, "&6You don't have&f " + target.getName() + "&6 as member");
                     }
                 }
             }

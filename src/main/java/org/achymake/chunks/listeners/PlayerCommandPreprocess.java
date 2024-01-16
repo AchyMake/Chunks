@@ -2,24 +2,30 @@ package org.achymake.chunks.listeners;
 
 import org.achymake.chunks.Chunks;
 import org.achymake.chunks.files.Database;
+import org.bukkit.Chunk;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 
 public class PlayerCommandPreprocess implements Listener {
+    private final Chunks plugin;
     private Database getDatabase() {
-        return Chunks.getDatabase();
+        return plugin.getDatabase();
     }
     public PlayerCommandPreprocess(Chunks plugin) {
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
+        this.plugin = plugin;
     }
     @EventHandler(priority = EventPriority.NORMAL)
     public void onPlayerCommandPreprocess(PlayerCommandPreprocessEvent event) {
-        if (!getDatabase().isClaimed(event.getPlayer().getLocation().getChunk()))return;
+        Player player = event.getPlayer();
+        Chunk chunk = event.getPlayer().getLocation().getChunk();
+        if (!getDatabase().isClaimed(chunk))return;
         if (!event.getMessage().startsWith("/sethome"))return;
-        if (getDatabase().hasAccess(event.getPlayer(), event.getPlayer().getLocation().getChunk()))return;
+        if (getDatabase().hasAccess(player, chunk))return;
         event.setCancelled(true);
-        Chunks.send(event.getPlayer(), "&cYou can't&f sethome&c inside&f " + getDatabase().getOwner(event.getPlayer().getLocation().getChunk()).getName() + "&c's Chunk");
+        plugin.send(player, "&cYou can't&f sethome&c inside&f " + getDatabase().getOwner(chunk).getName() + "&c's Chunk");
     }
 }

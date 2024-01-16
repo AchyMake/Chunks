@@ -15,8 +15,11 @@ import java.util.List;
 import java.util.UUID;
 
 public class ChunkCommand implements CommandExecutor, TabCompleter {
+    private Chunks getPlugin() {
+        return Chunks.getInstance();
+    }
     private Database getDatabase() {
-        return Chunks.getDatabase();
+        return getPlugin().getDatabase();
     }
     private final ArrayList<ChunkSubCommand> chunkSubCommands = new ArrayList<>();
 
@@ -34,7 +37,7 @@ public class ChunkCommand implements CommandExecutor, TabCompleter {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (sender instanceof Player player) {
             if (args.length == 0) {
-                Chunks.send(player, "&cUsage: &f/chunk help");
+                getPlugin().send(player, "&cUsage: &f/chunk help");
                 return true;
             } else {
                 for (ChunkSubCommand commands : getSubCommands()) {
