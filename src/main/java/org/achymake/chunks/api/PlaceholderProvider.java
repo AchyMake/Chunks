@@ -37,17 +37,17 @@ public class PlaceholderProvider extends PlaceholderExpansion {
             return "";
         }
         if (params.equals("owner")) {
-            if (Chunks.getChunkStorage().isProtected(player.getLocation().getChunk())) {
+            if (Chunks.getDatabase().isProtected(player.getLocation().getChunk())) {
                 return "Server";
             }
-            if (Chunks.getChunkStorage().isClaimed(player.getLocation().getChunk())) {
-                return Chunks.getChunkStorage().getOwner(player.getLocation().getChunk()).getName();
+            if (Chunks.getDatabase().isClaimed(player.getLocation().getChunk())) {
+                return Chunks.getDatabase().getOwner(player.getLocation().getChunk()).getName();
             }
             return "None";
         }
         if (params.equals("access")) {
-            if (Chunks.getChunkStorage().isProtected(player.getLocation().getChunk()) || Chunks.getChunkStorage().isClaimed(player.getLocation().getChunk())) {
-                if (Chunks.getChunkStorage().hasAccess(player, player.getLocation().getChunk())) {
+            if (Chunks.getDatabase().isProtected(player.getLocation().getChunk()) || Chunks.getDatabase().isClaimed(player.getLocation().getChunk())) {
+                if (Chunks.getDatabase().hasAccess(player, player.getLocation().getChunk())) {
                     return "True";
                 }else {
                     return "False";
@@ -56,7 +56,7 @@ public class PlaceholderProvider extends PlaceholderExpansion {
             return "True";
         }
         if (params.equals("claimed")) {
-            return String.valueOf(Chunks.getChunkStorage().getClaimedCount(player));
+            return String.valueOf(Chunks.getDatabase().getClaimedCount(player));
         }
         if (params.equals("max_claims")) {
             return String.valueOf(Chunks.getConfiguration().getInt("claim.max-claims"));
