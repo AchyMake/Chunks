@@ -22,56 +22,56 @@ commands:
     permission: chunks.command.chunks
 permissions:
   chunks.command.chunk:
-    description: chunk commands
+    description: chunk command
     default: op
   chunks.command.chunk.ban:
-    description: chunk commands
+    description: bans player from claimed
     default: op
   chunks.command.chunk.banned:
-    description: chunk commands
+    description: list of banned players from claimed
     default: op
   chunks.command.chunk.claim:
-    description: chunk commands
+    description: claims chunk
     default: op
   chunks.command.chunk.help:
-    description: chunk commands
+    description: list of commands
     default: op
   chunks.command.chunk.members:
-    description: chunk commands
+    description: list of members
     default: op
   chunks.command.chunk.tnt:
-    description: chunk commands
+    description: allows tnt on standing chunk
     default: op
   chunks.command.chunk.unban:
-    description: chunk commands
+    description: unbans from claimed chunks
     default: op
   chunks.command.chunk.unclaim:
-    description: chunk commands
+    description: unclaim command
     default: op
   chunks.command.chunks:
-    description: chunks commands
+    description: allows to use chunks command
     default: op
   chunks.command.chunks.delete:
-    description: chunks commands
+    description: unclaims claimed or protected chunks
     default: op
   chunks.command.chunks.edit:
-    description: chunks commands
+    description: allows to edit protected and claimed
     default: op
   chunks.command.chunks.effect:
-    description: chunks commands
+    description: showcase claim or unclaim effects
     default: op
   chunks.command.chunks.help:
-    description: chunks commands
+    description: list of commands
     default: op
   chunks.command.chunks.info:
-    description: chunks commands
+    description: info of the standing chunk
     default: op
   chunks.command.chunks.protect:
-    description: chunks commands
+    description: protects chunks
     default: op
   chunks.command.chunks.reload:
-    description: chunks commands
+    description: reload plugin files
     default: op
   chunks.command.chunks.setowner:
-    description: chunks commands
+    description: allows to setowner
     default: op
