@@ -38,18 +38,18 @@ public class PlaceholderProvider extends PlaceholderExpansion {
         } else {
             if (params.equals("owner")) {
                 Chunks chunks = Chunks.getInstance();
-                if (chunks.getDatabase().isProtected(player.getLocation().getChunk())) {
+                if (chunks.getChunkStorage().isProtected(player.getLocation().getChunk())) {
                     return "Server";
                 }
-                if (chunks.getDatabase().isClaimed(player.getLocation().getChunk())) {
-                    return chunks.getDatabase().getOwner(player.getLocation().getChunk()).getName();
+                if (chunks.getChunkStorage().isClaimed(player.getLocation().getChunk())) {
+                    return chunks.getChunkStorage().getOwner(player.getLocation().getChunk()).getName();
                 }
                 return "None";
             }
             if (params.equals("access")) {
                 Chunks chunks = Chunks.getInstance();
-                if (chunks.getDatabase().isProtected(player.getLocation().getChunk()) || chunks.getDatabase().isClaimed(player.getLocation().getChunk())) {
-                    if (chunks.getDatabase().hasAccess(player, player.getLocation().getChunk())) {
+                if (chunks.getChunkStorage().isProtected(player.getLocation().getChunk()) || chunks.getChunkStorage().isClaimed(player.getLocation().getChunk())) {
+                    if (chunks.getChunkStorage().hasAccess(player, player.getLocation().getChunk())) {
                         return "True";
                     }else {
                         return "False";
@@ -59,7 +59,7 @@ public class PlaceholderProvider extends PlaceholderExpansion {
             }
             if (params.equals("claimed")) {
                 Chunks chunks = Chunks.getInstance();
-                return String.valueOf(chunks.getDatabase().getClaimedCount(player));
+                return String.valueOf(chunks.getChunkStorage().getClaimedCount(player));
             }
             if (params.equals("max_claims")) {
                 Chunks chunks = Chunks.getInstance();
@@ -67,7 +67,7 @@ public class PlaceholderProvider extends PlaceholderExpansion {
             }
             if (params.equals("claims_left")) {
                 Chunks chunks = Chunks.getInstance();
-                return String.valueOf(chunks.getConfig().getInt("claim.max-claims") - chunks.getDatabase().getClaimedCount(player));
+                return String.valueOf(chunks.getConfig().getInt("claim.max-claims") - chunks.getChunkStorage().getClaimedCount(player));
             }
         }
         return super.onPlaceholderRequest(player, params);
