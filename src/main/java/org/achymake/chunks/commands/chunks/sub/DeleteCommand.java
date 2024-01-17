@@ -2,7 +2,7 @@ package org.achymake.chunks.commands.chunks.sub;
 
 import org.achymake.chunks.Chunks;
 import org.achymake.chunks.commands.chunks.ChunksSubCommand;
-import org.achymake.chunks.files.Database;
+import org.achymake.chunks.files.ChunkStorage;
 import org.bukkit.Chunk;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -11,8 +11,8 @@ public class DeleteCommand extends ChunksSubCommand {
     private Chunks getPlugin() {
         return Chunks.getInstance();
     }
-    private Database getDatabase() {
-        return getPlugin().getDatabase();
+    private ChunkStorage getChunkStorage() {
+        return getPlugin().getChunkStorage();
     }
     @Override
     public String getName() {
@@ -32,14 +32,14 @@ public class DeleteCommand extends ChunksSubCommand {
             if (sender instanceof Player player) {
                 if (args.length == 1){
                     Chunk chunk = player.getLocation().getChunk();
-                    if (getDatabase().isProtected(chunk)) {
-                        getDatabase().unprotect(chunk);
-                        getDatabase().unclaimEffect(player);
+                    if (getChunkStorage().isProtected(chunk)) {
+                        getChunkStorage().unprotect(chunk);
+                        getChunkStorage().unclaimEffect(player);
                         getPlugin().send(player, "&6Chunk is now unprotected");
-                    } else if (getDatabase().isClaimed(chunk)) {
-                        getPlugin().send(player, "&6You safely unclaimed&f " + getDatabase().getOwner(chunk).getName() + "&6 chunk");
-                        getDatabase().unclaim(chunk);
-                        getDatabase().unclaimEffect(player);
+                    } else if (getChunkStorage().isClaimed(chunk)) {
+                        getPlugin().send(player, "&6You safely unclaimed&f " + getChunkStorage().getOwner(chunk).getName() + "&6 chunk");
+                        getChunkStorage().unclaim(chunk);
+                        getChunkStorage().unclaimEffect(player);
                     } else {
                         getPlugin().send(player, "&cChunk is already unclaimed");
                     }

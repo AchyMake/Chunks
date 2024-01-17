@@ -2,7 +2,7 @@ package org.achymake.chunks.commands.chunk.sub;
 
 import org.achymake.chunks.Chunks;
 import org.achymake.chunks.commands.chunk.ChunkSubCommand;
-import org.achymake.chunks.files.Database;
+import org.achymake.chunks.files.ChunkStorage;
 import org.bukkit.Chunk;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
@@ -12,8 +12,8 @@ public class TNTCommand extends ChunkSubCommand {
     private Chunks getPlugin() {
         return Chunks.getInstance();
     }
-    private Database getDatabase() {
-        return getPlugin().getDatabase();
+    private ChunkStorage getChunkStorage() {
+        return getPlugin().getChunkStorage();
     }
     @Override
     public String getName() {
@@ -32,28 +32,28 @@ public class TNTCommand extends ChunkSubCommand {
         if (player.hasPermission("chunks.command.chunk.tnt")) {
             if (args.length == 1) {
                 Chunk chunk = player.getLocation().getChunk();
-                if (getDatabase().isProtected(chunk)) {
+                if (getChunkStorage().isProtected(chunk)) {
                     getPlugin().send(player, "&cChunk already owned by&f Server");
-                } else if (getDatabase().isClaimed(chunk)) {
-                    if (getDatabase().isOwner(player, chunk)) {
-                        if (getDatabase().TNTAllowed(chunk)) {
-                            getDatabase().getData(chunk).remove(NamespacedKey.minecraft("tnt"));
+                } else if (getChunkStorage().isClaimed(chunk)) {
+                    if (getChunkStorage().isOwner(player, chunk)) {
+                        if (getChunkStorage().TNTAllowed(chunk)) {
+                            getChunkStorage().getData(chunk).remove(NamespacedKey.minecraft("tnt"));
                             getPlugin().send(player, "&6You disabled tnt for this chunk");
                         } else {
-                            getDatabase().getData(chunk).set(NamespacedKey.minecraft("tnt"), PersistentDataType.STRING, "true");
+                            getChunkStorage().getData(chunk).set(NamespacedKey.minecraft("tnt"), PersistentDataType.STRING, "true");
                             getPlugin().send(player, "&6You enabled tnt for this chunk");
                         }
                     } else {
                         if (player.hasPermission("chunks.command.chunks.edit")) {
-                            if (getDatabase().TNTAllowed(chunk)) {
-                                getDatabase().getData(chunk).remove(NamespacedKey.minecraft("tnt"));
+                            if (getChunkStorage().TNTAllowed(chunk)) {
+                                getChunkStorage().getData(chunk).remove(NamespacedKey.minecraft("tnt"));
                                 getPlugin().send(player, "&6You disabled tnt for this chunk");
                             } else {
-                                getDatabase().getData(chunk).set(NamespacedKey.minecraft("tnt"), PersistentDataType.STRING, "true");
+                                getChunkStorage().getData(chunk).set(NamespacedKey.minecraft("tnt"), PersistentDataType.STRING, "true");
                                 getPlugin().send(player, "&6You enabled tnt for this chunk");
                             }
                         } else {
-                            getPlugin().send(player, "&cChunk already owned by&f " + getDatabase().getOwner(chunk).getName());
+                            getPlugin().send(player, "&cChunk already owned by&f " + getChunkStorage().getOwner(chunk).getName());
                         }
                     }
                 } else {

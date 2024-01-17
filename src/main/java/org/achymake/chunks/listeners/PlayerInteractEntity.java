@@ -1,7 +1,7 @@
 package org.achymake.chunks.listeners;
 
 import org.achymake.chunks.Chunks;
-import org.achymake.chunks.files.Database;
+import org.achymake.chunks.files.ChunkStorage;
 import org.bukkit.Chunk;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Entity;
@@ -14,8 +14,8 @@ import org.bukkit.event.player.PlayerInteractEntityEvent;
 
 public class PlayerInteractEntity implements Listener {
     private final Chunks plugin;
-    private Database getDatabase() {
-        return plugin.getDatabase();
+    private ChunkStorage getChunkStorage() {
+        return plugin.getChunkStorage();
     }
     private FileConfiguration getConfig() {
         return plugin.getConfig();
@@ -29,24 +29,24 @@ public class PlayerInteractEntity implements Listener {
         Player player = event.getPlayer();
         Chunk chunk = event.getRightClicked().getLocation().getChunk();
         Entity entity = event.getRightClicked();
-        if (getDatabase().isProtected(chunk)) {
+        if (getChunkStorage().isProtected(chunk)) {
             if (entity.getType().equals(EntityType.PLAYER))return;
             if (entity.getType().equals(EntityType.MINECART))return;
             if (entity.getType().equals(EntityType.BOAT))return;
             if (entity.isInvulnerable())return;
-            if (getDatabase().hasAccess(player, chunk))return;
+            if (getChunkStorage().hasAccess(player, chunk))return;
             if (getConfig().getBoolean("hostile." + entity.getType()))return;
             event.setCancelled(true);
             plugin.sendActionBar(player, "&cChunk is protected by&f Server");
-        } else if (getDatabase().isClaimed(chunk)) {
+        } else if (getChunkStorage().isClaimed(chunk)) {
             if (entity.getType().equals(EntityType.PLAYER))return;
             if (entity.getType().equals(EntityType.MINECART))return;
             if (entity.getType().equals(EntityType.BOAT))return;
             if (entity.isInvulnerable())return;
-            if (getDatabase().hasAccess(player, chunk))return;
+            if (getChunkStorage().hasAccess(player, chunk))return;
             if (getConfig().getBoolean("hostile." + entity.getType()))return;
             event.setCancelled(true);
-            plugin.sendActionBar(player, "&cChunk is owned by&f " + getDatabase().getOwner(chunk).getName());
+            plugin.sendActionBar(player, "&cChunk is owned by&f " + getChunkStorage().getOwner(chunk).getName());
         }
     }
 }

@@ -9,8 +9,6 @@ import org.achymake.chunks.commands.chunks.ChunksCommand;
 import org.achymake.chunks.files.*;
 import org.achymake.chunks.listeners.*;
 import org.bukkit.ChatColor;
-import org.bukkit.Chunk;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.entity.Player;
@@ -30,6 +28,7 @@ public final class Chunks extends JavaPlugin {
     private static Chunks instance;
     private static Logger logger;
     private static Database database;
+    private static ChunkStorage chunkStorage;
     private static Economy economy = null;
     @Override
     public void onEnable() {
@@ -55,6 +54,7 @@ public final class Chunks extends JavaPlugin {
             sendLog(Level.INFO, "Hooked to 'PlaceholderAPI'");
         }
         database = new Database(this);
+        chunkStorage = new ChunkStorage(this);
         commands();
         events();
         reload();
@@ -108,24 +108,6 @@ public final class Chunks extends JavaPlugin {
         new PlayerQuit(this);
         new PlayerShearEntity(this);
         new SignChange(this);
-    }
-    public boolean hasAccess(Player player, Chunk chunk) {
-        if (getDatabase().isProtected(chunk)) {
-            return getDatabase().hasChunkEdit(player);
-        }
-        if (getDatabase().isClaimed(chunk)) {
-            return getDatabase().isOwner(player, chunk) || getDatabase().isMember(player, chunk) || getDatabase().hasChunkEdit(player);
-        }
-        return true;
-    }
-    public boolean isClaimed(Chunk chunk) {
-        return getDatabase().isClaimed(chunk);
-    }
-    public boolean isProtected(Chunk chunk) {
-        return getDatabase().isProtected(chunk);
-    }
-    public OfflinePlayer getOwner(Chunk chunk) {
-        return getDatabase().getOwner(chunk);
     }
     public void getUpdate(Player player) {
         if (notifyUpdate()) {
@@ -205,6 +187,9 @@ public final class Chunks extends JavaPlugin {
     }
     public Economy getEconomy() {
         return economy;
+    }
+    public ChunkStorage getChunkStorage() {
+        return chunkStorage;
     }
     public Database getDatabase() {
         return database;

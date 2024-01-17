@@ -2,6 +2,7 @@ package org.achymake.chunks.commands.chunks.sub;
 
 import org.achymake.chunks.Chunks;
 import org.achymake.chunks.commands.chunks.ChunksSubCommand;
+import org.achymake.chunks.files.ChunkStorage;
 import org.achymake.chunks.files.Database;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -12,6 +13,9 @@ public class EditCommand extends ChunksSubCommand {
     }
     private Database getDatabase() {
         return getPlugin().getDatabase();
+    }
+    private ChunkStorage getChunkStorage() {
+        return getPlugin().getChunkStorage();
     }
     @Override
     public String getName() {
@@ -30,7 +34,7 @@ public class EditCommand extends ChunksSubCommand {
         if (sender instanceof Player player) {
             if (args.length == 1) {
                 if (player.hasPermission("chunks.command.chunks.edit")) {
-                    if (getDatabase().hasChunkEdit(player)) {
+                    if (getChunkStorage().hasChunkEdit(player)) {
                         getDatabase().setBoolean(player, "settings.chunk-edit", false);
                         getPlugin().sendActionBar(player, "&6&lChunk Edit:&c Disabled");
                     } else {

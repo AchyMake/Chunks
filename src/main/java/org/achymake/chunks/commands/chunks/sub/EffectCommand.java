@@ -2,7 +2,7 @@ package org.achymake.chunks.commands.chunks.sub;
 
 import org.achymake.chunks.Chunks;
 import org.achymake.chunks.commands.chunks.ChunksSubCommand;
-import org.achymake.chunks.files.Database;
+import org.achymake.chunks.files.ChunkStorage;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -10,8 +10,8 @@ public class EffectCommand extends ChunksSubCommand {
     private Chunks getPlugin() {
         return Chunks.getInstance();
     }
-    private Database getDatabase() {
-        return getPlugin().getDatabase();
+    private ChunkStorage getChunkStorage() {
+        return getPlugin().getChunkStorage();
     }
     @Override
     public String getName() {
@@ -31,11 +31,11 @@ public class EffectCommand extends ChunksSubCommand {
             if (sender.hasPermission("chunks.command.chunks.effect")) {
                 if (args.length == 2) {
                     if (args[1].equalsIgnoreCase("claim")) {
-                        getDatabase().claimEffect(player);
+                        getChunkStorage().claimEffect(player);
                         getPlugin().sendActionBar(player, "&6Started the effects of claiming");
                     }
                     if (args[1].equalsIgnoreCase("unclaim")) {
-                        getDatabase().unclaimEffect(player);
+                        getChunkStorage().unclaimEffect(player);
                         getPlugin().sendActionBar(player, "&6Started the effects of unclaiming");
                     }
                 }

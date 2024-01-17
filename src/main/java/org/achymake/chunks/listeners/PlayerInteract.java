@@ -1,7 +1,7 @@
 package org.achymake.chunks.listeners;
 
 import org.achymake.chunks.Chunks;
-import org.achymake.chunks.files.Database;
+import org.achymake.chunks.files.ChunkStorage;
 import org.bukkit.Chunk;
 import org.bukkit.Material;
 import org.bukkit.Tag;
@@ -15,8 +15,8 @@ import org.bukkit.event.player.PlayerInteractEvent;
 
 public class PlayerInteract implements Listener {
     private final Chunks plugin;
-    private Database getDatabase() {
-        return plugin.getDatabase();
+    private ChunkStorage getChunkStorage() {
+        return plugin.getChunkStorage();
     }
     public PlayerInteract(Chunks plugin) {
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
@@ -28,16 +28,16 @@ public class PlayerInteract implements Listener {
         if (event.getClickedBlock() == null)return;
         Player player = event.getPlayer();
         Chunk chunk = event.getClickedBlock().getChunk();
-        if (getDatabase().isProtected(chunk)) {
-            if (getDatabase().hasAccess(player, chunk))return;
+        if (getChunkStorage().isProtected(chunk)) {
+            if (getChunkStorage().hasAccess(player, chunk))return;
             if (!isCancelledProtected(event.getClickedBlock()))return;
             event.setCancelled(true);
             plugin.sendActionBar(player, "&cChunk is protected by&f Server");
-        } else if (getDatabase().isClaimed(chunk)) {
-            if (getDatabase().hasAccess(player, chunk))return;
+        } else if (getChunkStorage().isClaimed(chunk)) {
+            if (getChunkStorage().hasAccess(player, chunk))return;
             if (!isCancelledClaimed(event.getClickedBlock()))return;
             event.setCancelled(true);
-            plugin.sendActionBar(player, "&cChunk is owned by&f " + getDatabase().getOwner(chunk).getName());
+            plugin.sendActionBar(player, "&cChunk is owned by&f " + getChunkStorage().getOwner(chunk).getName());
 
         }
     }

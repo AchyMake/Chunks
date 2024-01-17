@@ -1,7 +1,7 @@
 package org.achymake.chunks.listeners;
 
 import org.achymake.chunks.Chunks;
-import org.achymake.chunks.files.Database;
+import org.achymake.chunks.files.ChunkStorage;
 import org.bukkit.Chunk;
 import org.bukkit.NamespacedKey;
 import org.bukkit.event.EventHandler;
@@ -12,8 +12,8 @@ import org.bukkit.persistence.PersistentDataType;
 
 public class PlayerMove implements Listener {
     private final Chunks plugin;
-    private Database getDatabase() {
-        return plugin.getDatabase();
+    private ChunkStorage getChunkStorage() {
+        return plugin.getChunkStorage();
     }
     public PlayerMove(Chunks plugin) {
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
@@ -24,7 +24,7 @@ public class PlayerMove implements Listener {
         if (event.getTo() == null)return;
         if (event.getFrom().getChunk() == event.getTo().getChunk())return;
         Chunk chunk = event.getTo().getChunk();
-        if (getDatabase().isProtected(chunk)) {
+        if (getChunkStorage().isProtected(chunk)) {
             if (event.getPlayer().getPersistentDataContainer().has(NamespacedKey.minecraft("chunk-visitor"), PersistentDataType.STRING)) {
                 if (!event.getPlayer().getPersistentDataContainer().get(NamespacedKey.minecraft("chunk-visitor"), PersistentDataType.STRING).equals("Server")) {
                     event.getPlayer().getPersistentDataContainer().remove(NamespacedKey.minecraft("chunk-visitor"));
@@ -33,18 +33,18 @@ public class PlayerMove implements Listener {
                 plugin.sendActionBar(event.getPlayer(), "&6Visiting&f Server&6's Chunk");
                 event.getPlayer().getPersistentDataContainer().set(NamespacedKey.minecraft("chunk-visitor"), PersistentDataType.STRING, "Server");
             }
-        } else if (getDatabase().isClaimed(chunk)) {
-            if (getDatabase().isBanned(chunk, event.getPlayer())) {
+        } else if (getChunkStorage().isClaimed(chunk)) {
+            if (getChunkStorage().isBanned(chunk, event.getPlayer())) {
                 event.setCancelled(true);
-                plugin.sendActionBar(event.getPlayer(), "&cError:&7 You are banned from&f " + getDatabase().getOwner(chunk).getName());
+                plugin.sendActionBar(event.getPlayer(), "&cError:&7 You are banned from&f " + getChunkStorage().getOwner(chunk).getName());
             }
             if (event.getPlayer().getPersistentDataContainer().has(NamespacedKey.minecraft("chunk-visitor"), PersistentDataType.STRING)) {
-                if (!event.getPlayer().getPersistentDataContainer().get(NamespacedKey.minecraft("chunk-visitor"), PersistentDataType.STRING).equals(getDatabase().getOwner(chunk).getName())) {
+                if (!event.getPlayer().getPersistentDataContainer().get(NamespacedKey.minecraft("chunk-visitor"), PersistentDataType.STRING).equals(getChunkStorage().getOwner(chunk).getName())) {
                     event.getPlayer().getPersistentDataContainer().remove(NamespacedKey.minecraft("chunk-visitor"));
                 }
             } else {
-                plugin.sendActionBar(event.getPlayer(), "&6Visiting&f " + getDatabase().getOwner(chunk).getName() + "&6's Chunk");
-                event.getPlayer().getPersistentDataContainer().set(NamespacedKey.minecraft("chunk-visitor"), PersistentDataType.STRING, getDatabase().getOwner(chunk).getName());
+                plugin.sendActionBar(event.getPlayer(), "&6Visiting&f " + getChunkStorage().getOwner(chunk).getName() + "&6's Chunk");
+                event.getPlayer().getPersistentDataContainer().set(NamespacedKey.minecraft("chunk-visitor"), PersistentDataType.STRING, getChunkStorage().getOwner(chunk).getName());
             }
         } else {
             if (event.getPlayer().getPersistentDataContainer().has(NamespacedKey.minecraft("chunk-visitor"), PersistentDataType.STRING)) {

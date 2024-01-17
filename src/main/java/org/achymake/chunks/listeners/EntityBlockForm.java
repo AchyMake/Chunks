@@ -1,7 +1,7 @@
 package org.achymake.chunks.listeners;
 
 import org.achymake.chunks.Chunks;
-import org.achymake.chunks.files.Database;
+import org.achymake.chunks.files.ChunkStorage;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -10,8 +10,8 @@ import org.bukkit.event.block.EntityBlockFormEvent;
 
 public class EntityBlockForm implements Listener {
     private final Chunks plugin;
-    private Database getDatabase() {
-        return plugin.getDatabase();
+    private ChunkStorage getChunkStorage() {
+        return plugin.getChunkStorage();
     }
     public EntityBlockForm(Chunks plugin) {
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
@@ -19,9 +19,9 @@ public class EntityBlockForm implements Listener {
     }
     @EventHandler(priority = EventPriority.NORMAL)
     public void onEntityBlockForm(EntityBlockFormEvent event) {
-        if (!getDatabase().isProtected(event.getBlock().getChunk()))return;
+        if (!getChunkStorage().isProtected(event.getBlock().getChunk()))return;
         if (event.getEntity() instanceof Player player) {
-            if (getDatabase().hasAccess(player, event.getBlock().getChunk()))return;
+            if (getChunkStorage().hasAccess(player, event.getBlock().getChunk()))return;
             event.setCancelled(true);
         } else {
             event.setCancelled(true);

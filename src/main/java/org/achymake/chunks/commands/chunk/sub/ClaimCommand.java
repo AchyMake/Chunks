@@ -3,6 +3,7 @@ package org.achymake.chunks.commands.chunk.sub;
 import net.milkbowl.vault.economy.Economy;
 import org.achymake.chunks.Chunks;
 import org.achymake.chunks.commands.chunk.ChunkSubCommand;
+import org.achymake.chunks.files.ChunkStorage;
 import org.achymake.chunks.files.Database;
 import org.bukkit.Chunk;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -21,6 +22,9 @@ public class ClaimCommand extends ChunkSubCommand {
     private Database getDatabase() {
         return getPlugin().getDatabase();
     }
+    private ChunkStorage getChunkStorage() {
+        return getPlugin().getChunkStorage();
+    }
     @Override
     public String getName() {
         return "claim";
@@ -38,19 +42,19 @@ public class ClaimCommand extends ChunkSubCommand {
         if (player.hasPermission("chunks.command.chunk.claim")) {
             if (args.length == 1) {
                 Chunk chunk = player.getLocation().getChunk();
-                if (getDatabase().isProtected(chunk)) {
+                if (getChunkStorage().isProtected(chunk)) {
                     getPlugin().send(player, "&cChunk is protected by&f Server");
-                } else if (getDatabase().isClaimed(chunk)) {
-                    if (getDatabase().isOwner(player ,chunk)) {
+                } else if (getChunkStorage().isClaimed(chunk)) {
+                    if (getChunkStorage().isOwner(player ,chunk)) {
                         getPlugin().send(player, "&cYou already own this chunk");
                     } else {
-                        getPlugin().send(player, "&cChunk already owned by " + getDatabase().getOwner(chunk).getName());
+                        getPlugin().send(player, "&cChunk already owned by " + getChunkStorage().getOwner(chunk).getName());
                     }
                 } else {
                     if (getConfig().getInt("claim.max-claims") > getDatabase().getConfig(player).getInt("claimed")) {
                         if (getEconomy().getBalance(player) >= getConfig().getDouble("claim.cost")) {
-                            getDatabase().claim(player, chunk);
-                            getDatabase().claimEffect(player);
+                            getChunkStorage().claim(player, chunk);
+                            getChunkStorage().claimEffect(player);
                             getPlugin().send(player, "&6You bought a chunk for&a " + getEconomy().format(getConfig().getDouble("claim.cost")));
                         } else {
                             getPlugin().send(player, "&cYou don't have&a " + getEconomy().format(getConfig().getDouble("claim.cost")) + "&c to buy a chunk");
