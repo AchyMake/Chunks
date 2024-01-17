@@ -17,7 +17,7 @@ public class PlaceholderProvider extends PlaceholderExpansion {
     }
     @Override
     public String getVersion() {
-        return "1.20.4";
+        return "1.20.5";
     }
     @Override
     public boolean canRegister() {
@@ -36,8 +36,8 @@ public class PlaceholderProvider extends PlaceholderExpansion {
         if (player == null) {
             return "";
         } else {
-            Chunks chunks = Chunks.getInstance();
             if (params.equals("owner")) {
+                Chunks chunks = Chunks.getInstance();
                 if (chunks.getDatabase().isProtected(player.getLocation().getChunk())) {
                     return "Server";
                 }
@@ -47,6 +47,7 @@ public class PlaceholderProvider extends PlaceholderExpansion {
                 return "None";
             }
             if (params.equals("access")) {
+                Chunks chunks = Chunks.getInstance();
                 if (chunks.getDatabase().isProtected(player.getLocation().getChunk()) || chunks.getDatabase().isClaimed(player.getLocation().getChunk())) {
                     if (chunks.getDatabase().hasAccess(player, player.getLocation().getChunk())) {
                         return "True";
@@ -57,10 +58,16 @@ public class PlaceholderProvider extends PlaceholderExpansion {
                 return "True";
             }
             if (params.equals("claimed")) {
+                Chunks chunks = Chunks.getInstance();
                 return String.valueOf(chunks.getDatabase().getClaimedCount(player));
             }
             if (params.equals("max_claims")) {
+                Chunks chunks = Chunks.getInstance();
                 return String.valueOf(chunks.getConfig().getInt("claim.max-claims"));
+            }
+            if (params.equals("claims_left")) {
+                Chunks chunks = Chunks.getInstance();
+                return String.valueOf(chunks.getConfig().getInt("claim.max-claims") - chunks.getDatabase().getClaimedCount(player));
             }
         }
         return super.onPlaceholderRequest(player, params);

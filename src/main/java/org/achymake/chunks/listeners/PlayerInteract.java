@@ -24,39 +24,22 @@ public class PlayerInteract implements Listener {
     }
     @EventHandler(priority = EventPriority.NORMAL)
     public void onPlayerInteract(PlayerInteractEvent event) {
-        if (event.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
-            if (event.getClickedBlock() == null)return;
-            Player player = event.getPlayer();
-            Chunk chunk = event.getClickedBlock().getChunk();
-            if (getDatabase().isProtected(chunk)) {
-                if (getDatabase().hasAccess(player, chunk))return;
-                if (!isCancelledProtected(event.getClickedBlock()))return;
-                event.setCancelled(true);
-                plugin.sendActionBar(player, "&cChunk is protected by&f Server");
-            } else if (getDatabase().isClaimed(chunk)) {
-                if (getDatabase().hasAccess(player, chunk))return;
-                if (!isCancelledClaimed(event.getClickedBlock()))return;
-                event.setCancelled(true);
-                plugin.sendActionBar(player, "&cChunk is owned by&f " + getDatabase().getOwner(chunk).getName());
+        if (!event.getAction().equals(Action.RIGHT_CLICK_BLOCK))return;
+        if (event.getClickedBlock() == null)return;
+        Player player = event.getPlayer();
+        Chunk chunk = event.getClickedBlock().getChunk();
+        if (getDatabase().isProtected(chunk)) {
+            if (getDatabase().hasAccess(player, chunk))return;
+            if (!isCancelledProtected(event.getClickedBlock()))return;
+            event.setCancelled(true);
+            plugin.sendActionBar(player, "&cChunk is protected by&f Server");
+        } else if (getDatabase().isClaimed(chunk)) {
+            if (getDatabase().hasAccess(player, chunk))return;
+            if (!isCancelledClaimed(event.getClickedBlock()))return;
+            event.setCancelled(true);
+            plugin.sendActionBar(player, "&cChunk is owned by&f " + getDatabase().getOwner(chunk).getName());
 
-            }
-        } else if (event.getAction().equals(Action.PHYSICAL)) {
-            if (event.getClickedBlock() == null)return;
-            Player player = event.getPlayer();
-            Chunk chunk = event.getClickedBlock().getChunk();
-            if (getDatabase().isProtected(chunk)) {
-                if (getDatabase().hasAccess(player, chunk))return;
-                if (!physical(event.getClickedBlock()))return;
-                event.setCancelled(true);
-            } else if (getDatabase().isClaimed(chunk)) {
-                if (getDatabase().hasAccess(player, chunk))return;
-                if (!physical(event.getClickedBlock()))return;
-                event.setCancelled(true);
-            }
         }
-    }
-    private boolean physical(Block block) {
-        return Tag.PRESSURE_PLATES.isTagged(block.getType()) || block.getType().equals(Material.TURTLE_EGG) || block.getType().equals(Material.FARMLAND);
     }
     public static boolean isCancelledClaimed(Block block) {
         if (Tag.BEDS.isTagged(block.getType())) {

@@ -26,6 +26,12 @@ public class Database {
     private File getFolder() {
         return plugin.getDataFolder();
     }
+    private FileConfiguration getConfig() {
+        return plugin.getConfig();
+    }
+    private Economy getEconomy() {
+        return plugin.getEconomy();
+    }
     public boolean exist(OfflinePlayer offlinePlayer) {
         return new File(getFolder(), "userdata/" + offlinePlayer.getUniqueId() + ".yml").exists();
     }
@@ -102,12 +108,6 @@ public class Database {
                 }
             }
         }
-    }
-    public FileConfiguration getConfig() {
-        return plugin.getConfig();
-    }
-    private Economy getEconomy() {
-        return plugin.getEconomy();
     }
     public PersistentDataContainer getData(Chunk chunk) {
         return chunk.getPersistentDataContainer();

@@ -100,6 +100,8 @@ public final class Chunks extends JavaPlugin {
         new PlayerBucketFill(this);
         new PlayerCommandPreprocess(this);
         new PlayerInteract(this);
+        new PlayerInteractEntity(this);
+        new PlayerInteractPhysical(this);
         new PlayerLeashEntity(this);
         new PlayerLogin(this);
         new PlayerMove(this);
