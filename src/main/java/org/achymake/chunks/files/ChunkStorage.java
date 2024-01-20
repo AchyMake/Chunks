@@ -20,9 +20,7 @@ import java.util.UUID;
 
 public class ChunkStorage {
     private final Chunks plugin;
-    public ChunkStorage(Chunks plugin) {
-        this.plugin = plugin;
-    }
+    private final List<Player> chunkEditors = new ArrayList<>();
     private FileConfiguration getConfig() {
         return plugin.getConfig();
     }
@@ -31,6 +29,9 @@ public class ChunkStorage {
     }
     private Economy getEconomy() {
         return plugin.getEconomy();
+    }
+    public ChunkStorage(Chunks plugin) {
+        this.plugin = plugin;
     }
     public PersistentDataContainer getData(Chunk chunk) {
         return chunk.getPersistentDataContainer();
@@ -51,7 +52,7 @@ public class ChunkStorage {
         return getMembers(chunk).contains(player.getUniqueId().toString());
     }
     public boolean hasChunkEdit(Player player) {
-        return getDatabase().getConfig(player).getBoolean("settings.chunk-edit");
+        return getChunkEditors().contains(player);
     }
     public boolean isClaimed(Chunk chunk) {
         return getData(chunk).has(NamespacedKey.minecraft("owner"), PersistentDataType.STRING);
@@ -166,5 +167,8 @@ public class ChunkStorage {
     }
     public boolean isBanned(Chunk chunk, Player player) {
         return getBanned(chunk).contains(player.getUniqueId().toString());
+    }
+    public List<Player> getChunkEditors() {
+        return chunkEditors;
     }
 }

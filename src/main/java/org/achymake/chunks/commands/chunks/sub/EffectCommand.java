@@ -3,6 +3,7 @@ package org.achymake.chunks.commands.chunks.sub;
 import org.achymake.chunks.Chunks;
 import org.achymake.chunks.commands.chunks.ChunksSubCommand;
 import org.achymake.chunks.files.ChunkStorage;
+import org.achymake.chunks.files.Message;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -12,6 +13,9 @@ public class EffectCommand extends ChunksSubCommand {
     }
     private ChunkStorage getChunkStorage() {
         return getPlugin().getChunkStorage();
+    }
+    private Message getMessage() {
+        return getPlugin().getMessage();
     }
     @Override
     public String getName() {
@@ -32,11 +36,11 @@ public class EffectCommand extends ChunksSubCommand {
                 if (args.length == 2) {
                     if (args[1].equalsIgnoreCase("claim")) {
                         getChunkStorage().claimEffect(player);
-                        getPlugin().sendActionBar(player, "&6Started the effects of claiming");
+                        getMessage().sendActionBar(player, "&6Started the effects of Claiming");
                     }
                     if (args[1].equalsIgnoreCase("unclaim")) {
                         getChunkStorage().unclaimEffect(player);
-                        getPlugin().sendActionBar(player, "&6Started the effects of unclaiming");
+                        getMessage().sendActionBar(player, "&6Started the effects of Unclaiming");
                     }
                 }
             }

@@ -3,6 +3,7 @@ package org.achymake.chunks.commands.chunk;
 import org.achymake.chunks.Chunks;
 import org.achymake.chunks.commands.chunk.sub.*;
 import org.achymake.chunks.files.Database;
+import org.achymake.chunks.files.Message;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -21,6 +22,9 @@ public class ChunkCommand implements CommandExecutor, TabCompleter {
     private Database getDatabase() {
         return getPlugin().getDatabase();
     }
+    private Message getMessage() {
+        return getPlugin().getMessage();
+    }
     private final ArrayList<ChunkSubCommand> chunkSubCommands = new ArrayList<>();
 
     public ChunkCommand() {
@@ -37,7 +41,7 @@ public class ChunkCommand implements CommandExecutor, TabCompleter {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (sender instanceof Player player) {
             if (args.length == 0) {
-                getPlugin().send(player, "&cUsage: &f/chunk help");
+                getMessage().send(player, "&cUsage: &f/chunk help");
                 return true;
             } else {
                 for (ChunkSubCommand commands : getSubCommands()) {

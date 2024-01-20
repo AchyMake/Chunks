@@ -2,7 +2,12 @@ package org.achymake.chunks.listeners;
 
 import org.achymake.chunks.Chunks;
 import org.achymake.chunks.files.ChunkStorage;
-import org.bukkit.entity.EntityType;
+import org.bukkit.Chunk;
+import org.bukkit.entity.Creeper;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.TNTPrimed;
+import org.bukkit.entity.WitherSkull;
+import org.bukkit.entity.minecart.ExplosiveMinecart;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -19,24 +24,20 @@ public class EntityExplode implements Listener {
     }
     @EventHandler(priority = EventPriority.NORMAL)
     public void onEntityExplode(EntityExplodeEvent event) {
-        if (getChunkStorage().isProtected(event.getEntity().getLocation().getChunk())) {
-            if (event.blockList().isEmpty())return;
+        Chunk chunk = event.getLocation().getChunk();
+        Entity entity = event.getEntity();
+        if (getChunkStorage().isProtected(chunk)) {
             event.blockList().clear();
-        } else if (getChunkStorage().isClaimed(event.getEntity().getLocation().getChunk())) {
-            if (event.getEntity().getType().equals(EntityType.MINECART_TNT)) {
-                if (!getChunkStorage().isClaimed(event.getEntity().getLocation().getChunk()))return;
-                if (getChunkStorage().TNTAllowed(event.getLocation().getChunk()))return;
-                if (event.blockList().isEmpty())return;
+        } else if (getChunkStorage().isClaimed(chunk)) {
+            if (entity instanceof Creeper) {
                 event.blockList().clear();
-            }
-            if (event.getEntity().getType().equals(EntityType.PRIMED_TNT)) {
-                if (!getChunkStorage().isClaimed(event.getEntity().getLocation().getChunk()))return;
-                if (getChunkStorage().TNTAllowed(event.getLocation().getChunk()))return;
-                if (event.blockList().isEmpty())return;
+            } else if (entity instanceof WitherSkull) {
                 event.blockList().clear();
-            }
-            if (event.getEntity().getType().equals(EntityType.CREEPER)) {
-                if (event.blockList().isEmpty())return;
+            } else if (entity instanceof TNTPrimed) {
+                if (getChunkStorage().TNTAllowed(chunk))return;
+                event.blockList().clear();
+            } else if (entity instanceof ExplosiveMinecart) {
+                if (getChunkStorage().TNTAllowed(chunk))return;
                 event.blockList().clear();
             }
         }

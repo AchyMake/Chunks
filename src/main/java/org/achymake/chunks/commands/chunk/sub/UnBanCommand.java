@@ -3,6 +3,7 @@ package org.achymake.chunks.commands.chunk.sub;
 import org.achymake.chunks.Chunks;
 import org.achymake.chunks.commands.chunk.ChunkSubCommand;
 import org.achymake.chunks.files.Database;
+import org.achymake.chunks.files.Message;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
@@ -15,6 +16,9 @@ public class UnBanCommand extends ChunkSubCommand {
     }
     private Database getDatabase() {
         return getPlugin().getDatabase();
+    }
+    private Message getMessage() {
+        return getPlugin().getMessage();
     }
     @Override
     public String getName() {
@@ -37,9 +41,9 @@ public class UnBanCommand extends ChunkSubCommand {
                     List<String> banned = getDatabase().getBanned(player);
                     banned.remove(target.getUniqueId().toString());
                     getDatabase().setStringList(player, "banned", banned);
-                    getPlugin().send(player, "&6You unbanned&f " + target.getName());
+                    getMessage().send(player, "&6You unbanned&f " + target.getName());
                 } else {
-                    getPlugin().send(player, "&cError:&7 You already banned&f " + target.getName());
+                    getMessage().send(player, "&cError:&7 You already banned&f " + target.getName());
                 }
             }
         }

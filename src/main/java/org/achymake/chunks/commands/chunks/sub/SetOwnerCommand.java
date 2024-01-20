@@ -4,6 +4,7 @@ import org.achymake.chunks.Chunks;
 import org.achymake.chunks.commands.chunks.ChunksSubCommand;
 import org.achymake.chunks.files.ChunkStorage;
 import org.achymake.chunks.files.Database;
+import org.achymake.chunks.files.Message;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
@@ -18,6 +19,9 @@ public class SetOwnerCommand extends ChunksSubCommand {
     }
     private ChunkStorage getChunkStorage() {
         return getPlugin().getChunkStorage();
+    }
+    private Message getMessage() {
+        return getPlugin().getMessage();
     }
     @Override
     public String getName() {
@@ -37,15 +41,15 @@ public class SetOwnerCommand extends ChunksSubCommand {
             if (player.hasPermission("chunks.command.chunks.setowner")) {
                 if (args.length == 2) {
                     if (getChunkStorage().isProtected(player.getLocation().getChunk())) {
-                        getPlugin().send(player, "&cChunk is protected by&f Server");
+                        getMessage().send(player, "&cChunk is protected by&f Server");
                     } else {
                         OfflinePlayer target = Bukkit.getOfflinePlayer(args[1]);
                         if (getDatabase().exist(target)) {
                             getChunkStorage().setOwner(player, target, player.getLocation().getChunk());
                             getChunkStorage().claimEffect(player);
-                            getPlugin().send(player, "&6Chunk is now owned by&f " + getChunkStorage().getOwner(player.getLocation().getChunk()).getName());
+                            getMessage().send(player, "&6Chunk is now owned by&f " + getChunkStorage().getOwner(player.getLocation().getChunk()).getName());
                         } else {
-                            getPlugin().send(player, target.getName() + "&c has never joined");
+                            getMessage().send(player, "&cError:&f " + target.getName() + "&7 has never joined");
                         }
                     }
                 }

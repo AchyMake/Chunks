@@ -13,11 +13,14 @@ import java.util.logging.Level;
 
 public class Database {
     private final Chunks plugin;
-    public Database(Chunks plugin) {
-        this.plugin = plugin;
-    }
     private File getFolder() {
         return plugin.getDataFolder();
+    }
+    private Message getMessage() {
+        return plugin.getMessage();
+    }
+    public Database(Chunks plugin) {
+        this.plugin = plugin;
     }
     public boolean exist(OfflinePlayer offlinePlayer) {
         return new File(getFolder(), "userdata/" + offlinePlayer.getUniqueId() + ".yml").exists();
@@ -31,7 +34,7 @@ public class Database {
                 try {
                     config.save(file);
                 } catch (IOException e) {
-                    plugin.sendLog(Level.WARNING, e.getMessage());
+                    getMessage().sendLog(Level.WARNING, e.getMessage());
                 }
             }
         } else {
@@ -43,7 +46,7 @@ public class Database {
             try {
                 config.save(file);
             } catch (IOException e) {
-                plugin.sendLog(Level.WARNING, e.getMessage());
+                getMessage().sendLog(Level.WARNING, e.getMessage());
             }
         }
     }
@@ -57,7 +60,7 @@ public class Database {
         try {
             config.save(file);
         } catch (IOException e) {
-            plugin.sendLog(Level.WARNING, e.getMessage());
+            getMessage().sendLog(Level.WARNING, e.getMessage());
         }
     }
     public void setInt(OfflinePlayer offlinePlayer, String path, int value) {
@@ -67,7 +70,7 @@ public class Database {
         try {
             config.save(file);
         } catch (IOException e) {
-            plugin.sendLog(Level.WARNING, e.getMessage());
+            getMessage().sendLog(Level.WARNING, e.getMessage());
         }
     }
     public void setStringList(OfflinePlayer offlinePlayer, String path, List<String> value) {
@@ -77,7 +80,7 @@ public class Database {
         try {
             config.save(file);
         } catch (IOException e) {
-            plugin.sendLog(Level.WARNING, e.getMessage());
+            getMessage().sendLog(Level.WARNING, e.getMessage());
         }
     }
     public List<String> getMembers(OfflinePlayer offlinePlayer) {
@@ -94,7 +97,7 @@ public class Database {
                 try {
                     config.load(file);
                 } catch (IOException | InvalidConfigurationException e) {
-                    plugin.sendLog(Level.WARNING, e.getMessage());
+                    getMessage().sendLog(Level.WARNING, e.getMessage());
                 }
             }
         }

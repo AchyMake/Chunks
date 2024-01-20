@@ -2,6 +2,7 @@ package org.achymake.chunks.api;
 
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import org.achymake.chunks.Chunks;
+import org.bukkit.Chunk;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -36,20 +37,20 @@ public class PlaceholderProvider extends PlaceholderExpansion {
         if (player == null) {
             return "";
         } else {
+            Chunks chunks = Chunks.getInstance();
+            Chunk chunk = player.getLocation().getChunk();
             if (params.equals("owner")) {
-                Chunks chunks = Chunks.getInstance();
-                if (chunks.getChunkStorage().isProtected(player.getLocation().getChunk())) {
+                if (chunks.getChunkStorage().isProtected(chunk)) {
                     return "Server";
                 }
-                if (chunks.getChunkStorage().isClaimed(player.getLocation().getChunk())) {
-                    return chunks.getChunkStorage().getOwner(player.getLocation().getChunk()).getName();
+                if (chunks.getChunkStorage().isClaimed(chunk)) {
+                    return chunks.getChunkStorage().getOwner(chunk).getName();
                 }
                 return "None";
             }
             if (params.equals("access")) {
-                Chunks chunks = Chunks.getInstance();
-                if (chunks.getChunkStorage().isProtected(player.getLocation().getChunk()) || chunks.getChunkStorage().isClaimed(player.getLocation().getChunk())) {
-                    if (chunks.getChunkStorage().hasAccess(player, player.getLocation().getChunk())) {
+                if (chunks.getChunkStorage().isProtected(chunk) || chunks.getChunkStorage().isClaimed(chunk)) {
+                    if (chunks.getChunkStorage().hasAccess(player, chunk)) {
                         return "True";
                     }else {
                         return "False";
@@ -58,15 +59,12 @@ public class PlaceholderProvider extends PlaceholderExpansion {
                 return "True";
             }
             if (params.equals("claimed")) {
-                Chunks chunks = Chunks.getInstance();
                 return String.valueOf(chunks.getChunkStorage().getClaimedCount(player));
             }
             if (params.equals("max_claims")) {
-                Chunks chunks = Chunks.getInstance();
                 return String.valueOf(chunks.getConfig().getInt("claim.max-claims"));
             }
             if (params.equals("claims_left")) {
-                Chunks chunks = Chunks.getInstance();
                 return String.valueOf(chunks.getConfig().getInt("claim.max-claims") - chunks.getChunkStorage().getClaimedCount(player));
             }
         }

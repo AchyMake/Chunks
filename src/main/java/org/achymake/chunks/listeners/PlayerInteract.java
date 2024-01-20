@@ -2,6 +2,7 @@ package org.achymake.chunks.listeners;
 
 import org.achymake.chunks.Chunks;
 import org.achymake.chunks.files.ChunkStorage;
+import org.achymake.chunks.files.Message;
 import org.bukkit.Chunk;
 import org.bukkit.Material;
 import org.bukkit.Tag;
@@ -18,6 +19,9 @@ public class PlayerInteract implements Listener {
     private ChunkStorage getChunkStorage() {
         return plugin.getChunkStorage();
     }
+    private Message getMessage() {
+        return plugin.getMessage();
+    }
     public PlayerInteract(Chunks plugin) {
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
         this.plugin = plugin;
@@ -32,12 +36,12 @@ public class PlayerInteract implements Listener {
             if (getChunkStorage().hasAccess(player, chunk))return;
             if (!isCancelledProtected(event.getClickedBlock()))return;
             event.setCancelled(true);
-            plugin.sendActionBar(player, "&cChunk is protected by&f Server");
+            getMessage().sendActionBar(player, "&cError:&7 Chunk protected by&f Server");
         } else if (getChunkStorage().isClaimed(chunk)) {
             if (getChunkStorage().hasAccess(player, chunk))return;
             if (!isCancelledClaimed(event.getClickedBlock()))return;
             event.setCancelled(true);
-            plugin.sendActionBar(player, "&cChunk is owned by&f " + getChunkStorage().getOwner(chunk).getName());
+            getMessage().sendActionBar(player, "&cError:&7 Chunk owned by&f " + getChunkStorage().getOwner(chunk).getName());
 
         }
     }

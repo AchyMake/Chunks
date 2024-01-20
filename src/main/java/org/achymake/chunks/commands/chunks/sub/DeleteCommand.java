@@ -3,6 +3,7 @@ package org.achymake.chunks.commands.chunks.sub;
 import org.achymake.chunks.Chunks;
 import org.achymake.chunks.commands.chunks.ChunksSubCommand;
 import org.achymake.chunks.files.ChunkStorage;
+import org.achymake.chunks.files.Message;
 import org.bukkit.Chunk;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -13,6 +14,9 @@ public class DeleteCommand extends ChunksSubCommand {
     }
     private ChunkStorage getChunkStorage() {
         return getPlugin().getChunkStorage();
+    }
+    private Message getMessage() {
+        return getPlugin().getMessage();
     }
     @Override
     public String getName() {
@@ -35,13 +39,13 @@ public class DeleteCommand extends ChunksSubCommand {
                     if (getChunkStorage().isProtected(chunk)) {
                         getChunkStorage().unprotect(chunk);
                         getChunkStorage().unclaimEffect(player);
-                        getPlugin().send(player, "&6Chunk is now unprotected");
+                        getMessage().send(player, "&6Chunk is now unprotected");
                     } else if (getChunkStorage().isClaimed(chunk)) {
-                        getPlugin().send(player, "&6You safely unclaimed&f " + getChunkStorage().getOwner(chunk).getName() + "&6 chunk");
+                        getMessage().send(player, "&6You safely unclaimed&f " + getChunkStorage().getOwner(chunk).getName() + "&6 chunk");
                         getChunkStorage().unclaim(chunk);
                         getChunkStorage().unclaimEffect(player);
                     } else {
-                        getPlugin().send(player, "&cChunk is already unclaimed");
+                        getMessage().send(player, "&cError:&7 Chunk already unclaimed");
                     }
                 }
             }

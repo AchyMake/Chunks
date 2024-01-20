@@ -4,6 +4,7 @@ import org.achymake.chunks.Chunks;
 import org.achymake.chunks.files.ChunkStorage;
 import org.bukkit.Chunk;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -27,13 +28,14 @@ public class EntityTarget implements Listener {
         if (event.getTarget() == null)return;
         if (event.getTarget() instanceof Player player) {
             Chunk chunk = event.getEntity().getLocation().getChunk();
+            Entity entity = event.getEntity();
             if (getChunkStorage().isProtected(chunk)) {
                 if (getChunkStorage().hasAccess(player, chunk))return;
-                if (getConfig().getBoolean("hostile." + event.getEntity().getType()))return;
+                if (getConfig().getBoolean("hostile." + entity.getType()))return;
                 event.setCancelled(true);
             } else if (getChunkStorage().isClaimed(chunk)) {
                 if (getChunkStorage().hasAccess(player, chunk))return;
-                if (getConfig().getBoolean("hostile." + event.getEntity().getType()))return;
+                if (getConfig().getBoolean("hostile." + entity.getType()))return;
                 event.setCancelled(true);
             }
         }

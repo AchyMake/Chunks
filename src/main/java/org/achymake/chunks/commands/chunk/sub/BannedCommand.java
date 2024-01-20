@@ -3,6 +3,7 @@ package org.achymake.chunks.commands.chunk.sub;
 import org.achymake.chunks.Chunks;
 import org.achymake.chunks.commands.chunk.ChunkSubCommand;
 import org.achymake.chunks.files.Database;
+import org.achymake.chunks.files.Message;
 import org.bukkit.entity.Player;
 
 import java.util.UUID;
@@ -13,6 +14,9 @@ public class BannedCommand extends ChunkSubCommand {
     }
     private Database getDatabase() {
         return getPlugin().getDatabase();
+    }
+    private Message getMessage() {
+        return getPlugin().getMessage();
     }
     @Override
     public String getName() {
@@ -31,11 +35,11 @@ public class BannedCommand extends ChunkSubCommand {
         if (player.hasPermission("chunks.command.chunk.banned")) {
             if (args.length == 1) {
                 if (getDatabase().getConfig(player).getStringList("banned").isEmpty()){
-                    getPlugin().send(player, "&cYou don't have any banned players");
+                    getMessage().send(player, "&cError:&7 You don't have any banned players");
                 } else {
-                    getPlugin().send(player, "&6Banned:");
+                    getMessage().send(player, "&6Banned:");
                     for (String uuidListed : getDatabase().getConfig(player).getStringList("banned")) {
-                        getPlugin().send(player, "- " + player.getServer().getOfflinePlayer(UUID.fromString(uuidListed)).getName());
+                        getMessage().send(player, "- " + player.getServer().getOfflinePlayer(UUID.fromString(uuidListed)).getName());
                     }
                 }
             }

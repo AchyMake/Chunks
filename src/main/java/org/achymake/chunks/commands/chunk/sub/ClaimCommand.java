@@ -5,6 +5,7 @@ import org.achymake.chunks.Chunks;
 import org.achymake.chunks.commands.chunk.ChunkSubCommand;
 import org.achymake.chunks.files.ChunkStorage;
 import org.achymake.chunks.files.Database;
+import org.achymake.chunks.files.Message;
 import org.bukkit.Chunk;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
@@ -25,6 +26,9 @@ public class ClaimCommand extends ChunkSubCommand {
     private ChunkStorage getChunkStorage() {
         return getPlugin().getChunkStorage();
     }
+    private Message getMessage() {
+        return getPlugin().getMessage();
+    }
     @Override
     public String getName() {
         return "claim";
@@ -43,24 +47,24 @@ public class ClaimCommand extends ChunkSubCommand {
             if (args.length == 1) {
                 Chunk chunk = player.getLocation().getChunk();
                 if (getChunkStorage().isProtected(chunk)) {
-                    getPlugin().send(player, "&cChunk is protected by&f Server");
+                    getMessage().send(player, "&cError:&7 Chunk protected by&f Server");
                 } else if (getChunkStorage().isClaimed(chunk)) {
                     if (getChunkStorage().isOwner(player ,chunk)) {
-                        getPlugin().send(player, "&cYou already own this chunk");
+                        getMessage().send(player, "&cError:&7 You already own current chunk");
                     } else {
-                        getPlugin().send(player, "&cChunk already owned by " + getChunkStorage().getOwner(chunk).getName());
+                        getMessage().send(player, "&cError:&7 Chunk owned by&f " + getChunkStorage().getOwner(chunk).getName());
                     }
                 } else {
                     if (getConfig().getInt("claim.max-claims") > getDatabase().getConfig(player).getInt("claimed")) {
                         if (getEconomy().getBalance(player) >= getConfig().getDouble("claim.cost")) {
                             getChunkStorage().claim(player, chunk);
                             getChunkStorage().claimEffect(player);
-                            getPlugin().send(player, "&6You bought a chunk for&a " + getEconomy().format(getConfig().getDouble("claim.cost")));
+                            getMessage().send(player, "&6You bought a chunk for&a " + getEconomy().format(getConfig().getDouble("claim.cost")));
                         } else {
-                            getPlugin().send(player, "&cYou don't have&a " + getEconomy().format(getConfig().getDouble("claim.cost")) + "&c to buy a chunk");
+                            getMessage().send(player, "&cError:&7 You don't have&a " + getEconomy().format(getConfig().getDouble("claim.cost")) + "&7 to buy a chunk");
                         }
                     } else {
-                        getPlugin().send(player, "&cYou have reach your limit of&f " + getDatabase().getConfig(player).getInt("chunks.claimed") + "&c claims");
+                        getMessage().send(player, "&cError:&7 You have reach your limit of&f " + getDatabase().getConfig(player).getInt("chunks.claimed") + "&7 claims");
                     }
                 }
             }

@@ -2,6 +2,7 @@ package org.achymake.chunks.listeners;
 
 import org.achymake.chunks.Chunks;
 import org.achymake.chunks.files.ChunkStorage;
+import org.bukkit.Chunk;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -18,7 +19,8 @@ public class CreatureSpawn implements Listener {
     }
     @EventHandler(priority = EventPriority.NORMAL)
     public void onCreatureSpawn(CreatureSpawnEvent event) {
-        if (!getChunkStorage().isProtected(event.getEntity().getLocation().getChunk()))return;
+        Chunk chunk = event.getLocation().getChunk();
+        if (!getChunkStorage().isProtected(chunk))return;
         if (event.getSpawnReason().equals(CreatureSpawnEvent.SpawnReason.CUSTOM))return;
         if (event.getSpawnReason().equals(CreatureSpawnEvent.SpawnReason.COMMAND))return;
         if (event.getSpawnReason().equals(CreatureSpawnEvent.SpawnReason.SPAWNER_EGG))return;

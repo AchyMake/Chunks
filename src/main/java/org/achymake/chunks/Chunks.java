@@ -1,15 +1,11 @@
 package org.achymake.chunks;
 
-import net.md_5.bungee.api.ChatMessageType;
-import net.md_5.bungee.api.chat.TextComponent;
 import net.milkbowl.vault.economy.Economy;
 import org.achymake.chunks.api.PlaceholderProvider;
 import org.achymake.chunks.commands.chunk.ChunkCommand;
 import org.achymake.chunks.commands.chunks.ChunksCommand;
 import org.achymake.chunks.files.*;
 import org.achymake.chunks.listeners.*;
-import org.bukkit.ChatColor;
-import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.RegisteredServiceProvider;
@@ -22,43 +18,42 @@ import java.net.URL;
 import java.util.Scanner;
 import java.util.function.Consumer;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public final class Chunks extends JavaPlugin {
     private static Chunks instance;
-    private static Logger logger;
     private static Database database;
+    private static Message message;
     private static ChunkStorage chunkStorage;
     private static Economy economy = null;
     @Override
     public void onEnable() {
         instance = this;
-        logger = getLogger();
+        message = new Message(this);
         if (getServer().getPluginManager().getPlugin("Vault") == null) {
-            sendLog(Level.WARNING, "You have to install 'Vault'");
+            getMessage().sendLog(Level.WARNING, "You have to install 'Vault'");
             getServer().getPluginManager().disablePlugin(this);
         } else {
-            sendLog(Level.INFO, "Hooked to 'Vault'");
+            getMessage().sendLog(Level.INFO, "Hooked to 'Vault'");
             if (isEconomyInstalled()) {
-                sendLog(Level.INFO, "Economy hooked from 'Vault'");
+                getMessage().sendLog(Level.INFO, "Economy hooked from 'Vault'");
             } else {
-                sendLog(Level.WARNING, "'Vault' does not have any 'Economy' installed");
+                getMessage().sendLog(Level.WARNING, "'Vault' does not have any 'Economy' installed");
                 getServer().getPluginManager().disablePlugin(this);
             }
         }
         if (getServer().getPluginManager().getPlugin("PlaceholderAPI") == null) {
-            sendLog(Level.WARNING, "You have to install 'PlaceholderAPI'");
+            getMessage().sendLog(Level.WARNING, "You have to install 'PlaceholderAPI'");
             getServer().getPluginManager().disablePlugin(this);
         } else {
             new PlaceholderProvider().register();
-            sendLog(Level.INFO, "Hooked to 'PlaceholderAPI'");
+            getMessage().sendLog(Level.INFO, "Hooked to 'PlaceholderAPI'");
         }
         database = new Database(this);
         chunkStorage = new ChunkStorage(this);
         commands();
         events();
         reload();
-        sendLog(Level.INFO, "Enabled " + getName() + " " + getDescription().getVersion());
+        getMessage().sendLog(Level.INFO, "Enabled " + getName() + " " + getDescription().getVersion());
         getUpdate();
     }
     @Override
@@ -66,7 +61,10 @@ public final class Chunks extends JavaPlugin {
         if (new PlaceholderProvider().isRegistered()) {
             new PlaceholderProvider().unregister();
         }
-        sendLog(Level.INFO, "Disabled " + getName() + " " + getDescription().getVersion());
+        if (!getChunkStorage().getChunkEditors().isEmpty()) {
+            getChunkStorage().getChunkEditors().clear();
+        }
+        getMessage().sendLog(Level.INFO, "Disabled " + getName() + " " + getDescription().getVersion());
     }
     private boolean isEconomyInstalled() {
         RegisteredServiceProvider<Economy> rsp = getServer().getServicesManager().getRegistration(Economy.class);
@@ -113,8 +111,8 @@ public final class Chunks extends JavaPlugin {
         if (notifyUpdate()) {
             getLatest((latest) -> {
                 if (!getDescription().getVersion().equals(latest)) {
-                    send(player,"&6" + getName() + " Update:&f " + latest);
-                    send(player,"&6Current Version: &f" + getDescription().getVersion());
+                    getMessage().send(player,"&6" + getName() + " Update:&f " + latest);
+                    getMessage().send(player,"&6Current Version: &f" + getDescription().getVersion());
                 }
             });
         }
@@ -125,12 +123,12 @@ public final class Chunks extends JavaPlugin {
                 @Override
                 public void run() {
                     getLatest((latest) -> {
-                        sendLog(Level.INFO, "Checking latest release");
-                        if (getDescription().getVersion().replace("-Spigot", "").equals(latest)) {
-                            sendLog(Level.INFO, "You are using the latest version");
+                        getMessage().sendLog(Level.INFO, "Checking latest release");
+                        if (getDescription().getVersion().equals(latest)) {
+                            getMessage().sendLog(Level.INFO, "You are using the latest version");
                         } else {
-                            sendLog(Level.INFO, "New Update: " + latest);
-                            sendLog(Level.INFO, "Current Version: " + getDescription().getVersion().replace("-Spigot", ""));
+                            getMessage().sendLog(Level.INFO, "New Update: " + latest);
+                            getMessage().sendLog(Level.INFO, "Current Version: " + getDescription().getVersion());
                         }
                     });
                 }
@@ -149,7 +147,7 @@ public final class Chunks extends JavaPlugin {
                 inputStream.close();
             }
         } catch (IOException e) {
-            sendLog(Level.WARNING, e.getMessage());
+            getMessage().sendLog(Level.WARNING, e.getMessage());
         }
     }
     private boolean notifyUpdate() {
@@ -161,7 +159,7 @@ public final class Chunks extends JavaPlugin {
             try {
                 getConfig().load(file);
             } catch (IOException | InvalidConfigurationException e) {
-                sendLog(Level.WARNING, e.getMessage());
+                getMessage().sendLog(Level.WARNING, e.getMessage());
             }
             saveConfig();
         } else {
@@ -170,23 +168,11 @@ public final class Chunks extends JavaPlugin {
         }
         getDatabase().reload(getServer().getOfflinePlayers());
     }
-    public void send(ConsoleCommandSender sender, String message) {
-        sender.sendMessage(message);
-    }
-    public void send(Player player, String message) {
-        player.sendMessage(addColor(message));
-    }
-    public void sendActionBar(Player player, String message) {
-        player.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent(addColor(message)));
-    }
-    public String addColor(String message) {
-        return ChatColor.translateAlternateColorCodes('&', message);
-    }
-    public void sendLog(Level level, String message) {
-        logger.log(level, message);
-    }
     public Economy getEconomy() {
         return economy;
+    }
+    public Message getMessage() {
+        return message;
     }
     public ChunkStorage getChunkStorage() {
         return chunkStorage;
