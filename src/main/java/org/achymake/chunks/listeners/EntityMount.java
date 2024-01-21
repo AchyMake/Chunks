@@ -5,6 +5,8 @@ import org.achymake.chunks.files.ChunkStorage;
 import org.achymake.chunks.files.Message;
 import org.bukkit.Chunk;
 import org.bukkit.entity.ArmorStand;
+import org.bukkit.entity.Boat;
+import org.bukkit.entity.Minecart;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -27,6 +29,8 @@ public class EntityMount implements Listener {
     public void onEntityMount(EntityMountEvent event) {
         if (event.getEntity() instanceof Player player) {
             if (event.getMount() instanceof ArmorStand)return;
+            if (event.getMount() instanceof Boat)return;
+            if (event.getMount() instanceof Minecart)return;
             Chunk chunk = event.getMount().getLocation().getChunk();
             if (getChunkStorage().isProtected(chunk)) {
                 if (getChunkStorage().hasAccess(player, chunk))return;

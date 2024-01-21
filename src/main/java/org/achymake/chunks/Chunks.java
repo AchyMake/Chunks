@@ -98,7 +98,11 @@ public final class Chunks extends JavaPlugin {
         new PlayerBucketFill(this);
         new PlayerCommandPreprocess(this);
         new PlayerInteract(this);
-        new PlayerInteractEntity(this);
+        if (getServer().getPluginManager().isPluginEnabled("Recovery")) {
+            new PlayerInteractAtEntityRecovery(this);
+        } else {
+            new PlayerInteractAtEntity(this);
+        }
         new PlayerInteractPhysical(this);
         new PlayerLeashEntity(this);
         new PlayerLogin(this);

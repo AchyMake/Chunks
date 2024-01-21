@@ -9,6 +9,7 @@ description: '${project.description}'
 softdepend:
   - Vault
   - PlaceholderAPI
+  - Recovery
 commands:
   chunk:
     usage: /chunk help

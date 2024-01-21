@@ -11,9 +11,9 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerInteractEntityEvent;
+import org.bukkit.event.player.PlayerInteractAtEntityEvent;
 
-public class PlayerInteractEntity implements Listener {
+public class PlayerInteractAtEntity implements Listener {
     private final Chunks plugin;
     private ChunkStorage getChunkStorage() {
         return plugin.getChunkStorage();
@@ -24,12 +24,12 @@ public class PlayerInteractEntity implements Listener {
     private Message getMessage() {
         return plugin.getMessage();
     }
-    public PlayerInteractEntity(Chunks plugin) {
+    public PlayerInteractAtEntity(Chunks plugin) {
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
         this.plugin = plugin;
     }
     @EventHandler(priority = EventPriority.NORMAL)
-    public void onPlayerInteractEntity(PlayerInteractEntityEvent event) {
+    public void onPlayerInteractAtEntity(PlayerInteractAtEntityEvent event) {
         Player player = event.getPlayer();
         Chunk chunk = event.getRightClicked().getLocation().getChunk();
         Entity entity = event.getRightClicked();
