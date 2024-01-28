@@ -6,6 +6,8 @@ prefix: '${project.name}'
 load: POSTWORLD
 author: AchyMake
 description: '${project.description}'
+depend:
+  - WorldGuard
 softdepend:
   - Vault
   - PlaceholderAPI
@@ -66,9 +68,6 @@ permissions:
     default: op
   chunks.command.chunks.info:
     description: info of the standing chunk
-    default: op
-  chunks.command.chunks.protect:
-    description: protects chunks
     default: op
   chunks.command.chunks.reload:
     description: reload plugin files

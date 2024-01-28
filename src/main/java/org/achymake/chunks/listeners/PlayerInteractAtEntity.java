@@ -30,29 +30,18 @@ public class PlayerInteractAtEntity implements Listener {
     }
     @EventHandler(priority = EventPriority.NORMAL)
     public void onPlayerInteractAtEntity(PlayerInteractAtEntityEvent event) {
-        Player player = event.getPlayer();
         Entity entity = event.getRightClicked();
         Chunk chunk = entity.getLocation().getChunk();
-        if (getChunkStorage().isProtected(chunk)) {
-            if (entity.getType().equals(EntityType.PLAYER))return;
-            if (entity.getType().equals(EntityType.MINECART))return;
-            if (entity.getType().equals(EntityType.BOAT))return;
-            if (entity.getType().equals(EntityType.INTERACTION))return;
-            if (entity.isInvulnerable())return;
-            if (getChunkStorage().hasAccess(player, chunk))return;
-            if (getConfig().getBoolean("hostile." + entity.getType()))return;
-            event.setCancelled(true);
-            getMessage().sendActionBar(player, "&cError:&7 Chunk protected by&f Server");
-        } else if (getChunkStorage().isClaimed(chunk)) {
-            if (entity.getType().equals(EntityType.PLAYER))return;
-            if (entity.getType().equals(EntityType.MINECART))return;
-            if (entity.getType().equals(EntityType.BOAT))return;
-            if (entity.getType().equals(EntityType.INTERACTION))return;
-            if (entity.isInvulnerable())return;
-            if (getChunkStorage().hasAccess(player, chunk))return;
-            if (getConfig().getBoolean("hostile." + entity.getType()))return;
-            event.setCancelled(true);
-            getMessage().sendActionBar(player, "&cError:&7 Chunk owned by&f " + getChunkStorage().getOwner(chunk).getName());
-        }
+        if (!getChunkStorage().isClaimed(chunk))return;
+        if (getConfig().getBoolean("hostile." + entity.getType()))return;
+        if (entity.getType().equals(EntityType.PLAYER))return;
+        if (entity.getType().equals(EntityType.MINECART))return;
+        if (entity.getType().equals(EntityType.BOAT))return;
+        if (entity.getType().equals(EntityType.INTERACTION))return;
+        if (entity.isInvulnerable())return;
+        Player player = event.getPlayer();
+        if (getChunkStorage().hasAccess(player, chunk))return;
+        event.setCancelled(true);
+        getMessage().sendActionBar(player, "&cError:&7 Chunk owned by&f " + getChunkStorage().getOwner(chunk).getName());
     }
 }

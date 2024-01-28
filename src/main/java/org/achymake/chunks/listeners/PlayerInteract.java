@@ -30,22 +30,14 @@ public class PlayerInteract implements Listener {
     public void onPlayerInteract(PlayerInteractEvent event) {
         if (!event.getAction().equals(Action.RIGHT_CLICK_BLOCK))return;
         if (event.getClickedBlock() == null)return;
-        Player player = event.getPlayer();
         Block block = event.getClickedBlock();
         Chunk chunk = block.getChunk();
-        if (getChunkStorage().isProtected(chunk)) {
-            if (getChunkStorage().hasAccess(player, chunk))return;
-            if (isCancelledProtected(block)) {
-                event.setCancelled(true);
-                getMessage().sendActionBar(player, "&cError:&7 Chunk protected by&f Server");
-            }
-        } else if (getChunkStorage().isClaimed(chunk)) {
-            if (getChunkStorage().hasAccess(player, chunk))return;
-            if (isCancelledClaimed(block)){
-                event.setCancelled(true);
-                getMessage().sendActionBar(player, "&cError:&7 Chunk owned by&f " + getChunkStorage().getOwner(chunk).getName());
-            }
-        }
+        if (!getChunkStorage().isClaimed(chunk))return;
+        if (!isCancelledClaimed(block))return;
+        Player player = event.getPlayer();
+        if (getChunkStorage().hasAccess(player, chunk))return;
+        event.setCancelled(true);
+        getMessage().sendActionBar(player, "&cError:&7 Chunk owned by&f " + getChunkStorage().getOwner(chunk).getName());
     }
     private boolean isCancelledClaimed(Block block) {
         if (Tag.BEDS.isTagged(block.getType())) {
@@ -121,22 +113,5 @@ public class PlayerInteract implements Listener {
         } else if (block.getType().equals(Material.TRAPPED_CHEST)) {
             return true;
         } else return block.getType().equals(Material.BARREL);
-    }
-    private boolean isCancelledProtected(Block block) {
-        if (Tag.FENCE_GATES.isTagged(block.getType())) {
-            return true;
-        } else if (Tag.FLOWER_POTS.isTagged(block.getType())) {
-            return true;
-        } else if (Tag.ANVIL.isTagged(block.getType())) {
-            return true;
-        } else if (Tag.CANDLES.isTagged(block.getType())) {
-            return true;
-        } else if (Tag.LOGS.isTagged(block.getType())) {
-            return true;
-        } else if (Tag.TRAPDOORS.isTagged(block.getType())) {
-            return true;
-        } else if (block.getType().equals(Material.DECORATED_POT)) {
-            return true;
-        } else return block.getType().equals(Material.CHISELED_BOOKSHELF);
     }
 }

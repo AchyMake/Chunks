@@ -6,6 +6,7 @@ import org.achymake.chunks.files.ChunkStorage;
 import org.achymake.chunks.files.Database;
 import org.achymake.chunks.files.Message;
 import org.bukkit.Bukkit;
+import org.bukkit.Chunk;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -40,17 +41,18 @@ public class SetOwnerCommand extends ChunksSubCommand {
         if (sender instanceof Player player) {
             if (player.hasPermission("chunks.command.chunks.setowner")) {
                 if (args.length == 2) {
-                    if (getChunkStorage().isProtected(player.getLocation().getChunk())) {
-                        getMessage().send(player, "&cChunk is protected by&f Server");
-                    } else {
-                        OfflinePlayer target = Bukkit.getOfflinePlayer(args[1]);
+                    OfflinePlayer target = Bukkit.getOfflinePlayer(args[1]);
+                    Chunk chunk = player.getLocation().getChunk();
+                    if (getChunkStorage().isAllowedClaim(getPlugin(), chunk)) {
                         if (getDatabase().exist(target)) {
-                            getChunkStorage().setOwner(player, target, player.getLocation().getChunk());
+                            getChunkStorage().setOwner(player, target, chunk);
                             getChunkStorage().claimEffect(player);
-                            getMessage().send(player, "&6Chunk is now owned by&f " + getChunkStorage().getOwner(player.getLocation().getChunk()).getName());
+                            getMessage().send(player, "&6Chunk is now owned by&f " + getChunkStorage().getOwner(chunk).getName());
                         } else {
                             getMessage().send(player, "&cError:&f " + target.getName() + "&7 has never joined");
                         }
+                    } else {
+                        getMessage().send(player, "&cError:&7 You cannot setowner on current region");
                     }
                 }
             }

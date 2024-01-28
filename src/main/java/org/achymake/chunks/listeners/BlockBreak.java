@@ -26,14 +26,9 @@ public class BlockBreak implements Listener {
     public void onBlockBreak(BlockBreakEvent event) {
         Player player = event.getPlayer();
         Chunk chunk = event.getBlock().getChunk();
-        if (getChunkStorage().isProtected(chunk)) {
-            if (getChunkStorage().hasAccess(player, chunk))return;
-            event.setCancelled(true);
-            getMessage().sendActionBar(player, "&cError:&7 Chunk protected by&f Server");
-        } else if (getChunkStorage().isClaimed(chunk)) {
-            if (getChunkStorage().hasAccess(player, chunk))return;
-            event.setCancelled(true);
-            getMessage().sendActionBar(player, "&cError:&7 Chunk owned by&f " + getChunkStorage().getOwner(chunk).getName());
-        }
+        if (!getChunkStorage().isClaimed(chunk))return;
+        if (getChunkStorage().hasAccess(player, chunk))return;
+        event.setCancelled(true);
+        getMessage().sendActionBar(player, "&cError:&7 Chunk owned by&f " + getChunkStorage().getOwner(chunk).getName());
     }
 }

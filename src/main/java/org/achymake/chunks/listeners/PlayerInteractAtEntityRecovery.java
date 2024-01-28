@@ -36,33 +36,20 @@ public class PlayerInteractAtEntityRecovery implements Listener {
     }
     @EventHandler(priority = EventPriority.NORMAL)
     public void onPlayerInteractAtEntityRecovery(PlayerInteractAtEntityEvent event) {
-        Player player = event.getPlayer();
         Chunk chunk = event.getRightClicked().getLocation().getChunk();
+        if (!getChunkStorage().isClaimed(chunk))return;
         Entity entity = event.getRightClicked();
-        if (getChunkStorage().isProtected(chunk)) {
-            if (entity.getType().equals(EntityType.PLAYER))return;
-            if (entity.getType().equals(EntityType.MINECART))return;
-            if (entity.getType().equals(EntityType.BOAT))return;
-            if (entity.isInvulnerable())return;
-            if (entity instanceof ArmorStand armorStand) {
-                if (getDatabase().hasDeathItems(armorStand))return;
-            }
-            if (getChunkStorage().hasAccess(player, chunk))return;
-            if (getConfig().getBoolean("hostile." + entity.getType()))return;
-            event.setCancelled(true);
-            getMessage().sendActionBar(player, "&cError:&7 Chunk protected by&f Server");
-        } else if (getChunkStorage().isClaimed(chunk)) {
-            if (entity.getType().equals(EntityType.PLAYER))return;
-            if (entity.getType().equals(EntityType.MINECART))return;
-            if (entity.getType().equals(EntityType.BOAT))return;
-            if (entity.isInvulnerable())return;
-            if (entity instanceof ArmorStand armorStand) {
-                if (getDatabase().hasDeathItems(armorStand))return;
-            }
-            if (getChunkStorage().hasAccess(player, chunk))return;
-            if (getConfig().getBoolean("hostile." + entity.getType()))return;
-            event.setCancelled(true);
-            getMessage().sendActionBar(player, "&cError:&7 Chunk owned by&f " + getChunkStorage().getOwner(chunk).getName());
+        if (entity.getType().equals(EntityType.PLAYER))return;
+        if (entity.getType().equals(EntityType.MINECART))return;
+        if (entity.getType().equals(EntityType.BOAT))return;
+        if (entity.isInvulnerable())return;
+        if (entity instanceof ArmorStand armorStand) {
+            if (getDatabase().hasDeathItems(armorStand))return;
         }
+        Player player = event.getPlayer();
+        if (getChunkStorage().hasAccess(player, chunk))return;
+        if (getConfig().getBoolean("hostile." + entity.getType()))return;
+        event.setCancelled(true);
+        getMessage().sendActionBar(player, "&cError:&7 Chunk owned by&f " + getChunkStorage().getOwner(chunk).getName());
     }
 }

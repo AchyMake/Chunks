@@ -36,11 +36,7 @@ public class DeleteCommand extends ChunksSubCommand {
             if (sender instanceof Player player) {
                 if (args.length == 1){
                     Chunk chunk = player.getLocation().getChunk();
-                    if (getChunkStorage().isProtected(chunk)) {
-                        getChunkStorage().unprotect(chunk);
-                        getChunkStorage().unclaimEffect(player);
-                        getMessage().send(player, "&6Chunk is now unprotected");
-                    } else if (getChunkStorage().isClaimed(chunk)) {
+                    if (getChunkStorage().isClaimed(chunk)) {
                         getMessage().send(player, "&6You safely unclaimed&f " + getChunkStorage().getOwner(chunk).getName() + "&6 chunk");
                         getChunkStorage().unclaim(chunk);
                         getChunkStorage().unclaimEffect(player);

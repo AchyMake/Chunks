@@ -46,15 +46,13 @@ public class ClaimCommand extends ChunkSubCommand {
         if (player.hasPermission("chunks.command.chunk.claim")) {
             if (args.length == 1) {
                 Chunk chunk = player.getLocation().getChunk();
-                if (getChunkStorage().isProtected(chunk)) {
-                    getMessage().send(player, "&cError:&7 Chunk protected by&f Server");
-                } else if (getChunkStorage().isClaimed(chunk)) {
+                if (getChunkStorage().isClaimed(chunk)) {
                     if (getChunkStorage().isOwner(player ,chunk)) {
                         getMessage().send(player, "&cError:&7 You already own current chunk");
                     } else {
                         getMessage().send(player, "&cError:&7 Chunk owned by&f " + getChunkStorage().getOwner(chunk).getName());
                     }
-                } else {
+                } else if (getChunkStorage().isAllowedClaim(getPlugin(), chunk)) {
                     if (getConfig().getInt("claim.max-claims") > getDatabase().getConfig(player).getInt("claimed")) {
                         if (getEconomy().getBalance(player) >= getConfig().getDouble("claim.cost")) {
                             getChunkStorage().claim(player, chunk);
@@ -66,6 +64,8 @@ public class ClaimCommand extends ChunkSubCommand {
                     } else {
                         getMessage().send(player, "&cError:&7 You have reach your limit of&f " + getDatabase().getConfig(player).getInt("chunks.claimed") + "&7 claims");
                     }
+                } else {
+                    getMessage().send(player, "&cError:&7 You are not allowed to claim inside regions");
                 }
             }
         }

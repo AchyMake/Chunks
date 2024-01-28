@@ -27,17 +27,12 @@ public class EntityTarget implements Listener {
     public void onEntityTarget(EntityTargetEvent event) {
         if (event.getTarget() == null)return;
         if (event.getTarget() instanceof Player player) {
-            Chunk chunk = event.getEntity().getLocation().getChunk();
             Entity entity = event.getEntity();
-            if (getChunkStorage().isProtected(chunk)) {
-                if (getChunkStorage().hasAccess(player, chunk))return;
-                if (getConfig().getBoolean("hostile." + entity.getType()))return;
-                event.setCancelled(true);
-            } else if (getChunkStorage().isClaimed(chunk)) {
-                if (getChunkStorage().hasAccess(player, chunk))return;
-                if (getConfig().getBoolean("hostile." + entity.getType()))return;
-                event.setCancelled(true);
-            }
+            Chunk chunk = entity.getLocation().getChunk();
+            if (!getChunkStorage().isClaimed(chunk))return;
+            if (getChunkStorage().hasAccess(player, chunk))return;
+            if (getConfig().getBoolean("hostile." + entity.getType()))return;
+            event.setCancelled(true);
         }
     }
 }

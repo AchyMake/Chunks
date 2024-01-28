@@ -26,17 +26,12 @@ public class PlayerInteractPhysical implements Listener {
     public void onPlayerInteractPhysical(PlayerInteractEvent event) {
         if (!event.getAction().equals(Action.PHYSICAL))return;
         if (event.getClickedBlock() == null)return;
-        Player player = event.getPlayer();
         Chunk chunk = event.getClickedBlock().getChunk();
-        if (getChunkStorage().isProtected(chunk)) {
-            if (getChunkStorage().hasAccess(player, chunk))return;
-            if (!isPhysical(event.getClickedBlock()))return;
-            event.setCancelled(true);
-        } else if (getChunkStorage().isClaimed(chunk)) {
-            if (getChunkStorage().hasAccess(player, chunk))return;
-            if (!isPhysical(event.getClickedBlock()))return;
-            event.setCancelled(true);
-        }
+        if (!getChunkStorage().isClaimed(chunk))return;
+        Player player = event.getPlayer();
+        if (getChunkStorage().hasAccess(player, chunk))return;
+        if (!isPhysical(event.getClickedBlock()))return;
+        event.setCancelled(true);
     }
     private boolean isPhysical(Block block) {
         return block.getType().equals(Material.FARMLAND) || block.getType().equals(Material.TURTLE_EGG) || Tag.PRESSURE_PLATES.isTagged(block.getType());

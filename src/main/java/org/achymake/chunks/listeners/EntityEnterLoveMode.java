@@ -22,13 +22,9 @@ public class EntityEnterLoveMode implements Listener {
     public void onEntityEnterLoveMode(EntityEnterLoveModeEvent event) {
         if (event.getHumanEntity() instanceof Player player) {
             Chunk chunk = event.getEntity().getLocation().getChunk();
-            if (getChunkStorage().isProtected(chunk)) {
-                if (getChunkStorage().hasAccess(player, chunk))return;
-                event.setCancelled(true);
-            } else if (getChunkStorage().isClaimed(chunk)) {
-                if (getChunkStorage().hasAccess(player, chunk))return;
-                event.setCancelled(true);
-            }
+            if (!getChunkStorage().isClaimed(chunk))return;
+            if (getChunkStorage().hasAccess(player, chunk))return;
+            event.setCancelled(true);
         }
     }
 }

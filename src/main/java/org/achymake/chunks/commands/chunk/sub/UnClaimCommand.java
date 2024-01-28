@@ -41,9 +41,7 @@ public class UnClaimCommand extends ChunkSubCommand {
     public void perform(Player player, String[] args) {
         if (player.hasPermission("chunks.command.chunk.unclaim")) {
             Chunk chunk = player.getLocation().getChunk();
-            if (getChunkStorage().isProtected(chunk)) {
-                getMessage().send(player, "&cError:&7 Chunk protected by&f Server");
-            } else if (getChunkStorage().isClaimed(chunk)) {
+            if (getChunkStorage().isClaimed(chunk)) {
                 if (getChunkStorage().isOwner(player, chunk)){
                     getMessage().send(player, "&6You unclaimed a chunk and got refunded&a " + getEconomy().format(getConfig().getDouble("unclaim.refund")));
                     getChunkStorage().unclaim(chunk);

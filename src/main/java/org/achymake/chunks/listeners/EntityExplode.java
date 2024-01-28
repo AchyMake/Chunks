@@ -26,21 +26,18 @@ public class EntityExplode implements Listener {
     @EventHandler(priority = EventPriority.NORMAL)
     public void onEntityExplode(EntityExplodeEvent event) {
         Chunk chunk = event.getLocation().getChunk();
+        if (!getChunkStorage().isClaimed(chunk))return;
         Entity entity = event.getEntity();
-        if (getChunkStorage().isProtected(chunk)) {
+        if (entity instanceof Creeper) {
             event.blockList().clear();
-        } else if (getChunkStorage().isClaimed(chunk)) {
-            if (entity instanceof Creeper) {
-                event.blockList().clear();
-            } else if (entity instanceof WitherSkull) {
-                event.blockList().clear();
-            } else if (entity instanceof TNTPrimed) {
-                if (getChunkStorage().TNTAllowed(chunk))return;
-                event.blockList().clear();
-            } else if (entity instanceof ExplosiveMinecart) {
-                if (getChunkStorage().TNTAllowed(chunk))return;
-                event.blockList().clear();
-            }
+        } else if (entity instanceof WitherSkull) {
+            event.blockList().clear();
+        } else if (entity instanceof TNTPrimed) {
+            if (getChunkStorage().TNTAllowed(chunk))return;
+            event.blockList().clear();
+        } else if (entity instanceof ExplosiveMinecart) {
+            if (getChunkStorage().TNTAllowed(chunk))return;
+            event.blockList().clear();
         }
     }
 }

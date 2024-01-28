@@ -27,19 +27,10 @@ public class PlayerMove implements Listener {
     @EventHandler(priority = EventPriority.NORMAL)
     public void onPlayerMove(PlayerMoveEvent event) {
         if (event.getTo() == null)return;
-        if (event.getFrom().getChunk() == event.getTo().getChunk())return;
-        Player player = event.getPlayer();
         Chunk chunk = event.getTo().getChunk();
-        if (getChunkStorage().isProtected(chunk)) {
-            if (player.getPersistentDataContainer().has(NamespacedKey.minecraft("chunk-visitor"), PersistentDataType.STRING)) {
-                if (!player.getPersistentDataContainer().get(NamespacedKey.minecraft("chunk-visitor"), PersistentDataType.STRING).equals("Server")) {
-                    player.getPersistentDataContainer().remove(NamespacedKey.minecraft("chunk-visitor"));
-                }
-            } else {
-                getMessage().sendActionBar(player, "&6Visiting&f Server&6's Chunk");
-                player.getPersistentDataContainer().set(NamespacedKey.minecraft("chunk-visitor"), PersistentDataType.STRING, "Server");
-            }
-        } else if (getChunkStorage().isClaimed(chunk)) {
+        if (event.getFrom().getChunk() == chunk)return;
+        Player player = event.getPlayer();
+        if (getChunkStorage().isClaimed(chunk)) {
             if (getChunkStorage().isBanned(chunk, player)) {
                 event.setCancelled(true);
                 getMessage().sendActionBar(player, "&cError:&7 You are banned from&f " + getChunkStorage().getOwner(chunk).getName());

@@ -56,9 +56,6 @@ public class InfoCommand extends ChunksSubCommand {
                                 getMessage().send(player, "- " + player.getServer().getOfflinePlayer(uuid).getName());
                             }
                         }
-                    } else if (getChunkStorage().isProtected(chunk)) {
-                        getMessage().send(player, "&6Chunks Info:&f Chunk");
-                        getMessage().send(player, "&6Owner:&f Server");
                     }
                 }
                 if (args.length == 2) {

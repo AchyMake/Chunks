@@ -1,5 +1,12 @@
 package org.achymake.chunks.files;
 
+import com.sk89q.worldedit.bukkit.BukkitAdapter;
+import com.sk89q.worldedit.math.BlockVector3;
+import com.sk89q.worldguard.WorldGuard;
+import com.sk89q.worldguard.protection.flags.StateFlag;
+import com.sk89q.worldguard.protection.managers.RegionManager;
+import com.sk89q.worldguard.protection.regions.ProtectedCuboidRegion;
+import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import net.milkbowl.vault.economy.Economy;
 import org.achymake.chunks.Chunks;
 import org.bukkit.Chunk;
@@ -17,6 +24,9 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.logging.Level;
+
+import static org.achymake.chunks.Chunks.FLAG_CHUNKS_CLAIM;
 
 public class ChunkStorage {
     private final Chunks plugin;
@@ -36,14 +46,37 @@ public class ChunkStorage {
     public PersistentDataContainer getData(Chunk chunk) {
         return chunk.getPersistentDataContainer();
     }
-    public boolean hasAccess(Player player, Chunk chunk) {
-        if (isProtected(chunk)) {
-            return hasChunkEdit(player);
+    public boolean isAllowedClaim(Chunks chunks, Chunk chunk) {
+        try {
+            int bx = chunk.getX() << 4;
+            int bz = chunk.getZ() << 4;
+            BlockVector3 pt1 = BlockVector3.at(bx, 0, bz);
+            BlockVector3 pt2 = BlockVector3.at(bx + 15, 256, bz + 15);
+            ProtectedCuboidRegion region = new ProtectedCuboidRegion("_", pt1, pt2);
+            RegionManager regionManager =
+                    WorldGuard.getInstance()
+                            .getPlatform()
+                            .getRegionContainer()
+                            .get(BukkitAdapter.adapt(chunk.getWorld()));
+            if (regionManager == null) {
+                return true;
+            }
+            for (ProtectedRegion regionIn : regionManager.getApplicableRegions(region)) {
+                StateFlag.State flag = regionIn.getFlag(FLAG_CHUNKS_CLAIM);
+                if (flag == StateFlag.State.DENY) return false;
+            }
+            return true;
+        } catch (Exception e) {
+            chunks.getMessage().sendLog(Level.WARNING, e.getMessage());
         }
+        return false;
+    }
+    public boolean hasAccess(Player player, Chunk chunk) {
         if (isClaimed(chunk)) {
             return isOwner(player, chunk) || isMember(player, chunk) || hasChunkEdit(player);
+        } else {
+            return true;
         }
-        return true;
     }
     public boolean isOwner(Player player, Chunk chunk) {
         return getOwner(chunk) == player;
@@ -155,15 +188,6 @@ public class ChunkStorage {
         getEconomy().depositPlayer(offlinePlayer, getConfig().getDouble("unclaim.refund"));
         getData(chunk).remove(NamespacedKey.minecraft("date-claimed"));
         getData(chunk).remove(NamespacedKey.minecraft("owner"));
-    }
-    public boolean isProtected(Chunk chunk) {
-        return getData(chunk).has(NamespacedKey.minecraft("protected"), PersistentDataType.STRING);
-    }
-    public void protect(Chunk chunk) {
-        getData(chunk).set(NamespacedKey.minecraft("protected"), PersistentDataType.STRING, "true");
-    }
-    public void unprotect(Chunk chunk) {
-        getData(chunk).remove(NamespacedKey.minecraft("protected"));
     }
     public boolean isBanned(Chunk chunk, Player player) {
         return getBanned(chunk).contains(player.getUniqueId().toString());

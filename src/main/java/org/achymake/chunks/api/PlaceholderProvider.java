@@ -18,7 +18,7 @@ public class PlaceholderProvider extends PlaceholderExpansion {
     }
     @Override
     public String getVersion() {
-        return "1.10.5";
+        return "1.10.7";
     }
     @Override
     public boolean canRegister() {
@@ -40,16 +40,13 @@ public class PlaceholderProvider extends PlaceholderExpansion {
             Chunks chunks = Chunks.getInstance();
             Chunk chunk = player.getLocation().getChunk();
             if (params.equals("owner")) {
-                if (chunks.getChunkStorage().isProtected(chunk)) {
-                    return "Server";
-                }
                 if (chunks.getChunkStorage().isClaimed(chunk)) {
                     return chunks.getChunkStorage().getOwner(chunk).getName();
                 }
                 return "None";
             }
             if (params.equals("access")) {
-                if (chunks.getChunkStorage().isProtected(chunk) || chunks.getChunkStorage().isClaimed(chunk)) {
+                if (chunks.getChunkStorage().isClaimed(chunk)) {
                     if (chunks.getChunkStorage().hasAccess(player, chunk)) {
                         return "True";
                     }else {

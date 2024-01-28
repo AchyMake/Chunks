@@ -24,16 +24,11 @@ public class PlayerShearEntity implements Listener {
     }
     @EventHandler(priority = EventPriority.NORMAL)
     public void onPlayerShearEntity(PlayerShearEntityEvent event) {
-        Player player = event.getPlayer();
         Chunk chunk = event.getEntity().getLocation().getChunk();
-        if (getChunkStorage().isProtected(chunk)) {
-            if (getChunkStorage().hasAccess(player, chunk))return;
-            event.setCancelled(true);
-            getMessage().sendActionBar(player, "&cError:&7 Chunk protected by&f Server");
-        } else if (getChunkStorage().isClaimed(chunk)) {
-            if (getChunkStorage().hasAccess(player, chunk))return;
-            event.setCancelled(true);
-            getMessage().sendActionBar(player, "&cError:&7 Chunk owned by&f " + getChunkStorage().getOwner(chunk).getName());
-        }
+        if (!getChunkStorage().isClaimed(chunk))return;
+        Player player = event.getPlayer();
+        if (getChunkStorage().hasAccess(player, chunk))return;
+        event.setCancelled(true);
+        getMessage().sendActionBar(player, "&cError:&7 Chunk owned by&f " + getChunkStorage().getOwner(chunk).getName());
     }
 }

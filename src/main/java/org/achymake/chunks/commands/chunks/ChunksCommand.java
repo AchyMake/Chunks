@@ -19,7 +19,6 @@ public class ChunksCommand implements CommandExecutor, TabCompleter {
         chunksSubCommands.add(new EffectCommand());
         chunksSubCommands.add(new HelpCommand());
         chunksSubCommands.add(new InfoCommand());
-        chunksSubCommands.add(new ProtectCommand());
         chunksSubCommands.add(new ReloadCommand());
         chunksSubCommands.add(new SetOwnerCommand());
     }
@@ -52,9 +51,6 @@ public class ChunksCommand implements CommandExecutor, TabCompleter {
             }
             if (sender.hasPermission("chunks.command.chunks.info")) {
                 commands.add("info");
-            }
-            if (sender.hasPermission("chunks.command.chunks.protect")) {
-                commands.add("protect");
             }
             if (sender.hasPermission("chunks.command.chunks.reload")) {
                 commands.add("reload");

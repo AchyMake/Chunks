@@ -1,5 +1,10 @@
 package org.achymake.chunks;
 
+import com.sk89q.worldguard.WorldGuard;
+import com.sk89q.worldguard.protection.flags.Flag;
+import com.sk89q.worldguard.protection.flags.StateFlag;
+import com.sk89q.worldguard.protection.flags.registry.FlagConflictException;
+import com.sk89q.worldguard.protection.flags.registry.FlagRegistry;
 import net.milkbowl.vault.economy.Economy;
 import org.achymake.chunks.api.PlaceholderProvider;
 import org.achymake.chunks.commands.chunk.ChunkCommand;
@@ -25,6 +30,22 @@ public final class Chunks extends JavaPlugin {
     private static Message message;
     private static ChunkStorage chunkStorage;
     private static Economy economy = null;
+    public static StateFlag FLAG_CHUNKS_CLAIM;
+    @Override
+    public void onLoad() {
+        FlagRegistry registry = WorldGuard.getInstance().getFlagRegistry();
+        try {
+            StateFlag flag = new StateFlag("chunks-claim", false);
+            registry.register(flag);
+        } catch (FlagConflictException ignored) {
+            Flag<?> existing = registry.get("chunks-claim");
+            if (existing instanceof StateFlag) {
+                FLAG_CHUNKS_CLAIM = (StateFlag) existing;
+            }
+        } catch (Exception e) {
+            getMessage().sendLog(Level.WARNING, e.getMessage());
+        }
+    }
     @Override
     public void onEnable() {
         instance = this;
@@ -84,8 +105,6 @@ public final class Chunks extends JavaPlugin {
         new BlockPlace(this);
         new BlockRedstone(this);
         new CauldronLevelChange(this);
-        new CreatureSpawn(this);
-        new EntityBlockForm(this);
         new EntityDamageByEntity(this);
         new EntityChangeBlock(this);
         new EntityEnterLoveMode(this);
