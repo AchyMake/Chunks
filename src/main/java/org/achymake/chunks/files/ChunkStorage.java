@@ -54,9 +54,7 @@ public class ChunkStorage {
             BlockVector3 pt2 = BlockVector3.at(bx + 15, 256, bz + 15);
             ProtectedCuboidRegion region = new ProtectedCuboidRegion("_", pt1, pt2);
             RegionManager regionManager = WorldGuard.getInstance().getPlatform().getRegionContainer().get(BukkitAdapter.adapt(chunk.getWorld()));
-            if (regionManager == null) {
-                return true;
-            } else {
+            if (regionManager != null) {
                 for (ProtectedRegion regionIn : regionManager.getApplicableRegions(region)) {
                     StateFlag.State flag = regionIn.getFlag(FLAG_CHUNKS_CLAIM);
                     if (flag == StateFlag.State.ALLOW) {
@@ -66,7 +64,7 @@ public class ChunkStorage {
                     }
                 }
             }
-            return false;
+            return true;
         } catch (Exception e) {
             chunks.getMessage().sendLog(Level.WARNING, e.getMessage());
             return false;
