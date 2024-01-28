@@ -31,12 +31,13 @@ public class PlayerInteractAtEntity implements Listener {
     @EventHandler(priority = EventPriority.NORMAL)
     public void onPlayerInteractAtEntity(PlayerInteractAtEntityEvent event) {
         Player player = event.getPlayer();
-        Chunk chunk = event.getRightClicked().getLocation().getChunk();
         Entity entity = event.getRightClicked();
+        Chunk chunk = entity.getLocation().getChunk();
         if (getChunkStorage().isProtected(chunk)) {
             if (entity.getType().equals(EntityType.PLAYER))return;
             if (entity.getType().equals(EntityType.MINECART))return;
             if (entity.getType().equals(EntityType.BOAT))return;
+            if (entity.getType().equals(EntityType.INTERACTION))return;
             if (entity.isInvulnerable())return;
             if (getChunkStorage().hasAccess(player, chunk))return;
             if (getConfig().getBoolean("hostile." + entity.getType()))return;
@@ -46,6 +47,7 @@ public class PlayerInteractAtEntity implements Listener {
             if (entity.getType().equals(EntityType.PLAYER))return;
             if (entity.getType().equals(EntityType.MINECART))return;
             if (entity.getType().equals(EntityType.BOAT))return;
+            if (entity.getType().equals(EntityType.INTERACTION))return;
             if (entity.isInvulnerable())return;
             if (getChunkStorage().hasAccess(player, chunk))return;
             if (getConfig().getBoolean("hostile." + entity.getType()))return;

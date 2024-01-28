@@ -15,7 +15,8 @@ import org.bukkit.event.entity.EntityExplodeEvent;
 
 public class EntityExplode implements Listener {
     private final Chunks plugin;
-    private ChunkStorage getChunkStorage() {
+    private ChunkStorage getChunkStorage()
+    {
         return plugin.getChunkStorage();
     }
     public EntityExplode(Chunks plugin) {

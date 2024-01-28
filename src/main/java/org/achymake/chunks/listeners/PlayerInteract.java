@@ -31,159 +31,112 @@ public class PlayerInteract implements Listener {
         if (!event.getAction().equals(Action.RIGHT_CLICK_BLOCK))return;
         if (event.getClickedBlock() == null)return;
         Player player = event.getPlayer();
-        Chunk chunk = event.getClickedBlock().getChunk();
+        Block block = event.getClickedBlock();
+        Chunk chunk = block.getChunk();
         if (getChunkStorage().isProtected(chunk)) {
             if (getChunkStorage().hasAccess(player, chunk))return;
-            if (!isCancelledProtected(event.getClickedBlock()))return;
-            event.setCancelled(true);
-            getMessage().sendActionBar(player, "&cError:&7 Chunk protected by&f Server");
+            if (isCancelledProtected(block)) {
+                event.setCancelled(true);
+                getMessage().sendActionBar(player, "&cError:&7 Chunk protected by&f Server");
+            }
         } else if (getChunkStorage().isClaimed(chunk)) {
             if (getChunkStorage().hasAccess(player, chunk))return;
-            if (!isCancelledClaimed(event.getClickedBlock()))return;
-            event.setCancelled(true);
-            getMessage().sendActionBar(player, "&cError:&7 Chunk owned by&f " + getChunkStorage().getOwner(chunk).getName());
-
+            if (isCancelledClaimed(block)){
+                event.setCancelled(true);
+                getMessage().sendActionBar(player, "&cError:&7 Chunk owned by&f " + getChunkStorage().getOwner(chunk).getName());
+            }
         }
     }
-    public static boolean isCancelledClaimed(Block block) {
+    private boolean isCancelledClaimed(Block block) {
         if (Tag.BEDS.isTagged(block.getType())) {
             return true;
-        }
-        if (Tag.SHULKER_BOXES.isTagged(block.getType())) {
+        } else if (Tag.SHULKER_BOXES.isTagged(block.getType())) {
             return true;
-        }
-        if (Tag.FLOWER_POTS.isTagged(block.getType())) {
+        } else if (Tag.FLOWER_POTS.isTagged(block.getType())) {
             return true;
-        }
-        if (Tag.ANVIL.isTagged(block.getType())) {
+        } else if (Tag.ANVIL.isTagged(block.getType())) {
             return true;
-        }
-        if (Tag.CAMPFIRES.isTagged(block.getType())) {
+        } else if (Tag.CAMPFIRES.isTagged(block.getType())) {
             return true;
-        }
-        if (Tag.LOGS.isTagged(block.getType())) {
+        } else if (Tag.LOGS.isTagged(block.getType())) {
             return true;
-        }
-        if (Tag.TRAPDOORS.isTagged(block.getType())) {
+        } else if (Tag.TRAPDOORS.isTagged(block.getType())) {
             return true;
-        }
-        if (Tag.DOORS.isTagged(block.getType())) {
+        } else if (Tag.DOORS.isTagged(block.getType())) {
             return true;
-        }
-        if (Tag.BUTTONS.isTagged(block.getType())) {
+        } else if (Tag.BUTTONS.isTagged(block.getType())) {
             return true;
-        }
-        if (Tag.FENCE_GATES.isTagged(block.getType())) {
+        } else if (Tag.FENCE_GATES.isTagged(block.getType())) {
             return true;
-        }
-        if (Tag.CANDLES.isTagged(block.getType())) {
+        } else if (Tag.CANDLES.isTagged(block.getType())) {
             return true;
-        }
-        if (block.getType().equals(Material.DECORATED_POT)) {
+        } else if (block.getType().equals(Material.DECORATED_POT)) {
             return true;
-        }
-        if (block.getType().equals(Material.CHISELED_BOOKSHELF)) {
+        } else if (block.getType().equals(Material.CHISELED_BOOKSHELF)) {
             return true;
-        }
-        if (block.getType().equals(Material.DISPENSER)) {
+        } else if (block.getType().equals(Material.DISPENSER)) {
             return true;
-        }
-        if (block.getType().equals(Material.DROPPER)) {
+        } else if (block.getType().equals(Material.DROPPER)) {
             return true;
-        }
-        if (block.getType().equals(Material.HOPPER)) {
+        } else if (block.getType().equals(Material.HOPPER)) {
             return true;
-        }
-        if (block.getType().equals(Material.DAYLIGHT_DETECTOR)) {
+        } else if (block.getType().equals(Material.DAYLIGHT_DETECTOR)) {
             return true;
-        }
-        if (block.getType().equals(Material.LECTERN)) {
+        } else if (block.getType().equals(Material.LECTERN)) {
             return true;
-        }
-        if (block.getType().equals(Material.COMPARATOR)) {
+        } else if (block.getType().equals(Material.COMPARATOR)) {
             return true;
-        }
-        if (block.getType().equals(Material.REPEATER)) {
+        } else if (block.getType().equals(Material.REPEATER)) {
             return true;
-        }
-        if (block.getType().equals(Material.REDSTONE_WIRE)) {
+        } else if (block.getType().equals(Material.REDSTONE_WIRE)) {
             return true;
-        }
-        if (block.getType().equals(Material.LEVER)) {
+        } else if (block.getType().equals(Material.LEVER)) {
             return true;
-        }
-        if (block.getType().equals(Material.JUKEBOX)) {
+        } else if (block.getType().equals(Material.JUKEBOX)) {
             return true;
-        }
-        if (block.getType().equals(Material.NOTE_BLOCK)) {
+        } else if (block.getType().equals(Material.NOTE_BLOCK)) {
             return true;
-        }
-        if (block.getType().equals(Material.BEEHIVE)) {
+        } else if (block.getType().equals(Material.BEEHIVE)) {
             return true;
-        }
-        if (block.getType().equals(Material.BEE_NEST)) {
+        } else if (block.getType().equals(Material.BEE_NEST)) {
             return true;
-        }
-        if (block.getType().equals(Material.RESPAWN_ANCHOR)) {
+        } else if (block.getType().equals(Material.RESPAWN_ANCHOR)) {
             return true;
-        }
-        if (block.getType().equals(Material.LODESTONE)) {
+        } else if (block.getType().equals(Material.LODESTONE)) {
             return true;
-        }
-        if (block.getType().equals(Material.BEACON)) {
+        } else if (block.getType().equals(Material.BEACON)) {
             return true;
-        }
-        if (block.getType().equals(Material.BELL)) {
+        } else if (block.getType().equals(Material.BELL)) {
             return true;
-        }
-        if (block.getType().equals(Material.BREWING_STAND)) {
+        } else if (block.getType().equals(Material.BREWING_STAND)) {
             return true;
-        }
-        if (block.getType().equals(Material.SMOKER)) {
+        } else if (block.getType().equals(Material.SMOKER)) {
             return true;
-        }
-        if (block.getType().equals(Material.BLAST_FURNACE)) {
+        } else if (block.getType().equals(Material.BLAST_FURNACE)) {
             return true;
-        }
-        if (block.getType().equals(Material.FURNACE)) {
+        } else if (block.getType().equals(Material.FURNACE)) {
             return true;
-        }
-        if (block.getType().equals(Material.CHEST)) {
+        } else if (block.getType().equals(Material.CHEST)) {
             return true;
-        }
-        if (block.getType().equals(Material.TRAPPED_CHEST)) {
+        } else if (block.getType().equals(Material.TRAPPED_CHEST)) {
             return true;
-        }
-        if (block.getType().equals(Material.BARREL)) {
-            return true;
-        }
-        return false;
+        } else return block.getType().equals(Material.BARREL);
     }
     private boolean isCancelledProtected(Block block) {
         if (Tag.FENCE_GATES.isTagged(block.getType())) {
             return true;
-        }
-        if (Tag.FLOWER_POTS.isTagged(block.getType())) {
+        } else if (Tag.FLOWER_POTS.isTagged(block.getType())) {
             return true;
-        }
-        if (Tag.ANVIL.isTagged(block.getType())) {
+        } else if (Tag.ANVIL.isTagged(block.getType())) {
             return true;
-        }
-        if (Tag.CANDLES.isTagged(block.getType())) {
+        } else if (Tag.CANDLES.isTagged(block.getType())) {
             return true;
-        }
-        if (Tag.LOGS.isTagged(block.getType())) {
+        } else if (Tag.LOGS.isTagged(block.getType())) {
             return true;
-        }
-        if (Tag.TRAPDOORS.isTagged(block.getType())) {
+        } else if (Tag.TRAPDOORS.isTagged(block.getType())) {
             return true;
-        }
-        if (block.getType().equals(Material.DECORATED_POT)) {
+        } else if (block.getType().equals(Material.DECORATED_POT)) {
             return true;
-        }
-        if (block.getType().equals(Material.CHISELED_BOOKSHELF)) {
-            return true;
-        }
-        return false;
+        } else return block.getType().equals(Material.CHISELED_BOOKSHELF);
     }
 }
