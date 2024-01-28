@@ -37,6 +37,7 @@ public final class Chunks extends JavaPlugin {
         try {
             StateFlag flag = new StateFlag("chunks-claim", false);
             registry.register(flag);
+            FLAG_CHUNKS_CLAIM = flag;
         } catch (FlagConflictException ignored) {
             Flag<?> existing = registry.get("chunks-claim");
             if (existing instanceof StateFlag) {

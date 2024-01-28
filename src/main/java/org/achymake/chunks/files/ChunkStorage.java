@@ -53,23 +53,24 @@ public class ChunkStorage {
             BlockVector3 pt1 = BlockVector3.at(bx, 0, bz);
             BlockVector3 pt2 = BlockVector3.at(bx + 15, 256, bz + 15);
             ProtectedCuboidRegion region = new ProtectedCuboidRegion("_", pt1, pt2);
-            RegionManager regionManager =
-                    WorldGuard.getInstance()
-                            .getPlatform()
-                            .getRegionContainer()
-                            .get(BukkitAdapter.adapt(chunk.getWorld()));
+            RegionManager regionManager = WorldGuard.getInstance().getPlatform().getRegionContainer().get(BukkitAdapter.adapt(chunk.getWorld()));
             if (regionManager == null) {
                 return true;
+            } else {
+                for (ProtectedRegion regionIn : regionManager.getApplicableRegions(region)) {
+                    StateFlag.State flag = regionIn.getFlag(FLAG_CHUNKS_CLAIM);
+                    if (flag == StateFlag.State.ALLOW) {
+                        return true;
+                    } else if (flag == StateFlag.State.DENY) {
+                        return false;
+                    }
+                }
             }
-            for (ProtectedRegion regionIn : regionManager.getApplicableRegions(region)) {
-                StateFlag.State flag = regionIn.getFlag(FLAG_CHUNKS_CLAIM);
-                if (flag == StateFlag.State.DENY) return false;
-            }
-            return true;
+            return false;
         } catch (Exception e) {
             chunks.getMessage().sendLog(Level.WARNING, e.getMessage());
+            return false;
         }
-        return false;
     }
     public boolean hasAccess(Player player, Chunk chunk) {
         if (isClaimed(chunk)) {
