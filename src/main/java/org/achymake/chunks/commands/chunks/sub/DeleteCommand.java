@@ -2,21 +2,18 @@ package org.achymake.chunks.commands.chunks.sub;
 
 import org.achymake.chunks.Chunks;
 import org.achymake.chunks.commands.chunks.ChunksSubCommand;
-import org.achymake.chunks.files.ChunkStorage;
-import org.achymake.chunks.files.Message;
+import org.achymake.chunks.data.ChunkStorage;
+import org.achymake.chunks.data.Message;
 import org.bukkit.Chunk;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 public class DeleteCommand extends ChunksSubCommand {
-    private Chunks getPlugin() {
-        return Chunks.getInstance();
-    }
-    private ChunkStorage getChunkStorage() {
-        return getPlugin().getChunkStorage();
-    }
-    private Message getMessage() {
-        return getPlugin().getMessage();
+    private final ChunkStorage chunkStorage;
+    private final Message message;
+    public DeleteCommand(Chunks plugin) {
+        chunkStorage = plugin.getChunkStorage();
+        message = plugin.getMessage();
     }
     @Override
     public String getName() {
@@ -36,12 +33,12 @@ public class DeleteCommand extends ChunksSubCommand {
             if (sender instanceof Player player) {
                 if (args.length == 1){
                     Chunk chunk = player.getLocation().getChunk();
-                    if (getChunkStorage().isClaimed(chunk)) {
-                        getMessage().send(player, "&6You safely unclaimed&f " + getChunkStorage().getOwner(chunk).getName() + "&6 chunk");
-                        getChunkStorage().unclaim(chunk);
-                        getChunkStorage().unclaimEffect(player);
+                    if (chunkStorage.isClaimed(chunk)) {
+                        message.send(player, "&6You safely unclaimed&f " + chunkStorage.getOwner(chunk).getName() + "&6 chunk");
+                        chunkStorage.unclaim(chunk);
+                        chunkStorage.unclaimEffect(player);
                     } else {
-                        getMessage().send(player, "&cError:&7 Chunk already unclaimed");
+                        message.send(player, "&c&lHey!&7 Sorry, but chunk is already unclaimed");
                     }
                 }
             }

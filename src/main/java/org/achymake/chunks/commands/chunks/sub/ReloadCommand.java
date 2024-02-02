@@ -2,16 +2,16 @@ package org.achymake.chunks.commands.chunks.sub;
 
 import org.achymake.chunks.Chunks;
 import org.achymake.chunks.commands.chunks.ChunksSubCommand;
-import org.achymake.chunks.files.Message;
+import org.achymake.chunks.data.Message;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 public class ReloadCommand extends ChunksSubCommand {
-    private Chunks getPlugin() {
-        return Chunks.getInstance();
-    }
-    private Message getMessage() {
-        return getPlugin().getMessage();
+    private final Chunks plugin;
+    private final Message message;
+    public ReloadCommand(Chunks plugin) {
+        this.plugin = plugin;
+        message = plugin.getMessage();
     }
     @Override
     public String getName() {
@@ -30,8 +30,8 @@ public class ReloadCommand extends ChunksSubCommand {
         if (sender instanceof Player player) {
             if (player.hasPermission("chunks.command.chunks.reload")) {
                 if (args.length == 1) {
-                    getPlugin().reload();
-                    getMessage().send(player, "&6Chunks:&f reloaded");
+                    plugin.reload();
+                    message.send(player, "&6Chunks:&f reloaded");
                 }
             }
         }

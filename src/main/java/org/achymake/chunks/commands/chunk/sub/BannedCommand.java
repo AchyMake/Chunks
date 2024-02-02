@@ -2,21 +2,18 @@ package org.achymake.chunks.commands.chunk.sub;
 
 import org.achymake.chunks.Chunks;
 import org.achymake.chunks.commands.chunk.ChunkSubCommand;
-import org.achymake.chunks.files.Database;
-import org.achymake.chunks.files.Message;
+import org.achymake.chunks.data.Message;
+import org.achymake.chunks.data.Userdata;
 import org.bukkit.entity.Player;
 
 import java.util.UUID;
 
 public class BannedCommand extends ChunkSubCommand {
-    private Chunks getPlugin() {
-        return Chunks.getInstance();
-    }
-    private Database getDatabase() {
-        return getPlugin().getDatabase();
-    }
-    private Message getMessage() {
-        return getPlugin().getMessage();
+    private final Userdata userdata;
+    private final Message message;
+    public BannedCommand(Chunks plugin) {
+        userdata = plugin.getUserdata();
+        message = plugin.getMessage();
     }
     @Override
     public String getName() {
@@ -34,12 +31,12 @@ public class BannedCommand extends ChunkSubCommand {
     public void perform(Player player, String[] args) {
         if (player.hasPermission("chunks.command.chunk.banned")) {
             if (args.length == 1) {
-                if (getDatabase().getConfig(player).getStringList("banned").isEmpty()){
-                    getMessage().send(player, "&cError:&7 You don't have any banned players");
+                if (userdata.getConfig(player).getStringList("banned").isEmpty()){
+                    message.send(player, "&c&lHey!&7 Sorry, but you don't have any banned players");
                 } else {
-                    getMessage().send(player, "&6Banned:");
-                    for (String uuidListed : getDatabase().getConfig(player).getStringList("banned")) {
-                        getMessage().send(player, "- " + player.getServer().getOfflinePlayer(UUID.fromString(uuidListed)).getName());
+                    message.send(player, "&6Banned:");
+                    for (String uuidListed : userdata.getConfig(player).getStringList("banned")) {
+                        message.send(player, "- " + player.getServer().getOfflinePlayer(UUID.fromString(uuidListed)).getName());
                     }
                 }
             }

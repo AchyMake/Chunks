@@ -3,31 +3,25 @@ package org.achymake.chunks.commands.chunk.sub;
 import net.milkbowl.vault.economy.Economy;
 import org.achymake.chunks.Chunks;
 import org.achymake.chunks.commands.chunk.ChunkSubCommand;
-import org.achymake.chunks.files.ChunkStorage;
-import org.achymake.chunks.files.Database;
-import org.achymake.chunks.files.Message;
+import org.achymake.chunks.data.ChunkStorage;
+import org.achymake.chunks.data.Message;
+import org.achymake.chunks.data.Userdata;
 import org.bukkit.Chunk;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
 public class ClaimCommand extends ChunkSubCommand {
-    private Chunks getPlugin() {
-        return Chunks.getInstance();
-    }
-    private FileConfiguration getConfig() {
-        return getPlugin().getConfig();
-    }
-    private Economy getEconomy() {
-        return getPlugin().getEconomy();
-    }
-    private Database getDatabase() {
-        return getPlugin().getDatabase();
-    }
-    private ChunkStorage getChunkStorage() {
-        return getPlugin().getChunkStorage();
-    }
-    private Message getMessage() {
-        return getPlugin().getMessage();
+    private final FileConfiguration config;
+    private final Userdata userdata;
+    private final ChunkStorage chunkStorage;
+    private final Economy economy;
+    private final Message message;
+    public ClaimCommand(Chunks plugin) {
+        config = plugin.getConfig();
+        userdata = plugin.getUserdata();
+        chunkStorage = plugin.getChunkStorage();
+        economy = plugin.getEconomy();
+        message = plugin.getMessage();
     }
     @Override
     public String getName() {
@@ -46,26 +40,26 @@ public class ClaimCommand extends ChunkSubCommand {
         if (player.hasPermission("chunks.command.chunk.claim")) {
             if (args.length == 1) {
                 Chunk chunk = player.getLocation().getChunk();
-                if (getChunkStorage().isClaimed(chunk)) {
-                    if (getChunkStorage().isOwner(player ,chunk)) {
-                        getMessage().send(player, "&cError:&7 You already own current chunk");
+                if (chunkStorage.isClaimed(chunk)) {
+                    if (chunkStorage.isOwner(player ,chunk)) {
+                        message.send(player, "&c&lHey!&7 Sorry, but you already own current chunk");
                     } else {
-                        getMessage().send(player, "&cError:&7 Chunk owned by&f " + getChunkStorage().getOwner(chunk).getName());
+                        message.send(player, "&c&lHey!&7 Sorry, but chunk is owned by&f " + chunkStorage.getOwner(chunk).getName());
                     }
-                } else if (getChunkStorage().isAllowedClaim(getPlugin(), chunk)) {
-                    if (getConfig().getInt("claim.max-claims") > getDatabase().getConfig(player).getInt("claimed")) {
-                        if (getEconomy().getBalance(player) >= getConfig().getDouble("claim.cost")) {
-                            getChunkStorage().claim(player, chunk);
-                            getChunkStorage().claimEffect(player);
-                            getMessage().send(player, "&6You bought a chunk for&a " + getEconomy().format(getConfig().getDouble("claim.cost")));
+                } else if (chunkStorage.isAllowedClaim(chunk)) {
+                    if (config.getInt("claim.max-claims") > userdata.getConfig(player).getInt("claimed")) {
+                        if (economy.getBalance(player) >= config.getDouble("claim.cost")) {
+                            chunkStorage.claim(player, chunk);
+                            chunkStorage.claimEffect(player);
+                            message.send(player, "&6You bought a chunk for&a " + economy.currencyNamePlural() + " " + economy.format(config.getDouble("claim.cost")));
                         } else {
-                            getMessage().send(player, "&cError:&7 You don't have&a " + getEconomy().format(getConfig().getDouble("claim.cost")) + "&7 to buy a chunk");
+                            message.send(player, "&c&lHey!&7 Sorry, but you don't have&a " + economy.currencyNamePlural() + " " + economy.format(config.getDouble("claim.cost")) + "&7 to buy a chunk");
                         }
                     } else {
-                        getMessage().send(player, "&cError:&7 You have reach your limit of&f " + getDatabase().getConfig(player).getInt("chunks.claimed") + "&7 claims");
+                        message.send(player, "&c&lHey!&7 Sorry, but you have reach your limit of&f " + userdata.getConfig(player).getInt("chunks.claimed") + "&7 claims");
                     }
                 } else {
-                    getMessage().send(player, "&cError:&7 You are not allowed to claim inside regions");
+                    message.send(player, "&c&lHey!&7 Sorry, but you are not allowed to claim here");
                 }
             }
         }

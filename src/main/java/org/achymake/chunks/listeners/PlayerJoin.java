@@ -7,16 +7,15 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 
-public class NotifyUpdate implements Listener {
+public class PlayerJoin implements Listener {
     private final Chunks plugin;
-    public NotifyUpdate(Chunks plugin) {
-        plugin.getServer().getPluginManager().registerEvents(this, plugin);
+    public PlayerJoin(Chunks plugin) {
         this.plugin = plugin;
     }
     @EventHandler(priority = EventPriority.NORMAL)
-    public void onNotifyUpdate(PlayerJoinEvent event) {
+    public void onPlayerJoin(PlayerJoinEvent event) {
         Player player = event.getPlayer();
-        if (!player.hasPermission("chunks.command.chunks.reload"))return;
+        if (!player.hasPermission("chunks.event.join.update"))return;
         plugin.getUpdate(player);
     }
 }

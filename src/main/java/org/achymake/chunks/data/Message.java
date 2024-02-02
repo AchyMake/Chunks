@@ -1,4 +1,4 @@
-package org.achymake.chunks.files;
+package org.achymake.chunks.data;
 
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
@@ -14,14 +14,13 @@ import java.util.logging.Level;
 
 public class Message {
     private final Chunks plugin;
-    private File getDataFolder() {
-        return plugin.getDataFolder();
-    }
+    private final File dataFolder;
     public Message(Chunks plugin) {
+        dataFolder = plugin.getDataFolder();
         this.plugin = plugin;
     }
     public File getFile() {
-        return new File(getDataFolder(), "message.yml");
+        return new File(dataFolder, "message.yml");
     }
     public boolean exist() {
         return getFile().exists();

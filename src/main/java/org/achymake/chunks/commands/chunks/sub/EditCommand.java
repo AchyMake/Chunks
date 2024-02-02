@@ -2,20 +2,17 @@ package org.achymake.chunks.commands.chunks.sub;
 
 import org.achymake.chunks.Chunks;
 import org.achymake.chunks.commands.chunks.ChunksSubCommand;
-import org.achymake.chunks.files.ChunkStorage;
-import org.achymake.chunks.files.Message;
+import org.achymake.chunks.data.ChunkStorage;
+import org.achymake.chunks.data.Message;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 public class EditCommand extends ChunksSubCommand {
-    private Chunks getPlugin() {
-        return Chunks.getInstance();
-    }
-    private ChunkStorage getChunkStorage() {
-        return getPlugin().getChunkStorage();
-    }
-    private Message getMessage() {
-        return getPlugin().getMessage();
+    private final ChunkStorage chunkStorage;
+    private final Message message;
+    public EditCommand(Chunks plugin) {
+        chunkStorage = plugin.getChunkStorage();
+        message = plugin.getMessage();
     }
     @Override
     public String getName() {
@@ -34,12 +31,12 @@ public class EditCommand extends ChunksSubCommand {
         if (sender instanceof Player player) {
             if (args.length == 1) {
                 if (player.hasPermission("chunks.command.chunks.edit")) {
-                    if (getChunkStorage().hasChunkEdit(player)) {
-                        getChunkStorage().getChunkEditors().remove(player);
-                        getMessage().sendActionBar(player, "&6&lChunk Edit:&c Disabled");
+                    if (chunkStorage.hasChunkEdit(player)) {
+                        chunkStorage.getChunkEditors().remove(player);
+                        message.sendActionBar(player, "&6&lChunk Edit:&c Disabled");
                     } else {
-                        getChunkStorage().getChunkEditors().add(player);
-                        getMessage().sendActionBar(player, "&6&lChunk Edit:&a Enabled");
+                        chunkStorage.getChunkEditors().add(player);
+                        message.sendActionBar(player, "&6&lChunk Edit:&a Enabled");
                     }
                 }
             }

@@ -2,9 +2,9 @@ package org.achymake.chunks.commands.chunk;
 
 import org.achymake.chunks.Chunks;
 import org.achymake.chunks.commands.chunk.sub.*;
-import org.achymake.chunks.files.Database;
-import org.achymake.chunks.files.Message;
+import org.achymake.chunks.data.Userdata;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.Server;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -16,40 +16,32 @@ import java.util.List;
 import java.util.UUID;
 
 public class ChunkCommand implements CommandExecutor, TabCompleter {
-    private Chunks getPlugin() {
-        return Chunks.getInstance();
-    }
-    private Database getDatabase() {
-        return getPlugin().getDatabase();
-    }
-    private Message getMessage() {
-        return getPlugin().getMessage();
-    }
+    private final Userdata userdata;
+    private final Server server;
     private final ArrayList<ChunkSubCommand> chunkSubCommands = new ArrayList<>();
-
-    public ChunkCommand() {
-        chunkSubCommands.add(new BanCommand());
-        chunkSubCommands.add(new BannedCommand());
-        chunkSubCommands.add(new ClaimCommand());
-        chunkSubCommands.add(new HelpCommand());
-        chunkSubCommands.add(new MembersCommand());
-        chunkSubCommands.add(new TNTCommand());
-        chunkSubCommands.add(new UnBanCommand());
-        chunkSubCommands.add(new UnClaimCommand());
+    public ChunkCommand(Chunks plugin) {
+        userdata = plugin.getUserdata();
+        server = plugin.getServer();
+        chunkSubCommands.add(new BanCommand(plugin));
+        chunkSubCommands.add(new BannedCommand(plugin));
+        chunkSubCommands.add(new ClaimCommand(plugin));
+        chunkSubCommands.add(new HelpCommand(plugin));
+        chunkSubCommands.add(new MembersCommand(plugin));
+        chunkSubCommands.add(new TNTCommand(plugin));
+        chunkSubCommands.add(new UnBanCommand(plugin));
+        chunkSubCommands.add(new UnClaimCommand(plugin));
     }
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (sender instanceof Player player) {
-            if (args.length == 0) {
-                getMessage().send(player, "&cUsage: &f/chunk help");
-                return true;
-            } else {
+            if (args.length > 0) {
                 for (ChunkSubCommand commands : getSubCommands()) {
                     if (args[0].equals(commands.getName())) {
                         commands.perform(player, args);
                         return true;
                     }
                 }
+                return true;
             }
         }
         return false;
@@ -96,14 +88,14 @@ public class ChunkCommand implements CommandExecutor, TabCompleter {
                 }
                 if (player.hasPermission("chunks.command.chunk.ban")) {
                     if (args[0].equalsIgnoreCase("ban")) {
-                        for (OfflinePlayer players : player.getServer().getOfflinePlayers()) {
+                        for (OfflinePlayer players : server.getOfflinePlayers()) {
                             commands.add(players.getName());
                         }
                     }
                 }
                 if (player.hasPermission("chunks.command.chunk.unban")) {
                     if (args[0].equalsIgnoreCase("unban")) {
-                        for (OfflinePlayer players : player.getServer().getOfflinePlayers()) {
+                        for (OfflinePlayer players : server.getOfflinePlayers()) {
                             commands.add(players.getName());
                         }
                     }
@@ -113,13 +105,13 @@ public class ChunkCommand implements CommandExecutor, TabCompleter {
                 if (player.hasPermission("chunks.command.chunk.members")) {
                     if (args[0].equalsIgnoreCase("members")) {
                         if (args[1].equalsIgnoreCase("add")) {
-                            for (OfflinePlayer players : player.getServer().getOfflinePlayers()) {
+                            for (OfflinePlayer players : server.getOfflinePlayers()) {
                                 commands.add(players.getName());
                             }
                         }
                         if (args[1].equalsIgnoreCase("remove")) {
-                            for (String uuidString : getDatabase().getConfig(player).getStringList("members")) {
-                                commands.add(player.getServer().getOfflinePlayer(UUID.fromString(uuidString)).getName());
+                            for (String uuidString : userdata.getConfig(player).getStringList("members")) {
+                                commands.add(server.getOfflinePlayer(UUID.fromString(uuidString)).getName());
                             }
                         }
                     }

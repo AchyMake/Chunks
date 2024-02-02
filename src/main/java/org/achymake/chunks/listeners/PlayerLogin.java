@@ -1,24 +1,20 @@
 package org.achymake.chunks.listeners;
 
 import org.achymake.chunks.Chunks;
-import org.achymake.chunks.files.Database;
+import org.achymake.chunks.data.Userdata;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerLoginEvent;
 
 public class PlayerLogin implements Listener {
-    private final Chunks plugin;
-    private Database getDatabase() {
-        return plugin.getDatabase();
-    }
+    private final Userdata userdata;
     public PlayerLogin(Chunks plugin) {
-        plugin.getServer().getPluginManager().registerEvents(this, plugin);
-        this.plugin = plugin;
+        userdata = plugin.getUserdata();
     }
     @EventHandler(priority = EventPriority.NORMAL)
     public void onPlayerLogin(PlayerLoginEvent event) {
         if (!event.getResult().equals(PlayerLoginEvent.Result.ALLOWED))return;
-        getDatabase().setup(event.getPlayer());
+        userdata.setup(event.getPlayer());
     }
 }

@@ -2,8 +2,8 @@ package org.achymake.chunks.commands.chunk.sub;
 
 import org.achymake.chunks.Chunks;
 import org.achymake.chunks.commands.chunk.ChunkSubCommand;
-import org.achymake.chunks.files.Database;
-import org.achymake.chunks.files.Message;
+import org.achymake.chunks.data.Message;
+import org.achymake.chunks.data.Userdata;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
@@ -12,14 +12,11 @@ import java.util.List;
 import java.util.UUID;
 
 public class MembersCommand extends ChunkSubCommand {
-    private Chunks getPlugin() {
-        return Chunks.getInstance();
-    }
-    private Database getDatabase() {
-        return getPlugin().getDatabase();
-    }
-    private Message getMessage() {
-        return getPlugin().getMessage();
+    private final Userdata userdata;
+    private final Message message;
+    public MembersCommand(Chunks plugin) {
+        userdata = plugin.getUserdata();
+        message = plugin.getMessage();
     }
     @Override
     public String getName() {
@@ -37,35 +34,35 @@ public class MembersCommand extends ChunkSubCommand {
     public void perform(Player player, String[] args) {
         if (player.hasPermission("chunks.command.chunk.members")) {
             if (args.length == 1) {
-                if (getDatabase().getConfig(player).getStringList("members").isEmpty()){
-                    getMessage().send(player, "&cError:&7 You don't have any members");
+                if (userdata.getConfig(player).getStringList("members").isEmpty()){
+                    message.send(player, "&c&lHey!&7 Sorry, but you don't have any members");
                 } else {
-                    getMessage().send(player, "&6Chunk Members:");
-                    for (String uuidListed : getDatabase().getConfig(player).getStringList("members")) {
-                        getMessage().send(player, "- " + player.getServer().getOfflinePlayer(UUID.fromString(uuidListed)).getName());
+                    message.send(player, "&6Chunk Members:");
+                    for (String uuidListed : userdata.getConfig(player).getStringList("members")) {
+                        message.send(player, "- " + player.getServer().getOfflinePlayer(UUID.fromString(uuidListed)).getName());
                     }
                 }
             }
             if (args.length == 3) {
                 OfflinePlayer target = Bukkit.getOfflinePlayer(args[2]);
                 if (args[1].equalsIgnoreCase("add")) {
-                    if (getDatabase().getConfig(player).getStringList("members").contains(target.getUniqueId().toString())) {
-                        getMessage().send(player, "&cError:&7 You already have&f " + target.getName() + "&7 as member");
+                    if (userdata.getConfig(player).getStringList("members").contains(target.getUniqueId().toString())) {
+                        message.send(player, "&c&lHey!&7 Sorry, but you already have&f " + target.getName() + "&7 as member");
                     } else {
-                        List<String> members = getDatabase().getConfig(player).getStringList("members");
+                        List<String> members = userdata.getConfig(player).getStringList("members");
                         members.add(target.getUniqueId().toString());
-                        getDatabase().setStringList(player, "members", members);
-                        getMessage().send(player, "&6You added&f " + target.getName() + "&6 to members");
+                        userdata.setStringList(player, "members", members);
+                        message.send(player, "&6You added&f " + target.getName() + "&6 to members");
                     }
                 }
                 if (args[1].equalsIgnoreCase("remove")) {
-                    if (getDatabase().getConfig(player).getStringList("members").contains(target.getUniqueId().toString())) {
-                        List<String> members = getDatabase().getConfig(player).getStringList("members");
+                    if (userdata.getConfig(player).getStringList("members").contains(target.getUniqueId().toString())) {
+                        List<String> members = userdata.getConfig(player).getStringList("members");
                         members.remove(target.getUniqueId().toString());
-                        getDatabase().setStringList(player, "members", members);
-                        getMessage().send(player, "&6You removed&f " + target.getName() + "&6 from members");
+                        userdata.setStringList(player, "members", members);
+                        message.send(player, "&6You removed&f " + target.getName() + "&6 from members");
                     } else {
-                        getMessage().send(player, "&cError:&7 You don't have&f " + target.getName() + "&7 as member");
+                        message.send(player, "&c&lHey!&7 Sorry, but you don't have&f " + target.getName() + "&7 as member");
                     }
                 }
             }

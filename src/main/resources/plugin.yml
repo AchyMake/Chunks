@@ -3,14 +3,13 @@ version: '${project.version}'
 main: org.achymake.chunks.Chunks
 api-version: '1.20'
 prefix: '${project.name}'
-load: POSTWORLD
 author: AchyMake
 description: '${project.description}'
 depend:
-  - WorldGuard
-softdepend:
   - Vault
+  - WorldGuard
   - PlaceholderAPI
+softdepend:
   - Recovery
 commands:
   chunk:

@@ -2,8 +2,8 @@ package org.achymake.chunks.commands.chunk.sub;
 
 import org.achymake.chunks.Chunks;
 import org.achymake.chunks.commands.chunk.ChunkSubCommand;
-import org.achymake.chunks.files.Database;
-import org.achymake.chunks.files.Message;
+import org.achymake.chunks.data.Userdata;
+import org.achymake.chunks.data.Message;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
@@ -11,14 +11,11 @@ import org.bukkit.entity.Player;
 import java.util.List;
 
 public class UnBanCommand extends ChunkSubCommand {
-    private Chunks getPlugin() {
-        return Chunks.getInstance();
-    }
-    private Database getDatabase() {
-        return getPlugin().getDatabase();
-    }
-    private Message getMessage() {
-        return getPlugin().getMessage();
+    private final Userdata userdata;
+    private final Message message;
+    public UnBanCommand(Chunks plugin) {
+        userdata = plugin.getUserdata();
+        message = plugin.getMessage();
     }
     @Override
     public String getName() {
@@ -37,13 +34,13 @@ public class UnBanCommand extends ChunkSubCommand {
         if (player.hasPermission("chunks.command.chunk.unban")) {
             if (args.length == 2) {
                 OfflinePlayer target = Bukkit.getOfflinePlayer(args[1]);
-                if (getDatabase().getBanned(player).contains(target.getUniqueId().toString())) {
-                    List<String> banned = getDatabase().getBanned(player);
+                if (userdata.getBanned(player).contains(target.getUniqueId().toString())) {
+                    List<String> banned = userdata.getBanned(player);
                     banned.remove(target.getUniqueId().toString());
-                    getDatabase().setStringList(player, "banned", banned);
-                    getMessage().send(player, "&6You unbanned&f " + target.getName());
+                    userdata.setStringList(player, "banned", banned);
+                    message.send(player, "&6You unbanned&f " + target.getName());
                 } else {
-                    getMessage().send(player, "&cError:&7 You already banned&f " + target.getName());
+                    message.send(player, "&c&lHey!&7 Sorry, but you already banned&f " + target.getName());
                 }
             }
         }

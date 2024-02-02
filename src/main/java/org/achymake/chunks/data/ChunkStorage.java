@@ -1,4 +1,4 @@
-package org.achymake.chunks.files;
+package org.achymake.chunks.data;
 
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.math.BlockVector3;
@@ -31,22 +31,19 @@ import static org.achymake.chunks.Chunks.FLAG_CHUNKS_CLAIM;
 public class ChunkStorage {
     private final Chunks plugin;
     private final List<Player> chunkEditors = new ArrayList<>();
-    private FileConfiguration getConfig() {
-        return plugin.getConfig();
-    }
-    private Database getDatabase() {
-        return plugin.getDatabase();
-    }
-    private Economy getEconomy() {
-        return plugin.getEconomy();
-    }
+    private final FileConfiguration config;
+    private final Userdata userdata;
+    private final Economy economy;
     public ChunkStorage(Chunks plugin) {
         this.plugin = plugin;
+        config = plugin.getConfig();
+        userdata = plugin.getUserdata();
+        economy = plugin.getEconomy();
     }
     public PersistentDataContainer getData(Chunk chunk) {
         return chunk.getPersistentDataContainer();
     }
-    public boolean isAllowedClaim(Chunks chunks, Chunk chunk) {
+    public boolean isAllowedClaim(Chunk chunk) {
         try {
             int bx = chunk.getX() << 4;
             int bz = chunk.getZ() << 4;
@@ -66,7 +63,7 @@ public class ChunkStorage {
             }
             return true;
         } catch (Exception e) {
-            chunks.getMessage().sendLog(Level.WARNING, e.getMessage());
+            plugin.getMessage().sendLog(Level.WARNING, e.getMessage());
             return false;
         }
     }
@@ -91,12 +88,12 @@ public class ChunkStorage {
     }
     public void setOwner(Player player, OfflinePlayer target, Chunk chunk) {
         if (isClaimed(chunk)) {
-            getDatabase().setInt(getOwner(chunk),"claimed", getDatabase().getConfig(getOwner(chunk)).getInt("claimed") - 1);
+            userdata.setInt(getOwner(chunk),"claimed", userdata.getConfig(getOwner(chunk)).getInt("claimed") - 1);
             getData(chunk).set(NamespacedKey.minecraft("owner"), PersistentDataType.STRING, target.getUniqueId().toString());
             getData(chunk).set(NamespacedKey.minecraft("date-claimed"), PersistentDataType.STRING, SimpleDateFormat.getDateInstance().format(player.getLastPlayed()));
-            getDatabase().setInt(target,"claimed", getDatabase().getConfig(target).getInt("claimed") + 1);
+            userdata.setInt(target,"claimed", userdata.getConfig(target).getInt("claimed") + 1);
         } else {
-            getDatabase().setInt(target,"claimed", getDatabase().getConfig(target).getInt("claimed") + 1);
+            userdata.setInt(target,"claimed", userdata.getConfig(target).getInt("claimed") + 1);
             getData(chunk).set(NamespacedKey.minecraft("owner"), PersistentDataType.STRING, target.getUniqueId().toString());
             getData(chunk).set(NamespacedKey.minecraft("date-claimed"), PersistentDataType.STRING, SimpleDateFormat.getDateInstance().format(player.getLastPlayed()));
         }
@@ -111,14 +108,14 @@ public class ChunkStorage {
         return getData(chunk).get(NamespacedKey.minecraft("date-claimed"), PersistentDataType.STRING);
     }
     public int getClaimedCount(Chunk chunk) {
-        return getDatabase().getConfig(getOwner(chunk)).getInt("claimed");
+        return userdata.getConfig(getOwner(chunk)).getInt("claimed");
     }
     public int getClaimedCount(OfflinePlayer offlinePlayer) {
-        return getDatabase().getConfig(offlinePlayer).getInt("claimed");
+        return userdata.getConfig(offlinePlayer).getInt("claimed");
     }
     public List<String> getBanned(Chunk chunk) {
         if (isClaimed(chunk)) {
-            return getDatabase().getBanned(getOwner(chunk));
+            return userdata.getBanned(getOwner(chunk));
         } else {
             return new ArrayList<>();
         }
@@ -140,15 +137,15 @@ public class ChunkStorage {
         }
     }
     public List<String> getMembers(OfflinePlayer offlinePlayer) {
-        if (getDatabase().exist(offlinePlayer)) {
-            return getDatabase().getMembers(offlinePlayer);
+        if (userdata.exist(offlinePlayer)) {
+            return userdata.getMembers(offlinePlayer);
         } else {
             return new ArrayList<>();
         }
     }
     public List<UUID> getMembersUUID(OfflinePlayer offlinePlayer) {
         List<UUID> uuids = new ArrayList<>();
-        if (getDatabase().exist(offlinePlayer)){
+        if (userdata.exist(offlinePlayer)){
             for (String uuidString : getMembers(offlinePlayer)) {
                 uuids.add(UUID.fromString(uuidString));
             }
@@ -156,35 +153,35 @@ public class ChunkStorage {
         return uuids;
     }
     public void claimEffect(Player player) {
-        Particle particle = Particle.valueOf(getConfig().getString("claim.particle"));
+        Particle particle = Particle.valueOf(config.getString("claim.particle"));
         Location locationSouth = new Location(player.getWorld(), player.getLocation().getChunk().getBlock(15, 0, 8).getX(), player.getLocation().getBlockY()-3, player.getLocation().getChunk().getBlock(15, 0, 8).getZ());
         Location locationEast = new Location(player.getWorld(), player.getLocation().getChunk().getBlock(8, 0, 15).getX(), player.getLocation().getBlockY()-3, player.getLocation().getChunk().getBlock(8, 0, 15).getZ());
-        player.playSound(player.getLocation(), Sound.valueOf(getConfig().getString("claim.sound.type")), Float.parseFloat(getConfig().getString("claim.sound.volume")), Float.parseFloat(getConfig().getString("claim.sound.pitch")));
+        player.playSound(player, Sound.valueOf(config.getString("claim.sound.type")), Float.parseFloat(config.getString("claim.sound.volume")), Float.parseFloat(config.getString("claim.sound.pitch")));
         player.spawnParticle(particle, player.getLocation().getChunk().getBlock(8, 0, 0).getX(), player.getLocation().getBlockY()-3, player.getLocation().getChunk().getBlock(8, 0, 0).getZ(), 250, 4, 12, 0, 0);
         player.spawnParticle(particle, player.getLocation().getChunk().getBlock(0, 0, 8).getX(), player.getLocation().getBlockY()-3, player.getLocation().getChunk().getBlock(0, 0, 8).getZ(), 250, 0, 12, 4, 0);
         player.spawnParticle(particle,locationSouth.add(1, 0, 0), 250, 0, 12, 4, 0);
         player.spawnParticle(particle,locationEast.add(0, 0, 1), 250, 4, 12, 0, 0);
     }
     public void unclaimEffect(Player player) {
-        Particle particle = Particle.valueOf(getConfig().getString("unclaim.particle"));
+        Particle particle = Particle.valueOf(config.getString("unclaim.particle"));
         Location locationSouth = new Location(player.getWorld(), player.getLocation().getChunk().getBlock(15, 0, 8).getX(), player.getLocation().getBlockY()-3, player.getLocation().getChunk().getBlock(15, 0, 8).getZ());
         Location locationEast = new Location(player.getWorld(), player.getLocation().getChunk().getBlock(8, 0, 15).getX(), player.getLocation().getBlockY()-3, player.getLocation().getChunk().getBlock(8, 0, 15).getZ());
-        player.playSound(player.getLocation(), Sound.valueOf(getConfig().getString("unclaim.sound.type")),Float.parseFloat(getConfig().getString("unclaim.sound.volume")), Float.parseFloat(getConfig().getString("unclaim.sound.pitch")));
+        player.playSound(player, Sound.valueOf(config.getString("unclaim.sound.type")),Float.parseFloat(config.getString("unclaim.sound.volume")), Float.parseFloat(config.getString("unclaim.sound.pitch")));
         player.spawnParticle(particle, player.getLocation().getChunk().getBlock(8, 0, 0).getX(), player.getLocation().getBlockY()-3, player.getLocation().getChunk().getBlock(8, 0, 0).getZ(), 250, 4, 12, 0, 0);
         player.spawnParticle(particle, player.getLocation().getChunk().getBlock(0, 0, 8).getX(), player.getLocation().getBlockY()-3, player.getLocation().getChunk().getBlock(0, 0, 8).getZ(), 250, 0, 12, 4, 0);
         player.spawnParticle(particle,locationSouth.add(1, 0, 0), 250, 0, 12, 4, 0);
         player.spawnParticle(particle,locationEast.add(0, 0, 1), 250, 4, 12, 0, 0);
     }
     public void claim(Player player, Chunk chunk) {
-        getEconomy().withdrawPlayer(player, getConfig().getDouble("claim.cost"));
+        economy.withdrawPlayer(player, config.getDouble("claim.cost"));
         getData(chunk).set(NamespacedKey.minecraft("owner"), PersistentDataType.STRING,player.getUniqueId().toString());
         getData(chunk).set(NamespacedKey.minecraft("date-claimed"), PersistentDataType.STRING, SimpleDateFormat.getDateInstance().format(player.getLastPlayed()));
-        getDatabase().setInt(player,"claimed", getDatabase().getConfig(player).getInt("claimed") + 1);
+        userdata.setInt(player,"claimed", userdata.getConfig(player).getInt("claimed") + 1);
     }
     public void unclaim(Chunk chunk) {
         OfflinePlayer offlinePlayer = getOwner(chunk);
-        getDatabase().setInt(offlinePlayer,"claimed", getDatabase().getConfig(offlinePlayer).getInt("claimed") - 1);
-        getEconomy().depositPlayer(offlinePlayer, getConfig().getDouble("unclaim.refund"));
+        userdata.setInt(offlinePlayer,"claimed", userdata.getConfig(offlinePlayer).getInt("claimed") - 1);
+        economy.depositPlayer(offlinePlayer, config.getDouble("unclaim.refund"));
         getData(chunk).remove(NamespacedKey.minecraft("date-claimed"));
         getData(chunk).remove(NamespacedKey.minecraft("owner"));
     }

@@ -1,5 +1,6 @@
 package org.achymake.chunks.commands.chunks;
 
+import org.achymake.chunks.Chunks;
 import org.achymake.chunks.commands.chunks.sub.*;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
@@ -12,15 +13,14 @@ import java.util.List;
 
 public class ChunksCommand implements CommandExecutor, TabCompleter {
     private final ArrayList<ChunksSubCommand> chunksSubCommands = new ArrayList<>();
-
-    public ChunksCommand() {
-        chunksSubCommands.add(new DeleteCommand());
-        chunksSubCommands.add(new EditCommand());
-        chunksSubCommands.add(new EffectCommand());
-        chunksSubCommands.add(new HelpCommand());
-        chunksSubCommands.add(new InfoCommand());
-        chunksSubCommands.add(new ReloadCommand());
-        chunksSubCommands.add(new SetOwnerCommand());
+    public ChunksCommand(Chunks plugin) {
+        chunksSubCommands.add(new DeleteCommand(plugin));
+        chunksSubCommands.add(new EditCommand(plugin));
+        chunksSubCommands.add(new EffectCommand(plugin));
+        chunksSubCommands.add(new HelpCommand(plugin));
+        chunksSubCommands.add(new InfoCommand(plugin));
+        chunksSubCommands.add(new ReloadCommand(plugin));
+        chunksSubCommands.add(new SetOwnerCommand(plugin));
     }
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {

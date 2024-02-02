@@ -1,8 +1,8 @@
 package org.achymake.chunks.listeners;
 
 import org.achymake.chunks.Chunks;
-import org.achymake.chunks.files.ChunkStorage;
-import org.achymake.chunks.files.Message;
+import org.achymake.chunks.data.ChunkStorage;
+import org.achymake.chunks.data.Message;
 import org.achymake.recovery.Recovery;
 import org.achymake.recovery.files.Database;
 import org.bukkit.Chunk;
@@ -17,39 +17,31 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerInteractAtEntityEvent;
 
 public class PlayerInteractAtEntityRecovery implements Listener {
-    private final Chunks plugin;
-    private ChunkStorage getChunkStorage() {
-        return plugin.getChunkStorage();
-    }
-    private FileConfiguration getConfig() {
-        return plugin.getConfig();
-    }
-    private Message getMessage() {
-        return plugin.getMessage();
-    }
-    private Database getDatabase() {
-        return Recovery.getInstance().getDatabase();
-    }
+    private final ChunkStorage chunkStorage;
+    private final FileConfiguration config;
+    private final Message message;
+    private final Database database = Recovery.getInstance().getDatabase();
     public PlayerInteractAtEntityRecovery(Chunks plugin) {
-        plugin.getServer().getPluginManager().registerEvents(this, plugin);
-        this.plugin = plugin;
+        chunkStorage = plugin.getChunkStorage();
+        config = plugin.getConfig();
+        message = plugin.getMessage();
     }
     @EventHandler(priority = EventPriority.NORMAL)
     public void onPlayerInteractAtEntityRecovery(PlayerInteractAtEntityEvent event) {
         Chunk chunk = event.getRightClicked().getLocation().getChunk();
-        if (!getChunkStorage().isClaimed(chunk))return;
+        if (!chunkStorage.isClaimed(chunk))return;
         Entity entity = event.getRightClicked();
         if (entity.getType().equals(EntityType.PLAYER))return;
         if (entity.getType().equals(EntityType.MINECART))return;
         if (entity.getType().equals(EntityType.BOAT))return;
         if (entity.isInvulnerable())return;
         if (entity instanceof ArmorStand armorStand) {
-            if (getDatabase().hasDeathItems(armorStand))return;
+            if (database.hasDeathItems(armorStand))return;
         }
         Player player = event.getPlayer();
-        if (getChunkStorage().hasAccess(player, chunk))return;
-        if (getConfig().getBoolean("hostile." + entity.getType()))return;
+        if (chunkStorage.hasAccess(player, chunk))return;
+        if (config.getBoolean("hostile." + entity.getType()))return;
         event.setCancelled(true);
-        getMessage().sendActionBar(player, "&cError:&7 Chunk owned by&f " + getChunkStorage().getOwner(chunk).getName());
+        message.send(player, "&c&lHey!&7 Sorry, chunk is owned by&f " + chunkStorage.getOwner(chunk).getName());
     }
 }

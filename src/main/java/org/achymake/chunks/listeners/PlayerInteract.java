@@ -1,8 +1,8 @@
 package org.achymake.chunks.listeners;
 
 import org.achymake.chunks.Chunks;
-import org.achymake.chunks.files.ChunkStorage;
-import org.achymake.chunks.files.Message;
+import org.achymake.chunks.data.ChunkStorage;
+import org.achymake.chunks.data.Message;
 import org.bukkit.Chunk;
 import org.bukkit.Material;
 import org.bukkit.Tag;
@@ -13,33 +13,30 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.inventory.EquipmentSlot;
 
 public class PlayerInteract implements Listener {
-    private final Chunks plugin;
-    private ChunkStorage getChunkStorage() {
-        return plugin.getChunkStorage();
-    }
-    private Message getMessage() {
-        return plugin.getMessage();
-    }
+    private final ChunkStorage chunkStorage;
+    private final Message message;
     public PlayerInteract(Chunks plugin) {
-        plugin.getServer().getPluginManager().registerEvents(this, plugin);
-        this.plugin = plugin;
+        chunkStorage = plugin.getChunkStorage();
+        message = plugin.getMessage();
     }
     @EventHandler(priority = EventPriority.NORMAL)
     public void onPlayerInteract(PlayerInteractEvent event) {
         if (!event.getAction().equals(Action.RIGHT_CLICK_BLOCK))return;
         if (event.getClickedBlock() == null)return;
+        if (event.getHand() != EquipmentSlot.HAND)return;
         Block block = event.getClickedBlock();
         Chunk chunk = block.getChunk();
-        if (!getChunkStorage().isClaimed(chunk))return;
-        if (!isCancelledClaimed(block))return;
+        if (!chunkStorage.isClaimed(chunk))return;
+        if (!isCancelled(block))return;
         Player player = event.getPlayer();
-        if (getChunkStorage().hasAccess(player, chunk))return;
+        if (chunkStorage.hasAccess(player, chunk))return;
         event.setCancelled(true);
-        getMessage().sendActionBar(player, "&cError:&7 Chunk owned by&f " + getChunkStorage().getOwner(chunk).getName());
+        message.send(player, "&c&lHey!&7 Sorry, chunk is owned by&f " + chunkStorage.getOwner(chunk).getName());
     }
-    private boolean isCancelledClaimed(Block block) {
+    private boolean isCancelled(Block block) {
         if (Tag.BEDS.isTagged(block.getType())) {
             return true;
         } else if (Tag.SHULKER_BOXES.isTagged(block.getType())) {

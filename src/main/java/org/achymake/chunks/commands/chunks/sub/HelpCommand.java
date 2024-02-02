@@ -2,16 +2,14 @@ package org.achymake.chunks.commands.chunks.sub;
 
 import org.achymake.chunks.Chunks;
 import org.achymake.chunks.commands.chunks.ChunksSubCommand;
-import org.achymake.chunks.files.Message;
+import org.achymake.chunks.data.Message;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 public class HelpCommand extends ChunksSubCommand {
-    private Chunks getPlugin() {
-        return Chunks.getInstance();
-    }
-    private Message getMessage() {
-        return getPlugin().getMessage();
+    private final Message message;
+    public HelpCommand(Chunks plugin) {
+        message = plugin.getMessage();
     }
     @Override
     public String getName() {
@@ -30,28 +28,28 @@ public class HelpCommand extends ChunksSubCommand {
         if (sender instanceof Player player) {
             if (player.hasPermission("chunks.command.chunks.help")) {
                 if (args.length == 1) {
-                    getMessage().send(player, "&6Chunks Help:");
+                    message.send(player, "&6Chunks Help:");
                     if (player.hasPermission("chunks.command.chunks.delete")) {
-                        getMessage().send(player, "&f/chunks delete &7- safely unclaims chunk");
+                        message.send(player, "&f/chunks delete &7- safely unclaims chunk");
                     }
                     if (player.hasPermission("chunks.command.chunks.edit")) {
-                        getMessage().send(player, "&f/chunks edit &7- toggle chunk edit");
+                        message.send(player, "&f/chunks edit &7- toggle chunk edit");
                     }
                     if (player.hasPermission("chunks.command.chunks.effect")) {
-                        getMessage().send(player, "&f/chunks effect &7- effects of claiming");
+                        message.send(player, "&f/chunks effect &7- effects of claiming");
                     }
-                    getMessage().send(player, "&f/chunks help &7- show this list");
+                    message.send(player, "&f/chunks help &7- show this list");
                     if (player.hasPermission("chunks.command.chunks.info")) {
-                        getMessage().send(player, "&f/chunks info &7- checks info of chunk");
+                        message.send(player, "&f/chunks info &7- checks info of chunk");
                     }
                     if (player.hasPermission("chunks.command.chunks.protect")) {
-                        getMessage().send(player, "&f/chunks protect &7- protects a chunk");
+                        message.send(player, "&f/chunks protect &7- protects a chunk");
                     }
                     if (player.hasPermission("chunks.command.chunks.reload")) {
-                        getMessage().send(player, "&f/chunks reload &7- reload smpchunks plugin");
+                        message.send(player, "&f/chunks reload &7- reload smpchunks plugin");
                     }
                     if (player.hasPermission("chunks.command.chunks.setowner")) {
-                        getMessage().send(player, "&f/chunks setowner target &7- sets chunk owner if claimed");
+                        message.send(player, "&f/chunks setowner target &7- sets chunk owner if claimed");
                     }
                 }
             }
