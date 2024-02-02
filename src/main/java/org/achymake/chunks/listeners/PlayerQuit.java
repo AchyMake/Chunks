@@ -8,15 +8,14 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerQuitEvent;
 
-public class PlayerQuit implements Listener {
-    private final ChunkStorage chunkStorage;
-    public PlayerQuit(Chunks plugin) {
-        chunkStorage = plugin.getChunkStorage();
+public record PlayerQuit(Chunks plugin) implements Listener {
+    private ChunkStorage getChunkStorage() {
+        return plugin.getChunkStorage();
     }
     @EventHandler(priority = EventPriority.NORMAL)
     public void onPlayerQuit(PlayerQuitEvent event) {
         Player player = event.getPlayer();
-        if (!chunkStorage.hasChunkEdit(player))return;
-        chunkStorage.getChunkEditors().remove(player);
+        if (!getChunkStorage().hasChunkEdit(player))return;
+        getChunkStorage().getChunkEditors().remove(player);
     }
 }

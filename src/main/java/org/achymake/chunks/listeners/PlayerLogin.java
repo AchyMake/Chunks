@@ -7,14 +7,13 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerLoginEvent;
 
-public class PlayerLogin implements Listener {
-    private final Userdata userdata;
-    public PlayerLogin(Chunks plugin) {
-        userdata = plugin.getUserdata();
+public record PlayerLogin(Chunks plugin) implements Listener {
+    private Userdata getUserdata() {
+        return plugin.getUserdata();
     }
     @EventHandler(priority = EventPriority.NORMAL)
     public void onPlayerLogin(PlayerLoginEvent event) {
         if (!event.getResult().equals(PlayerLoginEvent.Result.ALLOWED))return;
-        userdata.setup(event.getPlayer());
+        getUserdata().setup(event.getPlayer());
     }
 }

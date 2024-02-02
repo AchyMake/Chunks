@@ -9,17 +9,16 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityEnterLoveModeEvent;
 
-public class EntityEnterLoveMode implements Listener {
-    private final ChunkStorage chunkStorage;
-    public EntityEnterLoveMode(Chunks plugin) {
-        chunkStorage = plugin.getChunkStorage();
+public record EntityEnterLoveMode(Chunks plugin) implements Listener {
+    private ChunkStorage getChunkStorage() {
+        return plugin.getChunkStorage();
     }
     @EventHandler(priority = EventPriority.NORMAL)
     public void onEntityEnterLoveMode(EntityEnterLoveModeEvent event) {
         if (!(event.getHumanEntity() instanceof Player player)) return;
         Chunk chunk = event.getEntity().getLocation().getChunk();
-        if (!chunkStorage.isClaimed(chunk))return;
-        if (chunkStorage.hasAccess(player, chunk))return;
+        if (!getChunkStorage().isClaimed(chunk))return;
+        if (getChunkStorage().hasAccess(player, chunk))return;
         event.setCancelled(true);
     }
 }

@@ -15,12 +15,12 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlot;
 
-public class PlayerInteract implements Listener {
-    private final ChunkStorage chunkStorage;
-    private final Message message;
-    public PlayerInteract(Chunks plugin) {
-        chunkStorage = plugin.getChunkStorage();
-        message = plugin.getMessage();
+public record PlayerInteract(Chunks plugin) implements Listener {
+    private ChunkStorage getChunkStorage() {
+        return plugin.getChunkStorage();
+    }
+    private Message getMessage() {
+        return plugin.getMessage();
     }
     @EventHandler(priority = EventPriority.NORMAL)
     public void onPlayerInteract(PlayerInteractEvent event) {
@@ -29,12 +29,13 @@ public class PlayerInteract implements Listener {
         if (event.getHand() != EquipmentSlot.HAND)return;
         Block block = event.getClickedBlock();
         Chunk chunk = block.getChunk();
-        if (!chunkStorage.isClaimed(chunk))return;
+        if (!getChunkStorage().isClaimed(chunk))return;
         if (!isCancelled(block))return;
         Player player = event.getPlayer();
-        if (chunkStorage.hasAccess(player, chunk))return;
+        if (getChunkStorage().hasAccess(player, chunk))return;
         event.setCancelled(true);
-        message.send(player, "&c&lHey!&7 Sorry, chunk is owned by&f " + chunkStorage.getOwner(chunk).getName());
+        String owner = getChunkStorage().getOwner(chunk).getName();
+        getMessage().send(player, "&c&lHey!&7 Sorry, chunk is owned by&f " + owner);
     }
     private boolean isCancelled(Block block) {
         if (Tag.BEDS.isTagged(block.getType())) {

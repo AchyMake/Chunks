@@ -10,21 +10,22 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 
-public class PlayerCommandPreprocess implements Listener {
-    private final ChunkStorage chunkStorage;
-    private final Message message;
-    public PlayerCommandPreprocess(Chunks plugin) {
-        chunkStorage = plugin.getChunkStorage();
-        message = plugin.getMessage();
+public record PlayerCommandPreprocess(Chunks plugin) implements Listener {
+    private ChunkStorage getChunkStorage() {
+        return plugin.getChunkStorage();
+    }
+    private Message getMessage() {
+        return plugin.getMessage();
     }
     @EventHandler(priority = EventPriority.NORMAL)
     public void onPlayerCommandPreprocess(PlayerCommandPreprocessEvent event) {
         Player player = event.getPlayer();
         Chunk chunk = event.getPlayer().getLocation().getChunk();
-        if (!chunkStorage.isClaimed(chunk))return;
+        if (!getChunkStorage().isClaimed(chunk))return;
         if (!event.getMessage().startsWith("/sethome"))return;
-        if (chunkStorage.hasAccess(player, chunk))return;
+        if (getChunkStorage().hasAccess(player, chunk))return;
         event.setCancelled(true);
-        message.send(player, "&c&lHey!&7 Sorry, but you can't&f sethome&7 inside&f " + chunkStorage.getOwner(chunk).getName() + "&7's chunk");
+        String owner = getChunkStorage().getOwner(chunk).getName();
+        getMessage().send(player, "&c&lHey!&7 Sorry, but you can't&f sethome&7 inside&f " + owner + "&7's chunk");
     }
 }

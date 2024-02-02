@@ -13,29 +13,31 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerInteractAtEntityEvent;
 
-public class PlayerInteractAtEntity implements Listener {
-    private final ChunkStorage chunkStorage;
-    private final FileConfiguration config;
-    private final Message message;
-    public PlayerInteractAtEntity(Chunks plugin) {
-        chunkStorage = plugin.getChunkStorage();
-        config = plugin.getConfig();
-        message = plugin.getMessage();
+public record PlayerInteractAtEntity(Chunks plugin) implements Listener {
+    private FileConfiguration getConfig() {
+        return plugin.getConfig();
+    }
+    private ChunkStorage getChunkStorage() {
+        return plugin.getChunkStorage();
+    }
+    private Message getMessage() {
+        return plugin.getMessage();
     }
     @EventHandler(priority = EventPriority.NORMAL)
     public void onPlayerInteractAtEntity(PlayerInteractAtEntityEvent event) {
         Entity entity = event.getRightClicked();
         Chunk chunk = entity.getLocation().getChunk();
-        if (!chunkStorage.isClaimed(chunk))return;
-        if (config.getBoolean("hostile." + entity.getType()))return;
+        if (!getChunkStorage().isClaimed(chunk))return;
+        if (getConfig().getBoolean("hostile." + entity.getType()))return;
         if (entity.getType().equals(EntityType.PLAYER))return;
         if (entity.getType().equals(EntityType.MINECART))return;
         if (entity.getType().equals(EntityType.BOAT))return;
         if (entity.getType().equals(EntityType.INTERACTION))return;
         if (entity.isInvulnerable())return;
         Player player = event.getPlayer();
-        if (chunkStorage.hasAccess(player, chunk))return;
+        if (getChunkStorage().hasAccess(player, chunk))return;
         event.setCancelled(true);
-        message.send(player, "&c&lHey!&7 Sorry, chunk is owned by&f " + chunkStorage.getOwner(chunk).getName());
+        String owner = getChunkStorage().getOwner(chunk).getName();
+        getMessage().send(player, "&c&lHey!&7 Sorry, chunk is owned by&f " + owner);
     }
 }

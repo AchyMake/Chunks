@@ -21,6 +21,8 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 import java.util.function.Consumer;
 import java.util.logging.Level;
@@ -33,6 +35,7 @@ public final class Chunks extends JavaPlugin {
     private static Economy economy = null;
     public static StateFlag FLAG_CHUNKS_CLAIM;
     public static PluginManager manager;
+    private final List<Player> chunkEditors = new ArrayList<>();
     @Override
     public void onLoad() {
         FlagRegistry registry = WorldGuard.getInstance().getFlagRegistry();
@@ -54,8 +57,8 @@ public final class Chunks extends JavaPlugin {
         instance = this;
         message = new Message(this);
         manager = getServer().getPluginManager();
-        chunkStorage = new ChunkStorage(this);
         userdata = new Userdata(this);
+        chunkStorage = new ChunkStorage(this);
         if (isVaultDisable()) {
             getManager().disablePlugin(this);
         }
@@ -73,8 +76,8 @@ public final class Chunks extends JavaPlugin {
         if (new PlaceholderProvider().isRegistered()) {
             new PlaceholderProvider().unregister();
         }
-        if (!getChunkStorage().getChunkEditors().isEmpty()) {
-            getChunkStorage().getChunkEditors().clear();
+        if (!getChunkEditors().isEmpty()) {
+            getChunkEditors().clear();
         }
         getMessage().sendLog(Level.INFO, "Disabled " + getDescription().getName() + " " + getDescription().getVersion());
     }
@@ -206,6 +209,12 @@ public final class Chunks extends JavaPlugin {
             getMessage().sendLog(Level.WARNING, "You have to install 'PlaceholderAPI'");
             return true;
         }
+    }
+    public StateFlag getFlagChunksClaim() {
+        return FLAG_CHUNKS_CLAIM;
+    }
+    public List<Player> getChunkEditors() {
+        return chunkEditors;
     }
     public PluginManager getManager() {
         return manager;

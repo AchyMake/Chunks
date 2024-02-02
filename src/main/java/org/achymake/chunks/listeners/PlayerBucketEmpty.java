@@ -10,20 +10,21 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerBucketEmptyEvent;
 
-public class PlayerBucketEmpty implements Listener {
-    private final ChunkStorage chunkStorage;
-    private final Message message;
-    public PlayerBucketEmpty(Chunks plugin) {
-        chunkStorage = plugin.getChunkStorage();
-        message = plugin.getMessage();
+public record PlayerBucketEmpty(Chunks plugin) implements Listener {
+    private ChunkStorage getChunkStorage() {
+        return plugin.getChunkStorage();
+    }
+    private Message getMessage() {
+        return plugin.getMessage();
     }
     @EventHandler(priority = EventPriority.NORMAL)
     public void onPlayerBucketEmpty(PlayerBucketEmptyEvent event) {
         Chunk chunk = event.getBlockClicked().getChunk();
-        if (!chunkStorage.isClaimed(chunk))return;
+        if (!getChunkStorage().isClaimed(chunk))return;
         Player player = event.getPlayer();
-        if (chunkStorage.hasAccess(player, chunk))return;
+        if (getChunkStorage().hasAccess(player, chunk))return;
         event.setCancelled(true);
-        message.send(player, "&c&lHey!&7 Sorry, chunk is owned by&f " + chunkStorage.getOwner(chunk).getName());
+        String owner = getChunkStorage().getOwner(chunk).getName();
+        getMessage().send(player, "&c&lHey!&7 Sorry, chunk is owned by&f " + owner);
     }
 }

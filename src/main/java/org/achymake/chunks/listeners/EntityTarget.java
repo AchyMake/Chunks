@@ -11,21 +11,21 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityTargetEvent;
 
-public class EntityTarget implements Listener {
-    private final FileConfiguration config;
-    private final ChunkStorage chunkStorage;
-    public EntityTarget(Chunks plugin) {
-        config = plugin.getConfig();
-        chunkStorage = plugin.getChunkStorage();
+public record EntityTarget(Chunks plugin) implements Listener {
+    private FileConfiguration getConfig() {
+        return plugin.getConfig();
+    }
+    private ChunkStorage getChunkStorage() {
+        return plugin.getChunkStorage();
     }
     @EventHandler(priority = EventPriority.NORMAL)
     public void onEntityTarget(EntityTargetEvent event) {
         if (!(event.getTarget() instanceof Player player))return;
         Entity entity = event.getEntity();
         Chunk chunk = entity.getLocation().getChunk();
-        if (!chunkStorage.isClaimed(chunk))return;
-        if (chunkStorage.hasAccess(player, chunk))return;
-        if (config.getBoolean("hostile." + entity.getType()))return;
+        if (!getChunkStorage().isClaimed(chunk))return;
+        if (getChunkStorage().hasAccess(player, chunk))return;
+        if (getConfig().getBoolean("hostile." + entity.getType()))return;
         event.setCancelled(true);
     }
 }

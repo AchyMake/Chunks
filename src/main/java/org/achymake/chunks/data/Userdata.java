@@ -9,32 +9,33 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
+import java.util.UUID;
 import java.util.logging.Level;
 
-public class Userdata {
-    private final File dataFolder;
-    private final Message message;
-    public Userdata(Chunks plugin) {
-        dataFolder = plugin.getDataFolder();
-        message = plugin.getMessage();
+public record Userdata(Chunks plugin) {
+    private File getDataFolder() {
+        return plugin().getDataFolder();
+    }
+    private Message getMessage() {
+        return plugin().getMessage();
     }
     public boolean exist(OfflinePlayer offlinePlayer) {
-        return new File(dataFolder, "userdata/" + offlinePlayer.getUniqueId() + ".yml").exists();
+        return new File(getDataFolder(), "userdata/" + offlinePlayer.getUniqueId() + ".yml").exists();
     }
     public void setup(OfflinePlayer offlinePlayer) {
         if (exist(offlinePlayer)) {
             if (!getConfig(offlinePlayer).getString("name").equals(offlinePlayer.getName())) {
-                File file = new File(dataFolder, "userdata/" + offlinePlayer.getUniqueId() + ".yml");
+                File file = new File(getDataFolder(), "userdata/" + offlinePlayer.getUniqueId() + ".yml");
                 FileConfiguration config = YamlConfiguration.loadConfiguration(file);
                 config.set("name", offlinePlayer.getName());
                 try {
                     config.save(file);
                 } catch (IOException e) {
-                    message.sendLog(Level.WARNING, e.getMessage());
+                    getMessage().sendLog(Level.WARNING, e.getMessage());
                 }
             }
         } else {
-            File file = new File(dataFolder, "userdata/" + offlinePlayer.getUniqueId() + ".yml");
+            File file = new File(getDataFolder(), "userdata/" + offlinePlayer.getUniqueId() + ".yml");
             FileConfiguration config = YamlConfiguration.loadConfiguration(file);
             config.set("name", offlinePlayer.getName());
             config.set("claimed", 0);
@@ -42,41 +43,41 @@ public class Userdata {
             try {
                 config.save(file);
             } catch (IOException e) {
-                message.sendLog(Level.WARNING, e.getMessage());
+                getMessage().sendLog(Level.WARNING, e.getMessage());
             }
         }
     }
     public FileConfiguration getConfig(OfflinePlayer offlinePlayer) {
-        return YamlConfiguration.loadConfiguration(new File(dataFolder, "userdata/" + offlinePlayer.getUniqueId() + ".yml"));
+        return YamlConfiguration.loadConfiguration(new File(getDataFolder(), "userdata/" + offlinePlayer.getUniqueId() + ".yml"));
     }
     public void setBoolean(OfflinePlayer offlinePlayer, String path, boolean value) {
-        File file = new File(dataFolder, "userdata/" + offlinePlayer.getUniqueId() + ".yml");
+        File file = new File(getDataFolder(), "userdata/" + offlinePlayer.getUniqueId() + ".yml");
         FileConfiguration config = YamlConfiguration.loadConfiguration(file);
         config.set(path, value);
         try {
             config.save(file);
         } catch (IOException e) {
-            message.sendLog(Level.WARNING, e.getMessage());
+            getMessage().sendLog(Level.WARNING, e.getMessage());
         }
     }
     public void setInt(OfflinePlayer offlinePlayer, String path, int value) {
-        File file = new File(dataFolder, "userdata/" + offlinePlayer.getUniqueId() + ".yml");
+        File file = new File(getDataFolder(), "userdata/" + offlinePlayer.getUniqueId() + ".yml");
         FileConfiguration config = YamlConfiguration.loadConfiguration(file);
         config.set(path, value);
         try {
             config.save(file);
         } catch (IOException e) {
-            message.sendLog(Level.WARNING, e.getMessage());
+            getMessage().sendLog(Level.WARNING, e.getMessage());
         }
     }
     public void setStringList(OfflinePlayer offlinePlayer, String path, List<String> value) {
-        File file = new File(dataFolder, "userdata/" + offlinePlayer.getUniqueId() + ".yml");
+        File file = new File(getDataFolder(), "userdata/" + offlinePlayer.getUniqueId() + ".yml");
         FileConfiguration config = YamlConfiguration.loadConfiguration(file);
         config.set(path, value);
         try {
             config.save(file);
         } catch (IOException e) {
-            message.sendLog(Level.WARNING, e.getMessage());
+            getMessage().sendLog(Level.WARNING, e.getMessage());
         }
     }
     public List<String> getMembers(OfflinePlayer offlinePlayer) {
@@ -88,12 +89,13 @@ public class Userdata {
     public void reload(OfflinePlayer[] offlinePlayers) {
         for (OfflinePlayer offlinePlayer : offlinePlayers) {
             if (exist(offlinePlayer)) {
-                File file = new File(dataFolder, "userdata/" + offlinePlayer.getUniqueId() + ".yml");
+                UUID uuid = offlinePlayer.getUniqueId();
+                File file = new File(getDataFolder(), "userdata/" + uuid + ".yml");
                 FileConfiguration config = YamlConfiguration.loadConfiguration(file);
                 try {
                     config.load(file);
                 } catch (IOException | InvalidConfigurationException e) {
-                    message.sendLog(Level.WARNING, e.getMessage());
+                    getMessage().sendLog(Level.WARNING, e.getMessage());
                 }
             }
         }

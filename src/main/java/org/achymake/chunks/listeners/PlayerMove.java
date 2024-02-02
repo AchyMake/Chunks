@@ -12,12 +12,12 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.persistence.PersistentDataType;
 
-public class PlayerMove implements Listener {
-    private final ChunkStorage chunkStorage;
-    private final Message message;
-    public PlayerMove(Chunks plugin) {
-        chunkStorage = plugin.getChunkStorage();
-        message = plugin.getMessage();
+public record PlayerMove(Chunks plugin) implements Listener {
+    private ChunkStorage getChunkStorage() {
+        return plugin.getChunkStorage();
+    }
+    private Message getMessage() {
+        return plugin.getMessage();
     }
     @EventHandler(priority = EventPriority.NORMAL)
     public void onPlayerMove(PlayerMoveEvent event) {
@@ -25,23 +25,24 @@ public class PlayerMove implements Listener {
         Chunk chunk = event.getTo().getChunk();
         if (event.getFrom().getChunk() == chunk)return;
         Player player = event.getPlayer();
-        if (chunkStorage.isClaimed(chunk)) {
-            if (chunkStorage.isBanned(chunk, player)) {
+        if (getChunkStorage().isClaimed(chunk)) {
+            String owner = getChunkStorage().getOwner(chunk).getName();
+            if (getChunkStorage().isBanned(chunk, player)) {
                 event.setCancelled(true);
-                message.sendActionBar(player, "&c&lHey!&7 Sorry, but you are banned from&f " + chunkStorage.getOwner(chunk).getName());
+                getMessage().sendActionBar(player, "&c&lHey!&7 Sorry, but you are banned from&f " + owner);
             }
             if (player.getPersistentDataContainer().has(NamespacedKey.minecraft("chunk-visitor"), PersistentDataType.STRING)) {
-                if (!player.getPersistentDataContainer().get(NamespacedKey.minecraft("chunk-visitor"), PersistentDataType.STRING).equals(chunkStorage.getOwner(chunk).getName())) {
+                if (!player.getPersistentDataContainer().get(NamespacedKey.minecraft("chunk-visitor"), PersistentDataType.STRING).equals(owner)) {
                     player.getPersistentDataContainer().remove(NamespacedKey.minecraft("chunk-visitor"));
                 }
             } else {
-                message.sendActionBar(player, "&6Visiting&f " + chunkStorage.getOwner(chunk).getName() + "&6's Chunk");
-                player.getPersistentDataContainer().set(NamespacedKey.minecraft("chunk-visitor"), PersistentDataType.STRING, chunkStorage.getOwner(chunk).getName());
+                getMessage().sendActionBar(player, "&6Visiting&f " + owner + "&6's Chunk");
+                player.getPersistentDataContainer().set(NamespacedKey.minecraft("chunk-visitor"), PersistentDataType.STRING, owner);
             }
         } else {
             if (player.getPersistentDataContainer().has(NamespacedKey.minecraft("chunk-visitor"), PersistentDataType.STRING)) {
                 String lastChunkOwner = player.getPersistentDataContainer().get(NamespacedKey.minecraft("chunk-visitor"), PersistentDataType.STRING);
-                message.sendActionBar(player, "&6Exiting&f " + lastChunkOwner + "&6's Chunk");
+                getMessage().sendActionBar(player, "&6Exiting&f " + lastChunkOwner + "&6's Chunk");
                 player.getPersistentDataContainer().remove(NamespacedKey.minecraft("chunk-visitor"));
             }
         }

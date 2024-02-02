@@ -13,19 +13,18 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 
-public class PlayerInteractPhysical implements Listener {
-    private final ChunkStorage chunkStorage;
-    public PlayerInteractPhysical(Chunks plugin) {
-        chunkStorage = plugin.getChunkStorage();
+public record PlayerInteractPhysical(Chunks plugin) implements Listener {
+    private ChunkStorage getChunkStorage() {
+        return plugin.getChunkStorage();
     }
     @EventHandler(priority = EventPriority.NORMAL)
     public void onPlayerInteractPhysical(PlayerInteractEvent event) {
         if (!event.getAction().equals(Action.PHYSICAL))return;
         if (event.getClickedBlock() == null)return;
         Chunk chunk = event.getClickedBlock().getChunk();
-        if (!chunkStorage.isClaimed(chunk))return;
+        if (!getChunkStorage().isClaimed(chunk))return;
         Player player = event.getPlayer();
-        if (chunkStorage.hasAccess(player, chunk))return;
+        if (getChunkStorage().hasAccess(player, chunk))return;
         if (!isPhysical(event.getClickedBlock()))return;
         event.setCancelled(true);
     }

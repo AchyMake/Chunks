@@ -13,12 +13,12 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityMountEvent;
 
-public class EntityMount implements Listener {
-    private final ChunkStorage chunkStorage;
-    private final Message message;
-    public EntityMount(Chunks plugin) {
-        chunkStorage = plugin.getChunkStorage();
-        message = plugin.getMessage();
+public record EntityMount(Chunks plugin) implements Listener {
+    private ChunkStorage getChunkStorage() {
+        return plugin.getChunkStorage();
+    }
+    private Message getMessage() {
+        return plugin.getMessage();
     }
     @EventHandler(priority = EventPriority.NORMAL)
     public void onEntityMount(EntityMountEvent event) {
@@ -27,9 +27,10 @@ public class EntityMount implements Listener {
         if (event.getMount() instanceof Boat)return;
         if (event.getMount() instanceof Minecart)return;
         Chunk chunk = event.getMount().getLocation().getChunk();
-        if (!chunkStorage.isClaimed(chunk))return;
-        if (chunkStorage.hasAccess(player, chunk))return;
+        if (!getChunkStorage().isClaimed(chunk))return;
+        if (getChunkStorage().hasAccess(player, chunk))return;
         event.setCancelled(true);
-        message.send(player, "&c&lHey!&7 Sorry, chunk is owned by&f " + chunkStorage.getOwner(chunk).getName());
+        String owner = getChunkStorage().getOwner(chunk).getName();
+        getMessage().send(player, "&c&lHey!&7 Sorry, chunk is owned by&f " + owner);
     }
 }

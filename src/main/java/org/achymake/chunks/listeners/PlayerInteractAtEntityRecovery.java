@@ -16,32 +16,36 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerInteractAtEntityEvent;
 
-public class PlayerInteractAtEntityRecovery implements Listener {
-    private final ChunkStorage chunkStorage;
-    private final FileConfiguration config;
-    private final Message message;
-    private final Database database = Recovery.getInstance().getDatabase();
-    public PlayerInteractAtEntityRecovery(Chunks plugin) {
-        chunkStorage = plugin.getChunkStorage();
-        config = plugin.getConfig();
-        message = plugin.getMessage();
+public record PlayerInteractAtEntityRecovery(Chunks plugin) implements Listener {
+    private FileConfiguration getConfig() {
+        return plugin.getConfig();
+    }
+    private ChunkStorage getChunkStorage() {
+        return plugin.getChunkStorage();
+    }
+    private Message getMessage() {
+        return plugin.getMessage();
+    }
+    private Database getDatabase() {
+        return Recovery.getInstance().getDatabase();
     }
     @EventHandler(priority = EventPriority.NORMAL)
     public void onPlayerInteractAtEntityRecovery(PlayerInteractAtEntityEvent event) {
         Chunk chunk = event.getRightClicked().getLocation().getChunk();
-        if (!chunkStorage.isClaimed(chunk))return;
+        if (!getChunkStorage().isClaimed(chunk))return;
         Entity entity = event.getRightClicked();
         if (entity.getType().equals(EntityType.PLAYER))return;
         if (entity.getType().equals(EntityType.MINECART))return;
         if (entity.getType().equals(EntityType.BOAT))return;
         if (entity.isInvulnerable())return;
         if (entity instanceof ArmorStand armorStand) {
-            if (database.hasDeathItems(armorStand))return;
+            if (getDatabase().hasDeathItems(armorStand))return;
         }
         Player player = event.getPlayer();
-        if (chunkStorage.hasAccess(player, chunk))return;
-        if (config.getBoolean("hostile." + entity.getType()))return;
+        if (getChunkStorage().hasAccess(player, chunk))return;
+        if (getConfig().getBoolean("hostile." + entity.getType()))return;
         event.setCancelled(true);
-        message.send(player, "&c&lHey!&7 Sorry, chunk is owned by&f " + chunkStorage.getOwner(chunk).getName());
+        String owner = getChunkStorage().getOwner(chunk).getName();
+        getMessage().send(player, "&c&lHey!&7 Sorry, chunk is owned by&f " + owner);
     }
 }

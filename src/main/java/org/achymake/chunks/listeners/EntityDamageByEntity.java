@@ -11,53 +11,55 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 
-public class EntityDamageByEntity implements Listener {
-    private final FileConfiguration config;
-    private final ChunkStorage chunkStorage;
-    private final Message message;
-    public EntityDamageByEntity(Chunks plugin) {
-        config = plugin.getConfig();
-        chunkStorage = plugin.getChunkStorage();
-        message = plugin.getMessage();
+public record EntityDamageByEntity(Chunks plugin) implements Listener {
+    private FileConfiguration getConfig() {
+        return plugin.getConfig();
+    }
+    private ChunkStorage getChunkStorage() {
+        return plugin.getChunkStorage();
+    }
+    private Message getMessage() {
+        return plugin.getMessage();
     }
     @EventHandler(priority = EventPriority.NORMAL)
     public void onEntityDamageByEntity(EntityDamageByEntityEvent event) {
         Entity damager = event.getDamager();
         Entity target = event.getEntity();
         Chunk chunk = event.getEntity().getLocation().getChunk();
+        if (!getChunkStorage().isClaimed(chunk))return;
         if (target.isInvulnerable())return;
         if (target.getType().equals(EntityType.PLAYER))return;
-        if (config.getBoolean("hostile." + target.getType()))return;
-        if (!chunkStorage.isClaimed(chunk))return;
+        if (getConfig().getBoolean("hostile." + target.getType()))return;
+        String owner = getChunkStorage().getOwner(chunk).getName();
         if (damager instanceof Arrow arrow) {
             if (!(arrow.getShooter() instanceof Player player))return;
-            if (chunkStorage.hasAccess(player, chunk))return;
+            if (getChunkStorage().hasAccess(player, chunk))return;
             event.setCancelled(true);
-            message.send(player, "&c&lHey!&7 Sorry, chunk is owned by&f " + chunkStorage.getOwner(chunk).getName());
+            getMessage().send(player, "&c&lHey!&7 Sorry, chunk is owned by&f " + owner);
         } else if (damager instanceof Player player) {
-            if (chunkStorage.hasAccess(player, chunk))return;
+            if (getChunkStorage().hasAccess(player, chunk))return;
             event.setCancelled(true);
-            message.send(player, "&c&lHey!&7 Sorry, chunk is owned by&f " + chunkStorage.getOwner(chunk).getName());
+            getMessage().send(player, "&c&lHey!&7 Sorry, chunk is owned by&f " + owner);
         } else if (damager instanceof Snowball snowball) {
             if (!(snowball.getShooter() instanceof Player player)) return;
-            if (chunkStorage.hasAccess(player, chunk))return;
+            if (getChunkStorage().hasAccess(player, chunk))return;
             event.setCancelled(true);
-            message.send(player, "&c&lHey!&7 Sorry, chunk is owned by&f " + chunkStorage.getOwner(chunk).getName());
+            getMessage().send(player, "&c&lHey!&7 Sorry, chunk is owned by&f " + owner);
         } else if (damager instanceof SpectralArrow spectralArrow) {
             if (!(spectralArrow.getShooter() instanceof Player player)) return;
-            if (chunkStorage.hasAccess(player, chunk))return;
+            if (getChunkStorage().hasAccess(player, chunk))return;
             event.setCancelled(true);
-            message.send(player, "&c&lHey!&7 Sorry, chunk is owned by&f " + chunkStorage.getOwner(chunk).getName());
+            getMessage().send(player, "&c&lHey!&7 Sorry, chunk is owned by&f " + owner);
         } else if (damager instanceof ThrownPotion thrownPotion) {
             if (!(thrownPotion.getShooter() instanceof Player player))return;
-            if (chunkStorage.hasAccess(player, chunk))return;
+            if (getChunkStorage().hasAccess(player, chunk))return;
             event.setCancelled(true);
-            message.send(player, "&c&lHey!&7 Sorry, chunk is owned by&f " + chunkStorage.getOwner(chunk).getName());
+            getMessage().send(player, "&c&lHey!&7 Sorry, chunk is owned by&f " + owner);
         } else if (damager instanceof Trident trident) {
             if (!(trident.getShooter() instanceof Player player))return;
-            if (chunkStorage.hasAccess(player, chunk))return;
+            if (getChunkStorage().hasAccess(player, chunk))return;
             event.setCancelled(true);
-            message.send(player, "&c&lHey!&7 Sorry, chunk is owned by&f " + chunkStorage.getOwner(chunk).getName());
+            getMessage().send(player, "&c&lHey!&7 Sorry, chunk is owned by&f " + owner);
         }
     }
 }

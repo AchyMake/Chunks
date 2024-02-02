@@ -12,15 +12,9 @@ import org.bukkit.entity.Player;
 import java.io.File;
 import java.util.logging.Level;
 
-public class Message {
-    private final Chunks plugin;
-    private final File dataFolder;
-    public Message(Chunks plugin) {
-        dataFolder = plugin.getDataFolder();
-        this.plugin = plugin;
-    }
+public record Message(Chunks plugin) {
     public File getFile() {
-        return new File(dataFolder, "message.yml");
+        return new File(plugin().getDataFolder(), "message.yml");
     }
     public boolean exist() {
         return getFile().exists();
@@ -41,6 +35,6 @@ public class Message {
         return ChatColor.translateAlternateColorCodes('&', message);
     }
     public void sendLog(Level level, String message) {
-        plugin.getLogger().log(level, message);
+        plugin().getLogger().log(level, message);
     }
 }
