@@ -54,14 +54,14 @@ public final class Chunks extends JavaPlugin {
         instance = this;
         message = new Message(this);
         manager = getServer().getPluginManager();
+        chunkStorage = new ChunkStorage(this);
+        userdata = new Userdata(this);
         if (isVaultDisable()) {
             getManager().disablePlugin(this);
         }
         if (isPlaceholderAPIDisable()) {
             getManager().disablePlugin(this);
         }
-        userdata = new Userdata(this);
-        chunkStorage = new ChunkStorage(this);
         commands();
         events();
         reload();
