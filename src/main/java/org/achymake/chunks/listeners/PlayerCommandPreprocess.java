@@ -27,8 +27,6 @@ public record PlayerCommandPreprocess(Chunks plugin) implements Listener {
         if (!event.getMessage().startsWith("/sethome"))return;
         if (getChunkStorage().hasAccess(player, chunk))return;
         event.setCancelled(true);
-        String text = getMessage().getString("events.player-command-preprocess");
-        String message = MessageFormat.format(text, getChunkStorage().getOwner(chunk).getName());
-        getMessage().send(player, message);
+        player.sendMessage(MessageFormat.format(getMessage().getString("events.player-command-preprocess"), getChunkStorage().getOwner(chunk).getName()));
     }
 }

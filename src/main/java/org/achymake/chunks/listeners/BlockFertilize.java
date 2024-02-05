@@ -27,8 +27,6 @@ public record BlockFertilize(Chunks plugin) implements Listener {
         if (!getChunkStorage().isClaimed(chunk))return;
         if (getChunkStorage().hasAccess(player, chunk))return;
         event.setCancelled(true);
-        String text = getMessage().getString("events.block-fertilize");
-        String message = MessageFormat.format(text, getChunkStorage().getOwner(chunk).getName());
-        getMessage().send(player, message);
+        player.sendMessage(MessageFormat.format(getMessage().getString("events.block-fertilize"), getChunkStorage().getOwner(chunk).getName()));
     }
 }

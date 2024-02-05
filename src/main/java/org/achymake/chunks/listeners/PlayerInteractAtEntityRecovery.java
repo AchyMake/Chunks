@@ -47,8 +47,6 @@ public record PlayerInteractAtEntityRecovery(Chunks plugin) implements Listener 
         if (getChunkStorage().hasAccess(player, chunk))return;
         if (getConfig().getBoolean("hostile." + entity.getType()))return;
         event.setCancelled(true);
-        String text = getMessage().getString("events.player-interact-at-entity");
-        String message = MessageFormat.format(text, getChunkStorage().getOwner(chunk).getName());
-        getMessage().send(player, message);
+        player.sendMessage(MessageFormat.format(getMessage().getString("events.player-interact-at-entity"), getChunkStorage().getOwner(chunk).getName()));
     }
 }

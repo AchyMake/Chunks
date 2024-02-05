@@ -26,8 +26,6 @@ public record SignChange(Chunks plugin) implements Listener {
         if (!getChunkStorage().isClaimed(chunk))return;
         if (getChunkStorage().hasAccess(player, chunk))return;
         event.setCancelled(true);
-        String text = getMessage().getString("events.sign-change");
-        String message = MessageFormat.format(text, getChunkStorage().getOwner(chunk).getName());
-        getMessage().send(player, message);
+        player.sendMessage(MessageFormat.format(getMessage().getString("events.sign-change"), getChunkStorage().getOwner(chunk).getName()));
     }
 }

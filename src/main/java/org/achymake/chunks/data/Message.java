@@ -93,8 +93,10 @@ public class Message {
             config.set("commands.chunk.unclaim.success", "&6You unclaimed a chunk and refunded for&a {0}");
             config.set("commands.chunk.unclaim.claimed", "&cChunk is owned by&f {0}");
             config.set("commands.chunk.unclaim.unclaimed", "&cChunk is already unclaimed");
+
             config.set("events.block-break", "&cYou are not allowed to break blocks inside&f {0}&c's chunk");
             config.set("events.block-fertilize", "&cYou are not allowed to fertilize blocks inside&f {0}&c's chunk");
+            config.set("events.block-place", "&cYou are not allowed to place blocks inside&f {0}&c's chunk");
             config.set("events.cauldron-level-change", "&cYou are not allowed to change cauldrons inside&f {0}&c's chunk");
             config.set("events.entity-damage-by-entity", "&cYou are not allowed to damage entities inside&f {0}&c's chunk");
             config.set("events.entity-mount", "&cYou are not allowed to mount inside&f {0}'s chunk");

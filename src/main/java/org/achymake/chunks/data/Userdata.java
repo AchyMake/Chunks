@@ -9,7 +9,6 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
-import java.util.UUID;
 import java.util.logging.Level;
 
 public record Userdata(Chunks plugin) {
@@ -22,10 +21,13 @@ public record Userdata(Chunks plugin) {
     public boolean exist(OfflinePlayer offlinePlayer) {
         return new File(getDataFolder(), "userdata/" + offlinePlayer.getUniqueId() + ".yml").exists();
     }
+    public File getFile(OfflinePlayer offlinePlayer) {
+        return new File(getDataFolder(), "userdata/" + offlinePlayer.getUniqueId() + ".yml");
+    }
     public void setup(OfflinePlayer offlinePlayer) {
         if (exist(offlinePlayer)) {
             if (!getConfig(offlinePlayer).getString("name").equals(offlinePlayer.getName())) {
-                File file = new File(getDataFolder(), "userdata/" + offlinePlayer.getUniqueId() + ".yml");
+                File file = getFile(offlinePlayer);
                 FileConfiguration config = YamlConfiguration.loadConfiguration(file);
                 config.set("name", offlinePlayer.getName());
                 try {
@@ -35,7 +37,7 @@ public record Userdata(Chunks plugin) {
                 }
             }
         } else {
-            File file = new File(getDataFolder(), "userdata/" + offlinePlayer.getUniqueId() + ".yml");
+            File file = getFile(offlinePlayer);
             FileConfiguration config = YamlConfiguration.loadConfiguration(file);
             config.set("name", offlinePlayer.getName());
             config.set("claimed", 0);
@@ -48,10 +50,10 @@ public record Userdata(Chunks plugin) {
         }
     }
     public FileConfiguration getConfig(OfflinePlayer offlinePlayer) {
-        return YamlConfiguration.loadConfiguration(new File(getDataFolder(), "userdata/" + offlinePlayer.getUniqueId() + ".yml"));
+        return YamlConfiguration.loadConfiguration(getFile(offlinePlayer));
     }
     public void setBoolean(OfflinePlayer offlinePlayer, String path, boolean value) {
-        File file = new File(getDataFolder(), "userdata/" + offlinePlayer.getUniqueId() + ".yml");
+        File file = getFile(offlinePlayer);
         FileConfiguration config = YamlConfiguration.loadConfiguration(file);
         config.set(path, value);
         try {
@@ -61,7 +63,7 @@ public record Userdata(Chunks plugin) {
         }
     }
     public void setInt(OfflinePlayer offlinePlayer, String path, int value) {
-        File file = new File(getDataFolder(), "userdata/" + offlinePlayer.getUniqueId() + ".yml");
+        File file = getFile(offlinePlayer);
         FileConfiguration config = YamlConfiguration.loadConfiguration(file);
         config.set(path, value);
         try {
@@ -71,7 +73,7 @@ public record Userdata(Chunks plugin) {
         }
     }
     public void setStringList(OfflinePlayer offlinePlayer, String path, List<String> value) {
-        File file = new File(getDataFolder(), "userdata/" + offlinePlayer.getUniqueId() + ".yml");
+        File file = getFile(offlinePlayer);
         FileConfiguration config = YamlConfiguration.loadConfiguration(file);
         config.set(path, value);
         try {
@@ -92,8 +94,7 @@ public record Userdata(Chunks plugin) {
     public void reload(OfflinePlayer[] offlinePlayers) {
         for (OfflinePlayer offlinePlayer : offlinePlayers) {
             if (exist(offlinePlayer)) {
-                UUID uuid = offlinePlayer.getUniqueId();
-                File file = new File(getDataFolder(), "userdata/" + uuid + ".yml");
+                File file = getFile(offlinePlayer);
                 FileConfiguration config = YamlConfiguration.loadConfiguration(file);
                 try {
                     config.load(file);

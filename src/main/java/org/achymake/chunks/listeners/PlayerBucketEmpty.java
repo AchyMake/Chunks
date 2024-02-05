@@ -26,8 +26,6 @@ public record PlayerBucketEmpty(Chunks plugin) implements Listener {
         Player player = event.getPlayer();
         if (getChunkStorage().hasAccess(player, chunk))return;
         event.setCancelled(true);
-        String text = getMessage().getString("events.player-bucket-empty");
-        String message = MessageFormat.format(text, getChunkStorage().getOwner(chunk).getName());
-        getMessage().send(player, message);
+        player.sendMessage(MessageFormat.format(getMessage().getString("events.player-bucket-empty"), getChunkStorage().getOwner(chunk).getName()));
     }
 }

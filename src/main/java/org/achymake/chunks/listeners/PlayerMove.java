@@ -35,9 +35,7 @@ public record PlayerMove(Chunks plugin) implements Listener {
                     visit(player, owner);
                 } else {
                     event.setCancelled(true);
-                    String text = getMessage().getString("events.player-visit-chunk-banned");
-                    String message = MessageFormat.format(text, owner.getName());
-                    getMessage().send(player, message);
+                    player.sendMessage(MessageFormat.format(getMessage().getString("events.player-visit-chunk-banned"), owner.getName()));
                 }
             } else {
                 visit(player, owner);
@@ -52,18 +50,14 @@ public record PlayerMove(Chunks plugin) implements Listener {
                 player.getPersistentDataContainer().remove(NamespacedKey.minecraft("chunk-visitor"));
             }
         } else {
-            String text = getMessage().getString("events.player-visit-chunk");
-            String message = MessageFormat.format(text, owner.getName());
-            getMessage().send(player, message);
+            player.sendMessage(MessageFormat.format(getMessage().getString("events.player-visit-chunk"), owner.getName()));
             player.getPersistentDataContainer().set(NamespacedKey.minecraft("chunk-visitor"), PersistentDataType.STRING, owner.getName());
         }
     }
     private void exit(Player player) {
         if (player.getPersistentDataContainer().has(NamespacedKey.minecraft("chunk-visitor"), PersistentDataType.STRING)) {
             String lastChunkOwner = player.getPersistentDataContainer().get(NamespacedKey.minecraft("chunk-visitor"), PersistentDataType.STRING);
-            String text = getMessage().getString("events.player-exit-chunk");
-            String message = MessageFormat.format(text, lastChunkOwner);
-            getMessage().send(player, message);
+            player.sendMessage(MessageFormat.format(getMessage().getString("events.player-exit-chunk"), lastChunkOwner));
             player.getPersistentDataContainer().remove(NamespacedKey.minecraft("chunk-visitor"));
         }
     }
