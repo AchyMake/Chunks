@@ -9,16 +9,24 @@ import org.bukkit.Chunk;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
+import java.text.MessageFormat;
+
 public class UnClaimCommand extends ChunkSubCommand {
-    private final FileConfiguration config;
-    private final ChunkStorage chunkStorage;
-    private final Economy economy;
-    private final Message message;
+    private final Chunks plugin;
+    private FileConfiguration getConfig() {
+        return plugin.getConfig();
+    }
+    private ChunkStorage getChunkStorage() {
+        return plugin.getChunkStorage();
+    }
+    private Economy getEconomy() {
+        return plugin.getEconomy();
+    }
+    private Message getMessage() {
+        return plugin.getMessage();
+    }
     public UnClaimCommand(Chunks plugin) {
-        config = plugin.getConfig();
-        chunkStorage = plugin.getChunkStorage();
-        economy = plugin.getEconomy();
-        message = plugin.getMessage();
+        this.plugin = plugin;
     }
     @Override
     public String getName() {
@@ -36,16 +44,16 @@ public class UnClaimCommand extends ChunkSubCommand {
     public void perform(Player player, String[] args) {
         if (player.hasPermission("chunks.command.chunk.unclaim")) {
             Chunk chunk = player.getLocation().getChunk();
-            if (chunkStorage.isClaimed(chunk)) {
-                if (chunkStorage.isOwner(player, chunk)){
-                    message.send(player, "&6You unclaimed a chunk and got refunded&a " + economy.currencyNamePlural() + " " + economy.format(config.getDouble("unclaim.refund")));
-                    chunkStorage.unclaim(chunk);
-                    chunkStorage.unclaimEffect(player);
+            if (getChunkStorage().isClaimed(chunk)) {
+                if (getChunkStorage().isOwner(player, chunk)) {
+                    player.sendMessage(MessageFormat.format(getMessage().getString("commands.chunk.unclaim.success"), getEconomy().format(getConfig().getDouble("unclaim.refund"))));
+                    getChunkStorage().unclaim(chunk);
+                    getChunkStorage().unclaimEffect(player);
                 } else {
-                    message.send(player, "&c&lHey!&7 Sorry, chunk is owned by&f " + chunkStorage.getOwner(chunk).getName());
+                    player.sendMessage(MessageFormat.format(getMessage().getString("commands.chunk.unclaim.claimed"), getChunkStorage().getOwner(chunk).getName()));
                 }
             } else {
-                message.send(player, "&c&lHey!&7 Sorry, chunk is already unclaimed");
+                player.sendMessage(getMessage().getString("commands.chunk.unclaim.unclaimed"));
             }
         }
     }

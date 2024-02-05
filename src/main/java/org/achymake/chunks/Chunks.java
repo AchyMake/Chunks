@@ -55,7 +55,7 @@ public final class Chunks extends JavaPlugin {
     @Override
     public void onEnable() {
         instance = this;
-        message = new Message(this);
+        message = new Message();
         manager = getServer().getPluginManager();
         userdata = new Userdata(this);
         chunkStorage = new ChunkStorage(this);
@@ -175,6 +175,7 @@ public final class Chunks extends JavaPlugin {
             getConfig().options().copyDefaults(true);
             saveConfig();
         }
+        getMessage().reload();
         getUserdata().reload(getServer().getOfflinePlayers());
     }
     private boolean isVaultDisable() {

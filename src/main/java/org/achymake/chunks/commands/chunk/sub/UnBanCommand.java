@@ -8,6 +8,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
+import java.text.MessageFormat;
 import java.util.List;
 
 public class UnBanCommand extends ChunkSubCommand {
@@ -38,9 +39,9 @@ public class UnBanCommand extends ChunkSubCommand {
                     List<String> banned = userdata.getBanned(player);
                     banned.remove(target.getUniqueId().toString());
                     userdata.setStringList(player, "banned", banned);
-                    message.send(player, "&6You unbanned&f " + target.getName());
+                    player.sendMessage(MessageFormat.format(message.getString("commands.chunk.unban.success"), target.getName()));
                 } else {
-                    message.send(player, "&c&lHey!&7 Sorry, but you already banned&f " + target.getName());
+                    player.sendMessage(MessageFormat.format(message.getString("commands.chunk.unban.already-unbanned"), target.getName()));
                 }
             }
         }

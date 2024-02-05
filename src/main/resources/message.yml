@@ -1,0 +1,42 @@
+commands:
+  ban:
+    already-banned: "{0} is already banned"
+    success: "{0} is now banned from you're chunks"
+  banned:
+    empty: "You do not have any banned members"
+    title: "Banned:"
+    list: "- {0}"
+  claim:
+    success: "You claimed a chunk for ${0}"
+    influence: "You do not have {0} to claim the chunk"
+  help:
+    title: "Help:"
+    ban: ""
+    banned: ""
+    claim: ""
+    help: ""
+    members: ""
+    tnt: ""
+    unban: ""
+    unclaim: ""
+  members:
+    test: ""
+  tnt: ""
+events:
+  block-break: "You are not allowed to break blocks inside {0}'s chunk"
+  block-fertilize: "You are not allowed to fertilize blocks inside {0}'s chunk"
+  block-place: "You are not allowed to place blocks inside {0}'s chunk"
+  cauldron-level-change: "You are not allowed to change cauldrons inside {0}'s chunk"
+  entity-damage-by-entity: "You are not allowed to damage entities inside {0}'s chunk"
+  entity-mount: "You are not allowed to mount inside {0}'s chunk"
+  player-bucket-empty: "You are not allowed to empty buckets inside {0}'s chunk"
+  player-bucket-entity: "You are not allowed to bucket entities from {0}'s chunk"
+  player-bucket-fill: "You are not allowed to fill buckets from {0}'s chunk"
+  player-command-preprocess: "You are not allowed to sethome inside {0}'s chunk"
+  player-interact: "You are not allowed to interact blocks from {0}'s chunk"
+  player-interact-at-entity: "You are not allowed to interact entities from {0}'s chunk"
+  player-leash-entity: "You are not allowed to leash entities from {0}'s chunk"
+  player-visit-chunk: "Visiting {0}'s chunk"
+  player-exit-chunk: "Exiting {0}'s chunk"
+  player-shear-entity: "You are not allowed to shear entities from {0}'s chunk"
+  sign-change: "You are not allowed to change signs from {0}'s chunk"

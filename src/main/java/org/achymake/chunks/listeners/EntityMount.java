@@ -13,6 +13,8 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityMountEvent;
 
+import java.text.MessageFormat;
+
 public record EntityMount(Chunks plugin) implements Listener {
     private ChunkStorage getChunkStorage() {
         return plugin.getChunkStorage();
@@ -30,7 +32,8 @@ public record EntityMount(Chunks plugin) implements Listener {
         if (!getChunkStorage().isClaimed(chunk))return;
         if (getChunkStorage().hasAccess(player, chunk))return;
         event.setCancelled(true);
-        String owner = getChunkStorage().getOwner(chunk).getName();
-        getMessage().send(player, "&c&lHey!&7 Sorry, chunk is owned by&f " + owner);
+        String text = getMessage().getString("events.entity-mount");
+        String message = MessageFormat.format(text, getChunkStorage().getOwner(chunk).getName());
+        getMessage().send(player, message);
     }
 }

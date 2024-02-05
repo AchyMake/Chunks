@@ -10,6 +10,8 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerBucketFillEvent;
 
+import java.text.MessageFormat;
+
 public record PlayerBucketFill(Chunks plugin) implements Listener {
     private ChunkStorage getChunkStorage() {
         return plugin.getChunkStorage();
@@ -24,7 +26,8 @@ public record PlayerBucketFill(Chunks plugin) implements Listener {
         Player player = event.getPlayer();
         if (getChunkStorage().hasAccess(player, chunk))return;
         event.setCancelled(true);
-        String owner = getChunkStorage().getOwner(chunk).getName();
-        getMessage().send(player, "&c&lHey!&7 Sorry, chunk is owned by&f " + owner);
+        String text = getMessage().getString("events.player-bucket-fill");
+        String message = MessageFormat.format(text, getChunkStorage().getOwner(chunk).getName());
+        getMessage().send(player, message);
     }
 }

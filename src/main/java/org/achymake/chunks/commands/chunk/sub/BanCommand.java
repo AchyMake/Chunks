@@ -8,14 +8,19 @@ import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
+import java.text.MessageFormat;
 import java.util.List;
 
 public class BanCommand extends ChunkSubCommand {
-    private final Userdata userdata;
-    private final Message message;
+    private final Chunks plugin;
+    private Userdata getUserdata() {
+        return plugin.getUserdata();
+    }
+    private Message getMessage() {
+        return plugin.getMessage();
+    }
     public BanCommand(Chunks plugin) {
-        userdata = plugin.getUserdata();
-        message = plugin.getMessage();
+        this.plugin = plugin;
     }
     @Override
     public String getName() {
@@ -34,18 +39,18 @@ public class BanCommand extends ChunkSubCommand {
         if (player.hasPermission("chunks.command.chunk.ban")) {
             if (args.length == 2) {
                 OfflinePlayer target = Bukkit.getOfflinePlayer(args[1]);
-                if (userdata.getBanned(player).contains(target.getUniqueId().toString())) {
-                    message.send(player, "&c&lHey!&7 Sorry, but you already banned&f " + target.getName());
+                if (getUserdata().getBanned(player).contains(target.getUniqueId().toString())) {
+                    player.sendMessage(MessageFormat.format(getMessage().getString("commands.chunk.ban.already-banned"), target.getName()));
                 } else {
-                    if (userdata.getMembers(player).contains(target.getUniqueId().toString())) {
-                        List<String> members = userdata.getMembers(player);
+                    if (getUserdata().getMembers(player).contains(target.getUniqueId().toString())) {
+                        List<String> members = getUserdata().getMembers(player);
                         members.remove(target.getUniqueId().toString());
-                        userdata.setStringList(player, "members", members);
+                        getUserdata().setStringList(player, "members", members);
                     }
-                    List<String> banned = userdata.getBanned(player);
+                    List<String> banned = getUserdata().getBanned(player);
                     banned.add(target.getUniqueId().toString());
-                    userdata.setStringList(player, "banned", banned);
-                    message.send(player, "&6You banned&f " + target.getName());
+                    getUserdata().setStringList(player, "banned", banned);
+                    player.sendMessage(MessageFormat.format(getMessage().getString("commands.chunk.ban.success"), target.getName()));
                 }
             }
         }

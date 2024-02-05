@@ -36,20 +36,18 @@ public class HelpCommand extends ChunksSubCommand {
                         message.send(player, "&f/chunks edit &7- toggle chunk edit");
                     }
                     if (player.hasPermission("chunks.command.chunks.effect")) {
-                        message.send(player, "&f/chunks effect &7- effects of claiming");
+                        message.send(player, "&f/chunks effect claim &7- effects of claiming");
+                        message.send(player, "&f/chunks effect unclaim &7- effects of unclaiming");
                     }
                     message.send(player, "&f/chunks help &7- show this list");
                     if (player.hasPermission("chunks.command.chunks.info")) {
                         message.send(player, "&f/chunks info &7- checks info of chunk");
                     }
-                    if (player.hasPermission("chunks.command.chunks.protect")) {
-                        message.send(player, "&f/chunks protect &7- protects a chunk");
-                    }
                     if (player.hasPermission("chunks.command.chunks.reload")) {
                         message.send(player, "&f/chunks reload &7- reload smpchunks plugin");
                     }
                     if (player.hasPermission("chunks.command.chunks.setowner")) {
-                        message.send(player, "&f/chunks setowner target &7- sets chunk owner if claimed");
+                        message.send(player, "&f/chunks setowner target &7- sets chunk owner");
                     }
                 }
             }

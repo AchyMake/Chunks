@@ -10,6 +10,8 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 
+import java.text.MessageFormat;
+
 public record PlayerCommandPreprocess(Chunks plugin) implements Listener {
     private ChunkStorage getChunkStorage() {
         return plugin.getChunkStorage();
@@ -20,12 +22,13 @@ public record PlayerCommandPreprocess(Chunks plugin) implements Listener {
     @EventHandler(priority = EventPriority.NORMAL)
     public void onPlayerCommandPreprocess(PlayerCommandPreprocessEvent event) {
         Player player = event.getPlayer();
-        Chunk chunk = event.getPlayer().getLocation().getChunk();
+        Chunk chunk = player.getLocation().getChunk();
         if (!getChunkStorage().isClaimed(chunk))return;
         if (!event.getMessage().startsWith("/sethome"))return;
         if (getChunkStorage().hasAccess(player, chunk))return;
         event.setCancelled(true);
-        String owner = getChunkStorage().getOwner(chunk).getName();
-        getMessage().send(player, "&c&lHey!&7 Sorry, but you can't&f sethome&7 inside&f " + owner + "&7's chunk");
+        String text = getMessage().getString("events.player-command-preprocess");
+        String message = MessageFormat.format(text, getChunkStorage().getOwner(chunk).getName());
+        getMessage().send(player, message);
     }
 }

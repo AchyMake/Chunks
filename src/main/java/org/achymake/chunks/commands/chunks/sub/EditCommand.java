@@ -8,11 +8,15 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 public class EditCommand extends ChunksSubCommand {
-    private final ChunkStorage chunkStorage;
-    private final Message message;
+    private final Chunks plugin;
+    private ChunkStorage getChunkStorage() {
+        return plugin.getChunkStorage();
+    }
+    private Message getMessage() {
+        return plugin.getMessage();
+    }
     public EditCommand(Chunks plugin) {
-        chunkStorage = plugin.getChunkStorage();
-        message = plugin.getMessage();
+        this.plugin = plugin;
     }
     @Override
     public String getName() {
@@ -31,12 +35,12 @@ public class EditCommand extends ChunksSubCommand {
         if (sender instanceof Player player) {
             if (args.length == 1) {
                 if (player.hasPermission("chunks.command.chunks.edit")) {
-                    if (chunkStorage.hasChunkEdit(player)) {
-                        chunkStorage.getChunkEditors().remove(player);
-                        message.sendActionBar(player, "&6&lChunk Edit:&c Disabled");
+                    if (getChunkStorage().hasChunkEdit(player)) {
+                        getChunkStorage().getChunkEditors().remove(player);
+                        getMessage().sendActionBar(player, "&6Chunk Edit:&c Disabled");
                     } else {
-                        chunkStorage.getChunkEditors().add(player);
-                        message.sendActionBar(player, "&6&lChunk Edit:&a Enabled");
+                        getChunkStorage().getChunkEditors().add(player);
+                        getMessage().sendActionBar(player, "&6Chunk Edit:&a Enabled");
                     }
                 }
             }

@@ -14,10 +14,10 @@ import java.util.logging.Level;
 
 public record Userdata(Chunks plugin) {
     private File getDataFolder() {
-        return plugin().getDataFolder();
+        return plugin.getDataFolder();
     }
     private Message getMessage() {
-        return plugin().getMessage();
+        return plugin.getMessage();
     }
     public boolean exist(OfflinePlayer offlinePlayer) {
         return new File(getDataFolder(), "userdata/" + offlinePlayer.getUniqueId() + ".yml").exists();
@@ -85,6 +85,9 @@ public record Userdata(Chunks plugin) {
     }
     public List<String> getBanned(OfflinePlayer offlinePlayer) {
         return getConfig(offlinePlayer).getStringList("banned");
+    }
+    public int getClaimCount(OfflinePlayer offlinePlayer) {
+        return getConfig(offlinePlayer).getInt("claimed");
     }
     public void reload(OfflinePlayer[] offlinePlayers) {
         for (OfflinePlayer offlinePlayer : offlinePlayers) {

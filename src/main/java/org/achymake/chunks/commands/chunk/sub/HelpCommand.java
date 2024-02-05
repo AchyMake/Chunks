@@ -6,9 +6,12 @@ import org.achymake.chunks.data.Message;
 import org.bukkit.entity.Player;
 
 public class HelpCommand extends ChunkSubCommand {
-    private final Message message;
+    private final Chunks plugin;
+    private Message getMessage() {
+        return plugin.getMessage();
+    }
     public HelpCommand(Chunks plugin) {
-        message = plugin.getMessage();
+        this.plugin = plugin;
     }
     @Override
     public String getName() {
@@ -25,22 +28,22 @@ public class HelpCommand extends ChunkSubCommand {
     @Override
     public void perform(Player player, String[] args) {
         if (player.hasPermission("chunks.command.chunk.help")) {
-            if (args.length == 1){
-                message.send(player, "&6Chunk Help:");
+            if (args.length == 1) {
+                player.sendMessage(getMessage().getString("commands.chunk.help.title"));
                 if (player.hasPermission("chunks.command.chunk.claim")) {
-                    message.send(player, "/chunk claim&7 - claims current chunk");
+                    player.sendMessage(getMessage().getString("commands.chunk.help.claim"));
                 }
-                message.send(player, "/chunk help&7 - show this list");
+                player.sendMessage(getMessage().getString("commands.chunk.help.help"));
                 if (player.hasPermission("chunks.command.chunk.members")) {
-                    message.send(player, "/chunk members&7 - check member list");
-                    message.send(player, "/chunk members add target&7 - add member");
-                    message.send(player, "/chunk members remove target&7 - remove member");
+                    for (String messages : getMessage().getConfig().getStringList("commands.chunk.help.members")) {
+                        player.sendMessage(getMessage().addColor(messages));
+                    }
                 }
                 if (player.hasPermission("chunks.command.chunk.tnt")) {
-                    message.send(player, "/chunk tnt&7 - toggle tnt for the chunk");
+                    player.sendMessage(getMessage().getString("commands.chunk.help.tnt"));
                 }
                 if (player.hasPermission("chunks.command.chunk.unclaim")) {
-                    message.send(player, "/chunk unclaim&7 - unclaims current chunk");
+                    player.sendMessage(getMessage().getString("commands.chunk.help.unclaim"));
                 }
             }
         }

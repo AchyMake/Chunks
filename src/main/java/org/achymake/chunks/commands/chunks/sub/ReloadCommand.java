@@ -8,10 +8,11 @@ import org.bukkit.entity.Player;
 
 public class ReloadCommand extends ChunksSubCommand {
     private final Chunks plugin;
-    private final Message message;
+    private Message getMessage() {
+        return plugin.getMessage();
+    }
     public ReloadCommand(Chunks plugin) {
         this.plugin = plugin;
-        message = plugin.getMessage();
     }
     @Override
     public String getName() {
@@ -31,7 +32,7 @@ public class ReloadCommand extends ChunksSubCommand {
             if (player.hasPermission("chunks.command.chunks.reload")) {
                 if (args.length == 1) {
                     plugin.reload();
-                    message.send(player, "&6Chunks:&f reloaded");
+                    getMessage().send(player, "&6Chunks:&f reloaded");
                 }
             }
         }

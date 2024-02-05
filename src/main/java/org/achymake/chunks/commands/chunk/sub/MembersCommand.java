@@ -8,15 +8,20 @@ import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
+import java.text.MessageFormat;
 import java.util.List;
 import java.util.UUID;
 
 public class MembersCommand extends ChunkSubCommand {
-    private final Userdata userdata;
-    private final Message message;
+    private final Chunks plugin;
+    private Userdata getUserdata() {
+        return plugin.getUserdata();
+    }
+    private Message getMessage() {
+        return plugin.getMessage();
+    }
     public MembersCommand(Chunks plugin) {
-        userdata = plugin.getUserdata();
-        message = plugin.getMessage();
+        this.plugin = plugin;
     }
     @Override
     public String getName() {
@@ -34,35 +39,36 @@ public class MembersCommand extends ChunkSubCommand {
     public void perform(Player player, String[] args) {
         if (player.hasPermission("chunks.command.chunk.members")) {
             if (args.length == 1) {
-                if (userdata.getConfig(player).getStringList("members").isEmpty()){
-                    message.send(player, "&c&lHey!&7 Sorry, but you don't have any members");
+                if (getUserdata().getConfig(player).getStringList("members").isEmpty()) {
+                    player.sendMessage(getMessage().getString("commands.chunk.members.empty"));
                 } else {
-                    message.send(player, "&6Chunk Members:");
-                    for (String uuidListed : userdata.getConfig(player).getStringList("members")) {
-                        message.send(player, "- " + player.getServer().getOfflinePlayer(UUID.fromString(uuidListed)).getName());
+                    player.sendMessage(getMessage().getString("commands.chunk.members.title"));
+                    for (String uuidListed : getUserdata().getConfig(player).getStringList("members")) {
+                        OfflinePlayer offlinePlayer = player.getServer().getOfflinePlayer(UUID.fromString(uuidListed));
+                        player.sendMessage(MessageFormat.format(getMessage().getString("commands.chunk.members.list"), offlinePlayer.getName()));
                     }
                 }
             }
             if (args.length == 3) {
                 OfflinePlayer target = Bukkit.getOfflinePlayer(args[2]);
                 if (args[1].equalsIgnoreCase("add")) {
-                    if (userdata.getConfig(player).getStringList("members").contains(target.getUniqueId().toString())) {
-                        message.send(player, "&c&lHey!&7 Sorry, but you already have&f " + target.getName() + "&7 as member");
+                    if (getUserdata().getConfig(player).getStringList("members").contains(target.getUniqueId().toString())) {
+                        player.sendMessage(MessageFormat.format(getMessage().getString("commands.chunk.members.add.already-member"), target.getName()));
                     } else {
-                        List<String> members = userdata.getConfig(player).getStringList("members");
+                        List<String> members = getUserdata().getConfig(player).getStringList("members");
                         members.add(target.getUniqueId().toString());
-                        userdata.setStringList(player, "members", members);
-                        message.send(player, "&6You added&f " + target.getName() + "&6 to members");
+                        getUserdata().setStringList(player, "members", members);
+                        player.sendMessage(MessageFormat.format(getMessage().getString("commands.chunk.members.add.success"), target.getName()));
                     }
                 }
                 if (args[1].equalsIgnoreCase("remove")) {
-                    if (userdata.getConfig(player).getStringList("members").contains(target.getUniqueId().toString())) {
-                        List<String> members = userdata.getConfig(player).getStringList("members");
+                    if (getUserdata().getConfig(player).getStringList("members").contains(target.getUniqueId().toString())) {
+                        List<String> members = getUserdata().getConfig(player).getStringList("members");
                         members.remove(target.getUniqueId().toString());
-                        userdata.setStringList(player, "members", members);
-                        message.send(player, "&6You removed&f " + target.getName() + "&6 from members");
+                        getUserdata().setStringList(player, "members", members);
+                        player.sendMessage(MessageFormat.format(getMessage().getString("commands.chunk.members.remove.success"), target.getName()));
                     } else {
-                        message.send(player, "&c&lHey!&7 Sorry, but you don't have&f " + target.getName() + "&7 as member");
+                        player.sendMessage(MessageFormat.format(getMessage().getString("commands.chunk.members.remove.non-member"), target.getName()));
                     }
                 }
             }

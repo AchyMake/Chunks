@@ -15,6 +15,8 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlot;
 
+import java.text.MessageFormat;
+
 public record PlayerInteract(Chunks plugin) implements Listener {
     private ChunkStorage getChunkStorage() {
         return plugin.getChunkStorage();
@@ -34,8 +36,9 @@ public record PlayerInteract(Chunks plugin) implements Listener {
         Player player = event.getPlayer();
         if (getChunkStorage().hasAccess(player, chunk))return;
         event.setCancelled(true);
-        String owner = getChunkStorage().getOwner(chunk).getName();
-        getMessage().send(player, "&c&lHey!&7 Sorry, chunk is owned by&f " + owner);
+        String text = getMessage().getString("events.player-interact");
+        String message = MessageFormat.format(text, getChunkStorage().getOwner(chunk).getName());
+        getMessage().send(player, message);
     }
     private boolean isCancelled(Block block) {
         if (Tag.BEDS.isTagged(block.getType())) {

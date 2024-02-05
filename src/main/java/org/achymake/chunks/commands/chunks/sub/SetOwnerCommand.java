@@ -12,13 +12,18 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 public class SetOwnerCommand extends ChunksSubCommand {
-    private final Userdata userdata;
-    private final ChunkStorage chunkStorage;
-    private final Message message;
+    private final Chunks plugin;
+    private Userdata getUserdata() {
+        return plugin.getUserdata();
+    }
+    private ChunkStorage getChunkStorage() {
+        return plugin.getChunkStorage();
+    }
+    private Message getMessage() {
+        return plugin.getMessage();
+    }
     public SetOwnerCommand(Chunks plugin) {
-        userdata = plugin.getUserdata();
-        chunkStorage = plugin.getChunkStorage();
-        message = plugin.getMessage();
+        this.plugin = plugin;
     }
     @Override
     public String getName() {
@@ -39,16 +44,16 @@ public class SetOwnerCommand extends ChunksSubCommand {
                 if (args.length == 2) {
                     OfflinePlayer target = Bukkit.getOfflinePlayer(args[1]);
                     Chunk chunk = player.getLocation().getChunk();
-                    if (chunkStorage.isAllowedClaim(chunk)) {
-                        if (userdata.exist(target)) {
-                            chunkStorage.setOwner(player, target, chunk);
-                            chunkStorage.claimEffect(player);
-                            message.send(player, "&6Chunk is now owned by&f " + chunkStorage.getOwner(chunk).getName());
+                    if (getChunkStorage().isAllowedClaim(chunk)) {
+                        if (getUserdata().exist(target)) {
+                            getChunkStorage().setOwner(player, target, chunk);
+                            getChunkStorage().claimEffect(player);
+                            getMessage().send(player, "&6Chunk is now owned by&f " + getChunkStorage().getOwner(chunk).getName());
                         } else {
-                            message.send(player, "&c&lHey&7 Sorry, but&f " + target.getName() + "&7 has never joined");
+                            getMessage().send(player, target.getName() + "&c has never joined");
                         }
                     } else {
-                        message.send(player, "&c&lHey!&7 Sorry, but you cannot set-owner on current region");
+                        getMessage().send(player, "&c&lHey!&7 Sorry, but you cannot set-owner on current region");
                     }
                 }
             }

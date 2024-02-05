@@ -10,18 +10,27 @@ import org.bukkit.Chunk;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
+import java.text.MessageFormat;
+
 public class ClaimCommand extends ChunkSubCommand {
-    private final FileConfiguration config;
-    private final Userdata userdata;
-    private final ChunkStorage chunkStorage;
-    private final Economy economy;
-    private final Message message;
-    public ClaimCommand(Chunks plugin) {
-        config = plugin.getConfig();
-        userdata = plugin.getUserdata();
-        chunkStorage = plugin.getChunkStorage();
-        economy = plugin.getEconomy();
-        message = plugin.getMessage();
+    private final Chunks plugin;
+    private FileConfiguration getConfig() {
+        return plugin.getConfig();
+    }
+    private Userdata getUserdata() {
+        return plugin.getUserdata();
+    }
+    private ChunkStorage getChunkStorage() {
+        return plugin.getChunkStorage();
+    }
+    private Economy getEconomy() {
+        return plugin.getEconomy();
+    }
+    private Message getMessage() {
+        return plugin.getMessage();
+    }
+    public ClaimCommand(Chunks chunks) {
+        plugin = chunks;
     }
     @Override
     public String getName() {
@@ -40,26 +49,29 @@ public class ClaimCommand extends ChunkSubCommand {
         if (player.hasPermission("chunks.command.chunk.claim")) {
             if (args.length == 1) {
                 Chunk chunk = player.getLocation().getChunk();
-                if (chunkStorage.isClaimed(chunk)) {
-                    if (chunkStorage.isOwner(player ,chunk)) {
-                        message.send(player, "&c&lHey!&7 Sorry, but you already own current chunk");
-                    } else {
-                        message.send(player, "&c&lHey!&7 Sorry, but chunk is owned by&f " + chunkStorage.getOwner(chunk).getName());
-                    }
-                } else if (chunkStorage.isAllowedClaim(chunk)) {
-                    if (config.getInt("claim.max-claims") > userdata.getConfig(player).getInt("claimed")) {
-                        if (economy.getBalance(player) >= config.getDouble("claim.cost")) {
-                            chunkStorage.claim(player, chunk);
-                            chunkStorage.claimEffect(player);
-                            message.send(player, "&6You bought a chunk for&a " + economy.currencyNamePlural() + " " + economy.format(config.getDouble("claim.cost")));
+                if (getChunkStorage().isAllowedClaim(chunk)) {
+                    if (getChunkStorage().isClaimed(chunk)) {
+                        if (getChunkStorage().isOwner(player ,chunk)) {
+                            player.sendMessage(getMessage().getString("commands.chunk.claim.already-owned"));
                         } else {
-                            message.send(player, "&c&lHey!&7 Sorry, but you don't have&a " + economy.currencyNamePlural() + " " + economy.format(config.getDouble("claim.cost")) + "&7 to buy a chunk");
+                            player.sendMessage(MessageFormat.format(getMessage().getString("commands.chunk.claim.already-claimed"), getChunkStorage().getOwner(chunk).getName()));
                         }
                     } else {
-                        message.send(player, "&c&lHey!&7 Sorry, but you have reach your limit of&f " + userdata.getConfig(player).getInt("chunks.claimed") + "&7 claims");
+                        if (getUserdata().getClaimCount(player) >= getConfig().getInt("max-claims")) {
+                            if (getEconomy().getBalance(player) >= getConfig().getDouble("claim.cost")) {
+                                getChunkStorage().claim(player, chunk);
+                                getChunkStorage().claimEffect(player);
+                                player.sendMessage(MessageFormat.format(getMessage().getString("commands.chunk.claim.success"), getEconomy().format(getConfig().getDouble("claim.cost"))));
+                            } else {
+                                String value = getEconomy().format(getConfig().getDouble("claim.cost"));
+                                player.sendMessage(MessageFormat.format(getMessage().getString("commands.chunk.claim.insufficient-funds"), value));
+                            }
+                        } else {
+                            player.sendMessage(MessageFormat.format(getMessage().getString("commands.chunk.claim.insufficient-claims"), getUserdata().getConfig(player).getInt("claimed")));
+                        }
                     }
                 } else {
-                    message.send(player, "&c&lHey!&7 Sorry, but you are not allowed to claim here");
+                    player.sendMessage(getMessage().getString("commands.chunk.claim.worldguard"));
                 }
             }
         }

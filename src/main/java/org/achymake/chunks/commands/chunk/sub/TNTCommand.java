@@ -9,12 +9,18 @@ import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
 import org.bukkit.persistence.PersistentDataType;
 
+import java.text.MessageFormat;
+
 public class TNTCommand extends ChunkSubCommand {
-    private final ChunkStorage chunkStorage;
-    private final Message message;
+    private final Chunks plugin;
+    private ChunkStorage getChunkStorage() {
+        return plugin.getChunkStorage();
+    }
+    private Message getMessage() {
+        return plugin.getMessage();
+    }
     public TNTCommand(Chunks plugin) {
-        chunkStorage = plugin.getChunkStorage();
-        message = plugin.getMessage();
+        this.plugin = plugin;
     }
     @Override
     public String getName() {
@@ -33,30 +39,30 @@ public class TNTCommand extends ChunkSubCommand {
         if (player.hasPermission("chunks.command.chunk.tnt")) {
             if (args.length == 1) {
                 Chunk chunk = player.getLocation().getChunk();
-                if (chunkStorage.isClaimed(chunk)) {
-                    if (chunkStorage.isOwner(player, chunk)) {
-                        if (chunkStorage.TNTAllowed(chunk)) {
-                            chunkStorage.getData(chunk).remove(NamespacedKey.minecraft("tnt"));
-                            message.send(player, "&6You disabled tnt for this chunk");
+                if (getChunkStorage().isClaimed(chunk)) {
+                    if (getChunkStorage().isOwner(player, chunk)) {
+                        if (getChunkStorage().TNTAllowed(chunk)) {
+                            getChunkStorage().getData(chunk).remove(NamespacedKey.minecraft("tnt"));
+                            player.sendMessage(getMessage().getString("commands.chunk.tnt.disable"));
                         } else {
-                            chunkStorage.getData(chunk).set(NamespacedKey.minecraft("tnt"), PersistentDataType.STRING, "true");
-                            message.send(player, "&6You enabled tnt for this chunk");
+                            getChunkStorage().getData(chunk).set(NamespacedKey.minecraft("tnt"), PersistentDataType.STRING, "true");
+                            player.sendMessage(getMessage().getString("commands.chunk.tnt.enable"));
                         }
                     } else {
                         if (player.hasPermission("chunks.command.chunks.edit")) {
-                            if (chunkStorage.TNTAllowed(chunk)) {
-                                chunkStorage.getData(chunk).remove(NamespacedKey.minecraft("tnt"));
-                                message.send(player, "&6You disabled tnt for this chunk");
+                            if (getChunkStorage().TNTAllowed(chunk)) {
+                                getChunkStorage().getData(chunk).remove(NamespacedKey.minecraft("tnt"));
+                                player.sendMessage(getMessage().getString("commands.chunk.tnt.disable"));
                             } else {
-                                chunkStorage.getData(chunk).set(NamespacedKey.minecraft("tnt"), PersistentDataType.STRING, "true");
-                                message.send(player, "&6You enabled tnt for this chunk");
+                                getChunkStorage().getData(chunk).set(NamespacedKey.minecraft("tnt"), PersistentDataType.STRING, "true");
+                                player.sendMessage(getMessage().getString("commands.chunk.tnt.enable"));
                             }
                         } else {
-                            message.send(player, "&c&lHey!&7 Sorry, but chunk is owned by&f " + chunkStorage.getOwner(chunk).getName());
+                            player.sendMessage(MessageFormat.format(getMessage().getString("commands.chunk.tnt.claimed"), getChunkStorage().getOwner(chunk).getName()));
                         }
                     }
                 } else {
-                    message.send(player, "&c&lHey!&7 Sorry, but chunk is unclaimed");
+                    player.sendMessage(getMessage().getString("commands.chunk.tnt.unclaimed"));
                 }
             }
         }

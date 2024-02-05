@@ -16,12 +16,16 @@ import java.util.List;
 import java.util.UUID;
 
 public class ChunkCommand implements CommandExecutor, TabCompleter {
-    private final Userdata userdata;
-    private final Server server;
+    private final Chunks plugin;
+    private Userdata getUserdata() {
+        return plugin.getUserdata();
+    }
+    private Server getServer() {
+        return plugin.getServer();
+    }
     private final ArrayList<ChunkSubCommand> chunkSubCommands = new ArrayList<>();
     public ChunkCommand(Chunks plugin) {
-        userdata = plugin.getUserdata();
-        server = plugin.getServer();
+        this.plugin = plugin;
         chunkSubCommands.add(new BanCommand(plugin));
         chunkSubCommands.add(new BannedCommand(plugin));
         chunkSubCommands.add(new ClaimCommand(plugin));
@@ -88,14 +92,14 @@ public class ChunkCommand implements CommandExecutor, TabCompleter {
                 }
                 if (player.hasPermission("chunks.command.chunk.ban")) {
                     if (args[0].equalsIgnoreCase("ban")) {
-                        for (OfflinePlayer players : server.getOfflinePlayers()) {
+                        for (OfflinePlayer players : getServer().getOfflinePlayers()) {
                             commands.add(players.getName());
                         }
                     }
                 }
                 if (player.hasPermission("chunks.command.chunk.unban")) {
                     if (args[0].equalsIgnoreCase("unban")) {
-                        for (OfflinePlayer players : server.getOfflinePlayers()) {
+                        for (OfflinePlayer players : getServer().getOfflinePlayers()) {
                             commands.add(players.getName());
                         }
                     }
@@ -105,13 +109,13 @@ public class ChunkCommand implements CommandExecutor, TabCompleter {
                 if (player.hasPermission("chunks.command.chunk.members")) {
                     if (args[0].equalsIgnoreCase("members")) {
                         if (args[1].equalsIgnoreCase("add")) {
-                            for (OfflinePlayer players : server.getOfflinePlayers()) {
+                            for (OfflinePlayer players : getServer().getOfflinePlayers()) {
                                 commands.add(players.getName());
                             }
                         }
                         if (args[1].equalsIgnoreCase("remove")) {
-                            for (String uuidString : userdata.getConfig(player).getStringList("members")) {
-                                commands.add(server.getOfflinePlayer(UUID.fromString(uuidString)).getName());
+                            for (String uuidString : getUserdata().getConfig(player).getStringList("members")) {
+                                commands.add(getServer().getOfflinePlayer(UUID.fromString(uuidString)).getName());
                             }
                         }
                     }

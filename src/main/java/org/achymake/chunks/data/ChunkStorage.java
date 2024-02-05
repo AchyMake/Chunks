@@ -39,6 +39,15 @@ public record ChunkStorage(Chunks plugin) {
     public List<Player> getChunkEditors() {
         return plugin.getChunkEditors();
     }
+    private Message getMessage() {
+        return plugin.getMessage();
+    }
+    public double getClaimCost() {
+        return getConfig().getDouble("claim.cost");
+    }
+    public int getMaxClaims() {
+        return getConfig().getInt("max-claims");
+    }
     public PersistentDataContainer getData(Chunk chunk) {
         return chunk.getPersistentDataContainer();
     }
@@ -46,8 +55,8 @@ public record ChunkStorage(Chunks plugin) {
         try {
             int bx = chunk.getX() << 4;
             int bz = chunk.getZ() << 4;
-            BlockVector3 pt1 = BlockVector3.at(bx, 0, bz);
-            BlockVector3 pt2 = BlockVector3.at(bx + 15, 256, bz + 15);
+            BlockVector3 pt1 = BlockVector3.at(bx, -64, bz);
+            BlockVector3 pt2 = BlockVector3.at(bx + 15, 320, bz + 15);
             ProtectedCuboidRegion region = new ProtectedCuboidRegion("_", pt1, pt2);
             RegionManager regionManager = WorldGuard.getInstance().getPlatform().getRegionContainer().get(BukkitAdapter.adapt(chunk.getWorld()));
             if (regionManager != null) {
@@ -62,7 +71,7 @@ public record ChunkStorage(Chunks plugin) {
             }
             return true;
         } catch (Exception e) {
-            plugin.getMessage().sendLog(Level.WARNING, e.getMessage());
+            getMessage().sendLog(Level.WARNING, e.getMessage());
             return false;
         }
     }
@@ -86,22 +95,29 @@ public record ChunkStorage(Chunks plugin) {
         return getData(chunk).has(NamespacedKey.minecraft("owner"), PersistentDataType.STRING);
     }
     public void setOwner(Player player, OfflinePlayer target, Chunk chunk) {
+        String uuidString = target.getUniqueId().toString();
+        String date = SimpleDateFormat.getDateInstance().format(player.getLastPlayed());
+        int targetClaimed = getUserdata().getConfig(target).getInt("claimed") + 1;
         if (isClaimed(chunk)) {
-            getUserdata().setInt(getOwner(chunk),"claimed", getUserdata().getConfig(getOwner(chunk)).getInt("claimed") - 1);
-            getData(chunk).set(NamespacedKey.minecraft("owner"), PersistentDataType.STRING, target.getUniqueId().toString());
-            getData(chunk).set(NamespacedKey.minecraft("date-claimed"), PersistentDataType.STRING, SimpleDateFormat.getDateInstance().format(player.getLastPlayed()));
-            getUserdata().setInt(target,"claimed", getUserdata().getConfig(target).getInt("claimed") + 1);
+            OfflinePlayer owner = getOwner(chunk);
+            int ownerClaimed = getUserdata().getConfig(owner).getInt("claimed") - 1;
+            getUserdata().setInt(owner,"claimed", ownerClaimed);
+            getData(chunk).set(NamespacedKey.minecraft("owner"), PersistentDataType.STRING, uuidString);
+            getData(chunk).set(NamespacedKey.minecraft("date-claimed"), PersistentDataType.STRING, date);
+            getUserdata().setInt(target,"claimed", targetClaimed);
         } else {
-            getUserdata().setInt(target,"claimed", getUserdata().getConfig(target).getInt("claimed") + 1);
-            getData(chunk).set(NamespacedKey.minecraft("owner"), PersistentDataType.STRING, target.getUniqueId().toString());
-            getData(chunk).set(NamespacedKey.minecraft("date-claimed"), PersistentDataType.STRING, SimpleDateFormat.getDateInstance().format(player.getLastPlayed()));
+            getUserdata().setInt(target,"claimed", targetClaimed);
+            getData(chunk).set(NamespacedKey.minecraft("owner"), PersistentDataType.STRING, uuidString);
+            getData(chunk).set(NamespacedKey.minecraft("date-claimed"), PersistentDataType.STRING, date);
         }
     }
     public boolean TNTAllowed(Chunk chunk) {
         return getData(chunk).has(NamespacedKey.minecraft("tnt"), PersistentDataType.STRING);
     }
     public OfflinePlayer getOwner(Chunk chunk) {
-        return plugin.getServer().getOfflinePlayer(UUID.fromString(getData(chunk).get(NamespacedKey.minecraft("owner"), PersistentDataType.STRING)));
+        String uuidString = getData(chunk).get(NamespacedKey.minecraft("owner"), PersistentDataType.STRING);
+        UUID uuid = UUID.fromString(uuidString);
+        return plugin.getServer().getOfflinePlayer(uuid);
     }
     public String getDateClaimed(Chunk chunk) {
         return getData(chunk).get(NamespacedKey.minecraft("date-claimed"), PersistentDataType.STRING);
@@ -121,7 +137,7 @@ public record ChunkStorage(Chunks plugin) {
     }
     public List<UUID> getMembersUUID(Chunk chunk) {
         List<UUID> uuids = new ArrayList<>();
-        if (isClaimed(chunk)){
+        if (isClaimed(chunk)) {
             for (String uuidString : getMembers(chunk)) {
                 uuids.add(UUID.fromString(uuidString));
             }
@@ -144,7 +160,7 @@ public record ChunkStorage(Chunks plugin) {
     }
     public List<UUID> getMembersUUID(OfflinePlayer offlinePlayer) {
         List<UUID> uuids = new ArrayList<>();
-        if (getUserdata().exist(offlinePlayer)){
+        if (getUserdata().exist(offlinePlayer)) {
             for (String uuidString : getMembers(offlinePlayer)) {
                 uuids.add(UUID.fromString(uuidString));
             }

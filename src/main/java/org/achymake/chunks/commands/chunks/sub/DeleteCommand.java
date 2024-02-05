@@ -9,11 +9,15 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 public class DeleteCommand extends ChunksSubCommand {
-    private final ChunkStorage chunkStorage;
-    private final Message message;
+    private final Chunks plugin;
+    private ChunkStorage getChunkStorage() {
+        return plugin.getChunkStorage();
+    }
+    private Message getMessage() {
+        return plugin.getMessage();
+    }
     public DeleteCommand(Chunks plugin) {
-        chunkStorage = plugin.getChunkStorage();
-        message = plugin.getMessage();
+        this.plugin = plugin;
     }
     @Override
     public String getName() {
@@ -33,12 +37,12 @@ public class DeleteCommand extends ChunksSubCommand {
             if (sender instanceof Player player) {
                 if (args.length == 1){
                     Chunk chunk = player.getLocation().getChunk();
-                    if (chunkStorage.isClaimed(chunk)) {
-                        message.send(player, "&6You safely unclaimed&f " + chunkStorage.getOwner(chunk).getName() + "&6 chunk");
-                        chunkStorage.unclaim(chunk);
-                        chunkStorage.unclaimEffect(player);
+                    if (getChunkStorage().isClaimed(chunk)) {
+                        getMessage().send(player, "&6You safely unclaimed&f " + getChunkStorage().getOwner(chunk).getName() + "&6 chunk");
+                        getChunkStorage().unclaim(chunk);
+                        getChunkStorage().unclaimEffect(player);
                     } else {
-                        message.send(player, "&c&lHey!&7 Sorry, but chunk is already unclaimed");
+                        getMessage().send(player, "&cCurrent chunk is already unclaimed");
                     }
                 }
             }
