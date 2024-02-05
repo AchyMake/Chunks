@@ -60,6 +60,7 @@ public class Message {
             config.set("commands.chunk.banned.empty", "&cYou do not have any banned members");
             config.set("commands.chunk.banned.title", "&6Banned:");
             config.set("commands.chunk.banned.list", "- {0}");
+            config.set("commands.chunk.claim.success", "&6You claimed a chunk for&a {0}");
             config.set("commands.chunk.claim.already-owned", "&cYou already own the chunk");
             config.set("commands.chunk.claim.already-claimed", "&cChunk is already claimed by&f {0}");
             config.set("commands.chunk.claim.insufficient-funds", "&cYou do not have&a {0}&c to claim chunk");
