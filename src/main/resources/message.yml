@@ -1,72 +1,68 @@
 commands:
   chunk:
     ban:
-      already-banned: '{0}&c is already banned'
-      success: '&6You banned&f {0}'
+      already-banned: "{0}&c is already banned"
+      success: "&6You banned&f {0}"
     banned:
-      empty: '&cYou do not have any banned members'
-      title: '&6Banned:'
-      list: '- {0}'
+      empty: "&cYou do not have any banned members"
+      title: "&6Banned:"
+      list: "- {0}"
     claim:
-      success: '&6You claimed a chunk for&a {0}'
-      already-owned: '&cYou already own the chunk'
-      already-claimed: '&cChunk is already claimed by&f {0}'
-      insufficient-funds: '&cYou do not have&a {0}&c to claim chunk'
-      insufficient-claims: '&cYou have reach you''re limit to&f {0}'
-      worldguard: '&c&lHey!&7 Sorry, but you are not allowed to claim here'
+      success: "&6You claimed a chunk for&a {0}"
+      already-owned: "&cYou already own the chunk"
+      already-claimed: "&cChunk is already claimed by&f {0}"
+      insufficient-funds: "&cYou do not have&a {0}&c to claim chunk"
+      insufficient-claims: "&cYou have reach you""re limit to&f {0}"
+      worldguard: "&c&lHey!&7 Sorry, but you are not allowed to claim here"
     help:
-      title: '&6Chunk Help:'
-      ban: '&f/chunk ban player&7 - bans target from chunk'
-      banned: '&f/chunk banned&7 - check list of banned'
-      claim: '&f/chunk claim&7 - claim current chunk'
-      help: '&f/chunk help&7 - show this list'
+      title: "&6Chunk Help:"
+      ban: "&f/chunk ban player&7 - bans target from chunk"
+      banned: "&f/chunk banned&7 - check list of banned"
+      claim: "&f/chunk claim&7 - claim current chunk"
+      help: "&f/chunk help&7 - show this list"
       members:
-        - /chunk members add player&7 - adds chunk member
-        - /chunk members remove player&7 - removes chunk member
-      tnt: /chunk tnt&7 - toggle tnt
-      unban: /chunk unban player&7 - unbans target
-      unclaim: /chunk unclaim&7 - unclaim current chunk
+        - "/chunk members add player&7 - adds chunk member"
+        - "/chunk members remove player&7 - removes chunk member"
+      tnt: "/chunk tnt&7 - toggle tnt"
+      unban: "/chunk unban player&7 - unbans target"
+      unclaim: "/chunk unclaim&7 - unclaim current chunk"
     members:
-      empty: '&cYou do not have any members'
-      title: '&6Chunk Members:'
-      list: '- {0}'
+      empty: "&cYou do not have any members"
+      title: "&6Chunk Members:"
+      list: "- {0}"
       add:
-        already-member: '{0}&c is already a member'
-        success: '&6You added&f {0}&6 as member'
+        already-member: "{0}&c is already a member"
+        success: "&6You added&f {0}&6 as member"
       remove:
-        non-member: '{0}&c is not a member'
-        success: '&6You removed&f {0}&6 as member'
+        non-member: "{0}&c is not a member"
+        success: "&6You removed&f {0}&6 as member"
     tnt:
-      enable: '&6You enable tnt'
-      disable: '&6You disable tnt'
-      unclaimed: '&cChunk is unclaimed'
+      enable: "&6You enable tnt"
+      disable: "&6You disable tnt"
+      unclaimed: "&cChunk is unclaimed"
     unban:
-      success: '&6You unbanned&f {0}'
-      already-unbanned: '{0}&c is already unbanned'
+      success: "&6You unbanned&f {0}"
+      already-unbanned: "{0}&c is already unbanned"
     unclaim:
-      success: '&6You unclaimed a chunk and refunded for&a {0}'
-      claimed: '&cChunk is owned by&f {0}'
-      unclaimed: '&cChunk is already unclaimed'
+      success: "&6You unclaimed a chunk and refunded for&a {0}"
+      claimed: "&cChunk is owned by&f {0}"
+      unclaimed: "&cChunk is already unclaimed"
 events:
-  block-break: '&cYou are not allowed to break blocks inside&f {0}&c''s chunk'
-  block-fertilize: '&cYou are not allowed to fertilize blocks inside&f {0}&c''s chunk'
-  block-place: '&cYou are not allowed to place blocks inside&f {0}&c''s chunk'
-  cauldron-level-change: '&cYou are not allowed to change cauldrons inside&f {0}&c''s
-    chunk'
-  entity-damage-by-entity: '&cYou are not allowed to damage entities inside&f {0}&c''s
-    chunk'
-  entity-mount: '&cYou are not allowed to mount inside&f {0}''s chunk'
-  player-bucket-empty: '&cYou are not allowed to empty buckets inside&f {0}&c''s chunk'
-  player-bucket-entity: '&cYou are not allowed to bucket entities from&f {0}&c''s
-    chunk'
-  player-bucket-fill: '&cYou are not allowed to fill buckets from&f {0}&c''s chunk'
-  player-command-preprocess: '&cYou are not allowed to sethome inside&f {0}&c''s chunk'
-  player-interact: '&cYou are not allowed to interact blocks from&f {0}&c''s chunk'
-  player-interact-at-entity: '&cYou are not allowed to interact entities from&f {0}&c''s
-    chunk'
-  player-leash-entity: '&cYou are not allowed to leash entities from&f {0}&c''s chunk'
-  player-visit-chunk-banned: '&cYou are not allowed to visit&f {0}''s chunk'
-  player-visit-chunk: "&6Visiting&f {0}&6''s chunk"
-  player-exit-chunk: "&6Exiting&f {0}&6''s chunk"
-  player-shear-entity: '&cYou are not allowed to shear entities from&f {0}&c''s chunk'
-  sign-change: '&cYou are not allowed to change signs from&f {0}&c''s chunk'
+  block-break: "&cYou are not allowed to break blocks inside&f {0}&c's chunk"
+  block-fertilize: "&cYou are not allowed to fertilize blocks inside&f {0}&c's chunk"
+  block-place: "&cYou are not allowed to place blocks inside&f {0}&c's chunk"
+  cauldron-level-change: "&cYou are not allowed to change cauldrons inside&f {0}&c's chunk"
+  entity-damage-by-entity: "&cYou are not allowed to damage entities inside&f {0}&c's chunk"
+  entity-mount: "&cYou are not allowed to mount inside&f {0}'s chunk"
+  player-bucket-empty: "&cYou are not allowed to empty buckets inside&f {0}&c's chunk"
+  player-bucket-entity: "&cYou are not allowed to bucket entities from&f {0}&c's chunk"
+  player-bucket-fill: "&cYou are not allowed to fill buckets from&f {0}&c's chunk"
+  player-command-preprocess: "&cYou are not allowed to sethome inside&f {0}&c's chunk"
+  player-interact: "&cYou are not allowed to interact blocks from&f {0}&c's chunk"
+  player-interact-at-entity: "&cYou are not allowed to interact entities from&f {0}&c's chunk"
+  player-leash-entity: "&cYou are not allowed to leash entities from&f {0}&c's chunk"
+  player-visit-chunk-banned: "&cYou are not allowed to visit&f {0}'s chunk"
+  player-visit-chunk: "&6Visiting&f {0}&6's chunk"
+  player-exit-chunk: "&6Exiting&f {0}&6's chunk"
+  player-shear-entity: "&cYou are not allowed to shear entities from&f {0}&c's chunk"
+  sign-change: "&cYou are not allowed to change signs from&f {0}&c's chunk"

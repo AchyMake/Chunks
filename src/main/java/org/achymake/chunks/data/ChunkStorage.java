@@ -173,8 +173,8 @@ public record ChunkStorage(Chunks plugin) {
         Location locationSouth = new Location(player.getWorld(), location.getChunk().getBlock(15, 0, 8).getX(), location.getBlockY()-3, location.getChunk().getBlock(15, 0, 8).getZ());
         Location locationEast = new Location(player.getWorld(), location.getChunk().getBlock(8, 0, 15).getX(), location.getBlockY()-3, location.getChunk().getBlock(8, 0, 15).getZ());
         String soundType = getConfig().getString("claim.sound.type");
-        float volume = getConfig().getLong("claim.sound.volume");
-        float pitch = getConfig().getLong("claim.sound.pitch");
+        float volume = (float) getConfig().getDouble("claim.sound.volume");
+        float pitch = (float) getConfig().getDouble("claim.sound.pitch");
         player.playSound(player, Sound.valueOf(soundType), volume, pitch);
         player.spawnParticle(particle, location.getChunk().getBlock(8, 0, 0).getX(), location.getBlockY()-3, location.getChunk().getBlock(8, 0, 0).getZ(), 250, 4, 12, 0, 0);
         player.spawnParticle(particle, location.getChunk().getBlock(0, 0, 8).getX(), location.getBlockY()-3, location.getChunk().getBlock(0, 0, 8).getZ(), 250, 0, 12, 4, 0);
@@ -187,8 +187,8 @@ public record ChunkStorage(Chunks plugin) {
         Location locationSouth = new Location(player.getWorld(), location.getChunk().getBlock(15, 0, 8).getX(), location.getBlockY()-3, location.getChunk().getBlock(15, 0, 8).getZ());
         Location locationEast = new Location(player.getWorld(), location.getChunk().getBlock(8, 0, 15).getX(), location.getBlockY()-3, location.getChunk().getBlock(8, 0, 15).getZ());
         String soundType = getConfig().getString("unclaim.sound.type");
-        float volume = getConfig().getLong("unclaim.sound.volume");
-        float pitch = getConfig().getLong("unclaim.sound.pitch");
+        float volume = (float) getConfig().getDouble("unclaim.sound.volume");
+        float pitch = (float) getConfig().getDouble("unclaim.sound.pitch");
         player.playSound(player, Sound.valueOf(soundType), volume, pitch);
         player.spawnParticle(particle, location.getChunk().getBlock(8, 0, 0).getX(), location.getBlockY()-3, location.getChunk().getBlock(8, 0, 0).getZ(), 250, 4, 12, 0, 0);
         player.spawnParticle(particle, location.getChunk().getBlock(0, 0, 8).getX(), location.getBlockY()-3, location.getChunk().getBlock(0, 0, 8).getZ(), 250, 0, 12, 4, 0);

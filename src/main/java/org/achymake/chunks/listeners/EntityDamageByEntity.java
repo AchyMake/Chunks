@@ -28,40 +28,38 @@ public record EntityDamageByEntity(Chunks plugin) implements Listener {
         Chunk chunk = event.getEntity().getLocation().getChunk();
         if (!getChunkStorage().isClaimed(chunk))return;
         Entity target = event.getEntity();
-        if (target.isInvulnerable())return;
         if (target.getType().equals(EntityType.PLAYER))return;
         if (getConfig().getBoolean("hostile." + target.getType()))return;
         Entity damager = event.getDamager();
-        String message = MessageFormat.format(getMessage().getString("events.entity-damage-entity"), getChunkStorage().getOwner(chunk).getName());
         if (damager instanceof Arrow arrow) {
             if (!(arrow.getShooter() instanceof Player player))return;
             if (getChunkStorage().hasAccess(player, chunk))return;
             event.setCancelled(true);
-            player.sendMessage(message);
+            player.sendMessage(MessageFormat.format(getMessage().getString("events.entity-damage-entity"), getChunkStorage().getOwner(chunk).getName()));
         } else if (damager instanceof Player player) {
             if (getChunkStorage().hasAccess(player, chunk))return;
             event.setCancelled(true);
-            player.sendMessage(message);
+            player.sendMessage(MessageFormat.format(getMessage().getString("events.entity-damage-entity"), getChunkStorage().getOwner(chunk).getName()));
         } else if (damager instanceof Snowball snowball) {
             if (!(snowball.getShooter() instanceof Player player)) return;
             if (getChunkStorage().hasAccess(player, chunk))return;
             event.setCancelled(true);
-            player.sendMessage(message);
+            player.sendMessage(MessageFormat.format(getMessage().getString("events.entity-damage-entity"), getChunkStorage().getOwner(chunk).getName()));
         } else if (damager instanceof SpectralArrow spectralArrow) {
             if (!(spectralArrow.getShooter() instanceof Player player)) return;
             if (getChunkStorage().hasAccess(player, chunk))return;
             event.setCancelled(true);
-            player.sendMessage(message);
+            player.sendMessage(MessageFormat.format(getMessage().getString("events.entity-damage-entity"), getChunkStorage().getOwner(chunk).getName()));
         } else if (damager instanceof ThrownPotion thrownPotion) {
             if (!(thrownPotion.getShooter() instanceof Player player))return;
             if (getChunkStorage().hasAccess(player, chunk))return;
             event.setCancelled(true);
-            player.sendMessage(message);
+            player.sendMessage(MessageFormat.format(getMessage().getString("events.entity-damage-entity"), getChunkStorage().getOwner(chunk).getName()));
         } else if (damager instanceof Trident trident) {
             if (!(trident.getShooter() instanceof Player player))return;
             if (getChunkStorage().hasAccess(player, chunk))return;
             event.setCancelled(true);
-            player.sendMessage(message);
+            player.sendMessage(MessageFormat.format(getMessage().getString("events.entity-damage-entity"), getChunkStorage().getOwner(chunk).getName()));
         }
     }
 }

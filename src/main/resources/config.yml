@@ -6,15 +6,15 @@ claim:
   particle: TOTEM
   sound:
     type: BLOCK_AMETHYST_BLOCK_BREAK
-    volume: 0.75F
-    pitch: 1.0F
+    volume: 0.75
+    pitch: 1.0
 unclaim:
   refund: 750.0
   particle: SPELL_INSTANT
   sound:
     type: BLOCK_AMETHYST_BLOCK_BREAK
-    volume: 0.75F
-    pitch: 1.0F
+    volume: 0.75
+    pitch: 1.0
 hostile:
   PUFFERFISH: true
   CAVE_SPIDER: true
