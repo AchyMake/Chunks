@@ -40,7 +40,8 @@ public class DeleteCommand extends ChunksSubCommand {
                     if (getChunkStorage().isClaimed(chunk)) {
                         getMessage().send(player, "&6You safely unclaimed&f " + getChunkStorage().getOwner(chunk).getName() + "&6 chunk");
                         getChunkStorage().unclaim(chunk);
-                        getChunkStorage().unclaimEffect(player);
+                        getChunkStorage().unclaimEffect(player, chunk);
+                        getChunkStorage().unclaimSound(player);
                     } else {
                         getMessage().send(player, "&cCurrent chunk is already unclaimed");
                     }

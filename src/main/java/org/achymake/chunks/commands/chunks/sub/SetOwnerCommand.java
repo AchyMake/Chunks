@@ -47,7 +47,8 @@ public class SetOwnerCommand extends ChunksSubCommand {
                     if (getChunkStorage().isAllowedClaim(chunk)) {
                         if (getUserdata().exist(target)) {
                             getChunkStorage().setOwner(player, target, chunk);
-                            getChunkStorage().claimEffect(player);
+                            getChunkStorage().claimEffect(player, chunk);
+                            getChunkStorage().claimSound(player);
                             getMessage().send(player, "&6Chunk is now owned by&f " + getChunkStorage().getOwner(chunk).getName());
                         } else {
                             getMessage().send(player, target.getName() + "&c has never joined");

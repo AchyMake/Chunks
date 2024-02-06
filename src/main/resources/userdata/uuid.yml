@@ -1,3 +1,5 @@
 name: name
 claimed: 0
 members: {}
+world:
+  - chunk

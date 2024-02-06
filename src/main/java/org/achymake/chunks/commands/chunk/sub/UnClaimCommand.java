@@ -48,7 +48,8 @@ public class UnClaimCommand extends ChunkSubCommand {
                 if (getChunkStorage().isOwner(player, chunk)) {
                     player.sendMessage(MessageFormat.format(getMessage().getString("commands.chunk.unclaim.success"), getEconomy().format(getConfig().getDouble("unclaim.refund"))));
                     getChunkStorage().unclaim(chunk);
-                    getChunkStorage().unclaimEffect(player);
+                    getChunkStorage().unclaimEffect(player, chunk);
+                    getChunkStorage().unclaimSound(player);
                 } else {
                     player.sendMessage(MessageFormat.format(getMessage().getString("commands.chunk.unclaim.claimed"), getChunkStorage().getOwner(chunk).getName()));
                 }

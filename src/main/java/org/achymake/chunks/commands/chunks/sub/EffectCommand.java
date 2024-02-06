@@ -36,11 +36,13 @@ public class EffectCommand extends ChunksSubCommand {
             if (sender.hasPermission("chunks.command.chunks.effect")) {
                 if (args.length == 2) {
                     if (args[1].equalsIgnoreCase("claim")) {
-                        getChunkStorage().claimEffect(player);
+                        getChunkStorage().claimEffect(player, player.getLocation().getChunk());
+                        getChunkStorage().claimSound(player);
                         getMessage().sendActionBar(player, "&6Started the effects of Claiming");
                     }
                     if (args[1].equalsIgnoreCase("unclaim")) {
-                        getChunkStorage().unclaimEffect(player);
+                        getChunkStorage().unclaimEffect(player, player.getLocation().getChunk());
+                        getChunkStorage().unclaimSound(player);
                         getMessage().sendActionBar(player, "&6Started the effects of Unclaiming");
                     }
                 }

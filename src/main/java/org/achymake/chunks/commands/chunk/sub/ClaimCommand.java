@@ -60,7 +60,8 @@ public class ClaimCommand extends ChunkSubCommand {
                         if (getUserdata().getClaimCount(player) >= getConfig().getInt("max-claims")) {
                             if (getEconomy().getBalance(player) >= getConfig().getDouble("claim.cost")) {
                                 getChunkStorage().claim(player, chunk);
-                                getChunkStorage().claimEffect(player);
+                                getChunkStorage().claimEffect(player, chunk);
+                                getChunkStorage().claimSound(player);
                                 player.sendMessage(MessageFormat.format(getMessage().getString("commands.chunk.claim.success"), getEconomy().format(getConfig().getDouble("claim.cost"))));
                             } else {
                                 String value = getEconomy().format(getConfig().getDouble("claim.cost"));

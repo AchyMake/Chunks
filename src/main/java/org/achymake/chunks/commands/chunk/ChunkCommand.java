@@ -34,6 +34,7 @@ public class ChunkCommand implements CommandExecutor, TabCompleter {
         chunkSubCommands.add(new TNTCommand(plugin));
         chunkSubCommands.add(new UnBanCommand(plugin));
         chunkSubCommands.add(new UnClaimCommand(plugin));
+        chunkSubCommands.add(new ViewCommand(plugin));
     }
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
@@ -81,6 +82,9 @@ public class ChunkCommand implements CommandExecutor, TabCompleter {
                 }
                 if (player.hasPermission("chunks.command.chunk.unclaim")) {
                     commands.add("unclaim");
+                }
+                if (player.hasPermission("chunks.command.chunk.view")) {
+                    commands.add("view");
                 }
             }
             if (args.length == 2) {

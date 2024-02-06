@@ -50,6 +50,9 @@ permissions:
   chunks.command.chunk.unclaim:
     description: unclaim standing chunk if owner
     default: op
+  chunks.command.chunk.view:
+    description: view claimed chunks on current world
+    default: op
   chunks.command.chunks:
     description: chunks admin commands
     default: op
