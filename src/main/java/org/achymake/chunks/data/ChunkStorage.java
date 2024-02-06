@@ -102,6 +102,7 @@ public record ChunkStorage(Chunks plugin) {
             OfflinePlayer owner = getOwner(chunk);
             int ownerClaimed = getUserdata().getConfig(owner).getInt("claimed") - 1;
             getUserdata().setInt(owner,"claimed", ownerClaimed);
+            getUserdata().setString(owner, chunk.getWorld().getName() + "." + chunk, null);
             getData(chunk).set(NamespacedKey.minecraft("owner"), PersistentDataType.STRING, uuidString);
             getData(chunk).set(NamespacedKey.minecraft("date-claimed"), PersistentDataType.STRING, date);
             getUserdata().setInt(target,"claimed", targetClaimed);
@@ -214,7 +215,6 @@ public record ChunkStorage(Chunks plugin) {
         OfflinePlayer offlinePlayer = getOwner(chunk);
         int newValue = getUserdata().getConfig(offlinePlayer).getInt("claimed") - 1;
         getUserdata().setInt(offlinePlayer,"claimed", newValue);
-        getUserdata().setString(offlinePlayer, chunk.getWorld().getName() + "." + chunk, null);
         getUserdata().setString(offlinePlayer, chunk.getWorld().getName() + "." + chunk, null);
         getEconomy().depositPlayer(offlinePlayer, getConfig().getDouble("unclaim.refund"));
         getData(chunk).remove(NamespacedKey.minecraft("date-claimed"));
