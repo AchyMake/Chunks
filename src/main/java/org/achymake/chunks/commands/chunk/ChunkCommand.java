@@ -88,6 +88,15 @@ public class ChunkCommand implements CommandExecutor, TabCompleter {
                 }
             }
             if (args.length == 2) {
+                if (player.hasPermission("chunks.command.chunk.view.others")) {
+                    if (args[0].equalsIgnoreCase("view")) {
+                        for (OfflinePlayer offlinePlayer : player.getServer().getOfflinePlayers()) {
+                            if (getUserdata().exist(offlinePlayer)) {
+                                commands.add(offlinePlayer.getName());
+                            }
+                        }
+                    }
+                }
                 if (player.hasPermission("chunks.command.chunk.members")) {
                     if (args[0].equalsIgnoreCase("members")) {
                         commands.add("add");

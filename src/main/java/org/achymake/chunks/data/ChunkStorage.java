@@ -174,12 +174,10 @@ public record ChunkStorage(Chunks plugin) {
     public void claimEffect(Player player, Chunk chunk) {
         Location location = player.getLocation();
         Particle particle = Particle.valueOf(getConfig().getString("claim.particle"));
-        Location locationSouth = new Location(player.getWorld(), chunk.getBlock(15, 0, 8).getX(), location.getBlockY()-3, chunk.getBlock(15, 0, 8).getZ());
-        Location locationEast = new Location(player.getWorld(), chunk.getBlock(8, 0, 15).getX(), location.getBlockY()-3, chunk.getBlock(8, 0, 15).getZ());
-        player.spawnParticle(particle, chunk.getBlock(8, 0, 0).getX(), location.getBlockY()-3, chunk.getBlock(8, 0, 0).getZ(), 250, 4, 12, 0, 0);
-        player.spawnParticle(particle, chunk.getBlock(0, 0, 8).getX(), location.getBlockY()-3, chunk.getBlock(0, 0, 8).getZ(), 250, 0, 12, 4, 0);
-        player.spawnParticle(particle,locationSouth.add(1, 0, 0), 250, 0, 12, 4, 0);
-        player.spawnParticle(particle,locationEast.add(0, 0, 1), 250, 4, 12, 0, 0);
+        player.spawnParticle(particle, chunk.getBlock(8, 0, 0).getX(), location.getBlockY() - 1, chunk.getBlock(8, 0, 0).getZ(), 250, 4, 12, 0, 0);
+        player.spawnParticle(particle, chunk.getBlock(0, 0, 8).getX(), location.getBlockY() - 1, chunk.getBlock(0, 0, 8).getZ(), 250, 0, 12, 4, 0);
+        player.spawnParticle(particle, chunk.getBlock(15, 0, 8).getX() + 1, location.getBlockY() - 1, chunk.getBlock(15, 0, 8).getZ(), 250, 0, 12, 4, 0);
+        player.spawnParticle(particle, chunk.getBlock(8, 0, 15).getX(), location.getBlockY() - 1, chunk.getBlock(8, 0, 15).getZ() + 1, 250, 4, 12, 0, 0);
     }
     public void claimSound(Player player) {
         String soundType = getConfig().getString("claim.sound.type");
