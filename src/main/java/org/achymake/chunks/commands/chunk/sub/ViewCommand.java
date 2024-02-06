@@ -39,6 +39,7 @@ public class ViewCommand extends ChunkSubCommand {
                     OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(args[1]);
                     if (plugin.getUserdata().exist(offlinePlayer)) {
                         plugin.getUserdata().chunkView(player, offlinePlayer);
+                        plugin.getChunkStorage().claimSound(player);
                     }
                 }
             }
