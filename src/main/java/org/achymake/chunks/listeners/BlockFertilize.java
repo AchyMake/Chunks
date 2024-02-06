@@ -22,9 +22,9 @@ public record BlockFertilize(Chunks plugin) implements Listener {
     @EventHandler(priority = EventPriority.NORMAL)
     public void onBlockFertilize(BlockFertilizeEvent event) {
         if (event.getPlayer() == null)return;
-        Player player = event.getPlayer();
         Chunk chunk = event.getBlock().getChunk();
         if (!getChunkStorage().isClaimed(chunk))return;
+        Player player = event.getPlayer();
         if (getChunkStorage().hasAccess(player, chunk))return;
         event.setCancelled(true);
         player.sendMessage(MessageFormat.format(getMessage().getString("events.block-fertilize"), getChunkStorage().getOwner(chunk).getName()));

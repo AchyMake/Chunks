@@ -20,9 +20,9 @@ public record EntityChangeBlock(Chunks plugin) implements Listener {
     }
     @EventHandler(priority = EventPriority.NORMAL)
     public void onEntityChangeBlock(EntityChangeBlockEvent event) {
-        Entity entity = event.getEntity();
         Chunk chunk = event.getBlock().getChunk();
-        if (!getChunkStorage().isClaimed(chunk)) return;
+        if (!getChunkStorage().isClaimed(chunk))return;
+        Entity entity = event.getEntity();
         if (entity instanceof Player player) {
             if (getChunkStorage().hasAccess(player, chunk))return;
             event.setCancelled(true);

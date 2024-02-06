@@ -29,13 +29,13 @@ import java.util.logging.Level;
 
 public final class Chunks extends JavaPlugin {
     private static Chunks instance;
-    private static Userdata userdata;
     private static Message message;
+    private static Userdata userdata;
     private static ChunkStorage chunkStorage;
+    private final List<Player> chunkEditors = new ArrayList<>();
+    public static PluginManager manager;
     private static Economy economy = null;
     public static StateFlag FLAG_CHUNKS_CLAIM;
-    public static PluginManager manager;
-    private final List<Player> chunkEditors = new ArrayList<>();
     @Override
     public void onLoad() {
         FlagRegistry registry = WorldGuard.getInstance().getFlagRegistry();
@@ -62,9 +62,7 @@ public final class Chunks extends JavaPlugin {
         if (isVaultDisable()) {
             getManager().disablePlugin(this);
         }
-        if (isPlaceholderAPIDisable()) {
-            getManager().disablePlugin(this);
-        }
+        new PlaceholderProvider().register();
         commands();
         events();
         reload();
@@ -73,9 +71,7 @@ public final class Chunks extends JavaPlugin {
     }
     @Override
     public void onDisable() {
-        if (new PlaceholderProvider().isRegistered()) {
-            new PlaceholderProvider().unregister();
-        }
+        new PlaceholderProvider().unregister();
         if (!getChunkEditors().isEmpty()) {
             getChunkEditors().clear();
         }
@@ -108,7 +104,6 @@ public final class Chunks extends JavaPlugin {
         } else {
             getManager().registerEvents(new PlayerInteractAtEntity(this), this);
         }
-        getManager().registerEvents(new PlayerInteractPhysical(this), this);
         getManager().registerEvents(new PlayerLeashEntity(this), this);
         getManager().registerEvents(new PlayerLogin(this), this);
         getManager().registerEvents(new PlayerMove(this), this);
@@ -201,36 +196,26 @@ public final class Chunks extends JavaPlugin {
         economy = rsp.getProvider();
         return economy != null;
     }
-    private boolean isPlaceholderAPIDisable() {
-        if (getManager().isPluginEnabled("PlaceholderAPI")) {
-            new PlaceholderProvider().register();
-            getMessage().sendLog(Level.INFO, "Hooked to 'PlaceholderAPI'");
-            return false;
-        } else {
-            getMessage().sendLog(Level.WARNING, "You have to install 'PlaceholderAPI'");
-            return true;
-        }
-    }
     public StateFlag getFlagChunksClaim() {
         return FLAG_CHUNKS_CLAIM;
-    }
-    public List<Player> getChunkEditors() {
-        return chunkEditors;
-    }
-    public PluginManager getManager() {
-        return manager;
     }
     public Economy getEconomy() {
         return economy;
     }
-    public Message getMessage() {
-        return message;
+    public PluginManager getManager() {
+        return manager;
+    }
+    public List<Player> getChunkEditors() {
+        return chunkEditors;
     }
     public ChunkStorage getChunkStorage() {
         return chunkStorage;
     }
     public Userdata getUserdata() {
         return userdata;
+    }
+    public Message getMessage() {
+        return message;
     }
     public static Chunks getInstance() {
         return instance;

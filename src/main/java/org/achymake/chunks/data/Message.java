@@ -1,5 +1,6 @@
 package org.achymake.chunks.data;
 
+import net.kyori.adventure.text.Component;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.achymake.chunks.Chunks;
@@ -39,7 +40,7 @@ public class Message {
                 return config.getString(path);
             }
         } else {
-            return path + " is not string :c";
+            return path + ": is not string :c";
         }
     }
     public void send(ConsoleCommandSender sender, String message) {

@@ -4,6 +4,7 @@ import org.achymake.chunks.Chunks;
 import org.achymake.chunks.commands.chunks.ChunksSubCommand;
 import org.achymake.chunks.data.Message;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 
 public class HelpCommand extends ChunksSubCommand {
@@ -44,12 +45,18 @@ public class HelpCommand extends ChunksSubCommand {
                         message.send(player, "&f/chunks info &7- checks info of chunk");
                     }
                     if (player.hasPermission("chunks.command.chunks.reload")) {
-                        message.send(player, "&f/chunks reload &7- reload smpchunks plugin");
+                        message.send(player, "&f/chunks reload &7- reload chunks plugin");
                     }
                     if (player.hasPermission("chunks.command.chunks.setowner")) {
                         message.send(player, "&f/chunks setowner target &7- sets chunk owner");
                     }
                 }
+            }
+        } else if (sender instanceof ConsoleCommandSender consoleCommandSender) {
+            if (args.length == 1) {
+                message.send(consoleCommandSender, "Chunks Help:");
+                message.send(consoleCommandSender, "/chunks help - show this list");
+                message.send(consoleCommandSender, "/chunks reload - reload smpchunks plugin");
             }
         }
     }

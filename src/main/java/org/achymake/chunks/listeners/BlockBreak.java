@@ -21,9 +21,9 @@ public record BlockBreak(Chunks plugin) implements Listener {
     }
     @EventHandler(priority = EventPriority.NORMAL)
     public void onBlockBreak(BlockBreakEvent event) {
-        Player player = event.getPlayer();
         Chunk chunk = event.getBlock().getChunk();
         if (!getChunkStorage().isClaimed(chunk))return;
+        Player player = event.getPlayer();
         if (getChunkStorage().hasAccess(player, chunk))return;
         event.setCancelled(true);
         player.sendMessage(MessageFormat.format(getMessage().getString("events.block-break"), getChunkStorage().getOwner(chunk).getName()));

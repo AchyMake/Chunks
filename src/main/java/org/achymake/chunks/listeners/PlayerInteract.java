@@ -26,19 +26,27 @@ public record PlayerInteract(Chunks plugin) implements Listener {
     }
     @EventHandler(priority = EventPriority.NORMAL)
     public void onPlayerInteract(PlayerInteractEvent event) {
-        if (!event.getAction().equals(Action.RIGHT_CLICK_BLOCK))return;
         if (event.getClickedBlock() == null)return;
-        if (event.getHand() != EquipmentSlot.HAND)return;
         Block block = event.getClickedBlock();
         Chunk chunk = block.getChunk();
         if (!getChunkStorage().isClaimed(chunk))return;
-        if (!isCancelled(block))return;
         Player player = event.getPlayer();
         if (getChunkStorage().hasAccess(player, chunk))return;
-        event.setCancelled(true);
-        player.sendMessage(MessageFormat.format(getMessage().getString("events.player-interact"), getChunkStorage().getOwner(chunk).getName()));
+        if (event.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
+            if (event.getHand() != EquipmentSlot.HAND)return;
+            if (!isRightClickBlock(block))return;
+            event.setCancelled(true);
+            player.sendMessage(MessageFormat.format(getMessage().getString("events.player-interact"), getChunkStorage().getOwner(chunk).getName()));
+        } else if (event.getAction().equals(Action.PHYSICAL)) {
+            if (!getChunkStorage().isClaimed(chunk))return;
+            if (!isPhysical(block))return;
+            event.setCancelled(true);
+        }
     }
-    private boolean isCancelled(Block block) {
+    private boolean isPhysical(Block block) {
+        return block.getType().equals(Material.FARMLAND) || block.getType().equals(Material.TURTLE_EGG) || Tag.PRESSURE_PLATES.isTagged(block.getType());
+    }
+    private boolean isRightClickBlock(Block block) {
         if (Tag.BEDS.isTagged(block.getType())) {
             return true;
         } else if (Tag.SHULKER_BOXES.isTagged(block.getType())) {

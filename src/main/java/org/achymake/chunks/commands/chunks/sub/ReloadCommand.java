@@ -4,6 +4,7 @@ import org.achymake.chunks.Chunks;
 import org.achymake.chunks.commands.chunks.ChunksSubCommand;
 import org.achymake.chunks.data.Message;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 
 public class ReloadCommand extends ChunksSubCommand {
@@ -34,6 +35,11 @@ public class ReloadCommand extends ChunksSubCommand {
                     plugin.reload();
                     getMessage().send(player, "&6Chunks:&f reloaded");
                 }
+            }
+        } else if (sender instanceof ConsoleCommandSender consoleCommandSender) {
+            if (args.length == 1) {
+                plugin.reload();
+                getMessage().send(consoleCommandSender, "Chunks: reloaded");
             }
         }
     }

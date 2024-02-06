@@ -25,7 +25,7 @@ public record PlayerMove(Chunks plugin) implements Listener {
     @EventHandler(priority = EventPriority.NORMAL)
     public void onPlayerMove(PlayerMoveEvent event) {
         if (event.getTo() == null)return;
-        if (event.getFrom().getChunk() == event.getTo().getChunk())return;
+        if (event.getTo().getChunk() == event.getFrom().getChunk())return;
         Player player = event.getPlayer();
         Chunk chunk = event.getTo().getChunk();
         if (getChunkStorage().isClaimed(chunk)) {
@@ -35,7 +35,7 @@ public record PlayerMove(Chunks plugin) implements Listener {
                     visit(player, owner);
                 } else {
                     event.setCancelled(true);
-                    player.sendMessage(MessageFormat.format(getMessage().getString("events.player-visit-chunk-banned"), owner.getName()));
+                    getMessage().sendActionBar(player, MessageFormat.format(getMessage().getString("events.player-visit-chunk-banned"), owner.getName()));
                 }
             } else {
                 visit(player, owner);
@@ -50,14 +50,14 @@ public record PlayerMove(Chunks plugin) implements Listener {
                 player.getPersistentDataContainer().remove(NamespacedKey.minecraft("chunk-visitor"));
             }
         } else {
-            player.sendMessage(MessageFormat.format(getMessage().getString("events.player-visit-chunk"), owner.getName()));
+            getMessage().sendActionBar(player, MessageFormat.format(getMessage().getString("events.player-visit-chunk"), owner.getName()));
             player.getPersistentDataContainer().set(NamespacedKey.minecraft("chunk-visitor"), PersistentDataType.STRING, owner.getName());
         }
     }
     private void exit(Player player) {
         if (player.getPersistentDataContainer().has(NamespacedKey.minecraft("chunk-visitor"), PersistentDataType.STRING)) {
             String lastChunkOwner = player.getPersistentDataContainer().get(NamespacedKey.minecraft("chunk-visitor"), PersistentDataType.STRING);
-            player.sendMessage(MessageFormat.format(getMessage().getString("events.player-exit-chunk"), lastChunkOwner));
+            getMessage().sendActionBar(player, MessageFormat.format(getMessage().getString("events.player-exit-chunk"), lastChunkOwner));
             player.getPersistentDataContainer().remove(NamespacedKey.minecraft("chunk-visitor"));
         }
     }
