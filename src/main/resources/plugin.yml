@@ -14,12 +14,12 @@ softdepend:
 commands:
   chunk:
     usage: /chunk help
-    description: chunk commands
+    description: chunks claiming commands
     permission-message: You are do not have the permission to execute the command
     permission: chunks.command.chunk
   chunks:
     usage: /chunks help
-    description: chunks commands
+    description: chunks admin commands
     permission-message: You are do not have the permission to execute the command
     permission: chunks.command.chunks
 permissions:
@@ -27,10 +27,10 @@ permissions:
     description: chunk command
     default: op
   chunks.command.chunk.ban:
-    description: bans player from claimed
+    description: bans player from claims
     default: op
   chunks.command.chunk.banned:
-    description: list of banned players from claimed
+    description: list of banned players from claims
     default: op
   chunks.command.chunk.claim:
     description: claims chunk
@@ -42,35 +42,35 @@ permissions:
     description: list of members
     default: op
   chunks.command.chunk.tnt:
-    description: allows tnt on standing chunk
+    description: toggle tnt on standing chunk
     default: op
   chunks.command.chunk.unban:
-    description: unbans from claimed chunks
+    description: unbans player from claims
     default: op
   chunks.command.chunk.unclaim:
-    description: unclaim command
+    description: unclaim standing chunk if owner
     default: op
   chunks.command.chunks:
-    description: allows to use chunks command
+    description: chunks admin commands
     default: op
   chunks.command.chunks.delete:
-    description: unclaims claimed or protected chunks
+    description: unclaim current chunk if claimed
     default: op
   chunks.command.chunks.edit:
-    description: allows to edit protected and claimed
+    description: toggle chunk edit
     default: op
   chunks.command.chunks.effect:
     description: showcase claim or unclaim effects
     default: op
   chunks.command.chunks.help:
-    description: list of commands
+    description: list of chunks admin commands
     default: op
   chunks.command.chunks.info:
-    description: info of the standing chunk
+    description: info of the current chunk
     default: op
   chunks.command.chunks.reload:
     description: reload plugin files
     default: op
   chunks.command.chunks.setowner:
-    description: allows to setowner
+    description: sets owner of current chunk
     default: op
