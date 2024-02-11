@@ -82,8 +82,8 @@ public record ChunkStorage(Chunks plugin) {
             return true;
         }
     }
-    public boolean isOwner(Player player, Chunk chunk) {
-        return getOwner(chunk) == player;
+    public boolean isOwner(OfflinePlayer offlinePlayer, Chunk chunk) {
+        return getOwner(chunk) == offlinePlayer;
     }
     public boolean isMember(Player player, Chunk chunk) {
         return getMembers(chunk).contains(player.getUniqueId().toString());

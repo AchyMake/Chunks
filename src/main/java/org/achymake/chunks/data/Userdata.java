@@ -19,6 +19,9 @@ public record Userdata(Chunks plugin) {
     private FileConfiguration getConfig() {
         return plugin.getConfig();
     }
+    private ChunkStorage getChunkStorage() {
+        return plugin.getChunkStorage();
+    }
     private Message getMessage() {
         return plugin.getMessage();
     }
@@ -102,9 +105,26 @@ public record Userdata(Chunks plugin) {
             for (String chunkLocations : getConfig(offlinePlayer).getConfigurationSection(worldName).getKeys(false)) {
                 int x = getConfig(offlinePlayer).getInt(worldName + "." + chunkLocations + ".x");
                 int z = getConfig(offlinePlayer).getInt(worldName + "." + chunkLocations + ".z");
-                Chunk chunk = player.getWorld().getChunkAt(x,z);
+                Chunk chunk = player.getWorld().getChunkAt(x, z);
                 if (chunk.isLoaded()) {
                     claimEffect(player, chunk, offlinePlayer);
+                }
+            }
+        }
+    }
+    public void unclaimALL(OfflinePlayer offlinePlayer) {
+        for (World worlds : plugin.getServer().getWorlds()) {
+            String worldName = worlds.getName();
+            if (getConfig(offlinePlayer).isConfigurationSection(worldName)) {
+                for (String chunkLocations : getConfig(offlinePlayer).getConfigurationSection(worldName).getKeys(false)) {
+                    int x = getConfig(offlinePlayer).getInt(worldName + "." + chunkLocations + ".x");
+                    int z = getConfig(offlinePlayer).getInt(worldName + "." + chunkLocations + ".z");
+                    Chunk chunk = worlds.getChunkAt(x, z);
+                    if (getChunkStorage().isClaimed(chunk)) {
+                        if (getChunkStorage().isOwner(offlinePlayer, chunk)) {
+                            getChunkStorage().unclaim(chunk);
+                        }
+                    }
                 }
             }
         }
@@ -116,29 +136,29 @@ public record Userdata(Chunks plugin) {
         Location north = new Location(player.getWorld(), chunk.getBlock(0, 0, 0).getX() + 0.5, location.getBlockY()-1, chunk.getBlock(0, 0, 0).getZ() + 0.5 - 1);
         Location south = new Location(player.getWorld(), chunk.getBlock(0, 0, 0).getX() + 0.5, location.getBlockY()-1, chunk.getBlock(0, 0, 0).getZ() + 0.5 + 16);
         Location east = new Location(player.getWorld(), chunk.getBlock(0, 0, 0).getX() + 0.5 + 16, location.getBlockY()-1, chunk.getBlock(0, 0, 0).getZ() + 0.5);
-        if (plugin.getChunkStorage().isClaimed(north.getChunk())) {
-            if (!plugin.getChunkStorage().getOwner(north.getChunk()).equals(offlinePlayer)) {
+        if (getChunkStorage().isClaimed(north.getChunk())) {
+            if (!getChunkStorage().getOwner(north.getChunk()).equals(offlinePlayer)) {
                 player.spawnParticle(particle, chunk.getBlock(8, 0, 0).getX(), location.getBlockY() - 1, chunk.getBlock(8, 0, 0).getZ(), 250, 4, 12, 0, 0);
             }
         } else {
             player.spawnParticle(particle, chunk.getBlock(8, 0, 0).getX(), location.getBlockY() - 1, chunk.getBlock(8, 0, 0).getZ(), 250, 4, 12, 0, 0);
         }
-        if (plugin.getChunkStorage().isClaimed(west.getChunk())) {
-            if (!plugin.getChunkStorage().getOwner(west.getChunk()).equals(offlinePlayer)) {
+        if (getChunkStorage().isClaimed(west.getChunk())) {
+            if (!getChunkStorage().getOwner(west.getChunk()).equals(offlinePlayer)) {
                 player.spawnParticle(particle, chunk.getBlock(0, 0, 8).getX(), location.getBlockY() - 1, chunk.getBlock(0, 0, 8).getZ(), 250, 0, 12, 4, 0);
             }
         } else {
             player.spawnParticle(particle, chunk.getBlock(0, 0, 8).getX(), location.getBlockY() - 1, chunk.getBlock(0, 0, 8).getZ(), 250, 0, 12, 4, 0);
         }
-        if (plugin.getChunkStorage().isClaimed(east.getChunk())) {
-            if (!plugin.getChunkStorage().getOwner(east.getChunk()).equals(offlinePlayer)) {
+        if (getChunkStorage().isClaimed(east.getChunk())) {
+            if (!getChunkStorage().getOwner(east.getChunk()).equals(offlinePlayer)) {
                 player.spawnParticle(particle, chunk.getBlock(15, 0, 8).getX() + 1, location.getBlockY() - 1, chunk.getBlock(15, 0, 8).getZ(), 250, 0, 12, 4, 0);
             }
         } else {
             player.spawnParticle(particle, chunk.getBlock(15, 0, 8).getX() + 1, location.getBlockY() - 1, chunk.getBlock(15, 0, 8).getZ(), 250, 0, 12, 4, 0);
         }
-        if (plugin.getChunkStorage().isClaimed(south.getChunk())) {
-            if (!plugin.getChunkStorage().getOwner(south.getChunk()).equals(offlinePlayer)) {
+        if (getChunkStorage().isClaimed(south.getChunk())) {
+            if (!getChunkStorage().getOwner(south.getChunk()).equals(offlinePlayer)) {
                 player.spawnParticle(particle, chunk.getBlock(8, 0, 15).getX(), location.getBlockY() - 1, chunk.getBlock(8, 0, 15).getZ() + 1, 250, 4, 12, 0, 0);
             }
         } else {

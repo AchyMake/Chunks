@@ -14,13 +14,13 @@ import java.util.List;
 public class ChunksCommand implements CommandExecutor, TabCompleter {
     private final ArrayList<ChunksSubCommand> chunksSubCommands = new ArrayList<>();
     public ChunksCommand(Chunks plugin) {
-        chunksSubCommands.add(new DeleteCommand(plugin));
         chunksSubCommands.add(new EditCommand(plugin));
         chunksSubCommands.add(new EffectCommand(plugin));
         chunksSubCommands.add(new HelpCommand(plugin));
         chunksSubCommands.add(new InfoCommand(plugin));
         chunksSubCommands.add(new ReloadCommand(plugin));
         chunksSubCommands.add(new SetOwnerCommand(plugin));
+        chunksSubCommands.add(new UnClaimCommand(plugin));
     }
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
@@ -37,8 +37,8 @@ public class ChunksCommand implements CommandExecutor, TabCompleter {
     public List<String> onTabComplete(CommandSender sender, Command command, String label, String[] args) {
         List<String> commands = new ArrayList<>();
         if (args.length == 1) {
-            if (sender.hasPermission("chunks.command.chunks.delete")) {
-                commands.add("delete");
+            if (sender.hasPermission("chunks.command.chunks.unclaim")) {
+                commands.add("unclaim");
             }
             if (sender.hasPermission("chunks.command.chunks.edit")) {
                 commands.add("edit");
@@ -60,6 +60,13 @@ public class ChunksCommand implements CommandExecutor, TabCompleter {
             }
         }
         if (args.length == 2) {
+            if (args[0].equalsIgnoreCase("unclaim")) {
+                if (sender.hasPermission("chunks.command.chunk.unclaim")) {
+                    for (OfflinePlayer offlinePlayers : sender.getServer().getOfflinePlayers()) {
+                        commands.add(offlinePlayers.getName());
+                    }
+                }
+            }
             if (args[0].equalsIgnoreCase("effect")) {
                 if (sender.hasPermission("chunks.command.chunks.effect")) {
                     commands.add("claim");
@@ -83,6 +90,13 @@ public class ChunksCommand implements CommandExecutor, TabCompleter {
                     for (OfflinePlayer offlinePlayers : sender.getServer().getOfflinePlayers()) {
                         commands.add(offlinePlayers.getName());
                     }
+                }
+            }
+        }
+        if (args.length == 3) {
+            if (args[0].equalsIgnoreCase("unclaim")) {
+                if (sender.hasPermission("chunks.command.chunk.unclaim")) {
+                    commands.add("all");
                 }
             }
         }

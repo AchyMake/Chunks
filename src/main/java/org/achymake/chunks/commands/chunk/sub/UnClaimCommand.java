@@ -5,6 +5,7 @@ import org.achymake.chunks.Chunks;
 import org.achymake.chunks.commands.chunk.ChunkSubCommand;
 import org.achymake.chunks.data.ChunkStorage;
 import org.achymake.chunks.data.Message;
+import org.achymake.chunks.data.Userdata;
 import org.bukkit.Chunk;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
@@ -18,6 +19,9 @@ public class UnClaimCommand extends ChunkSubCommand {
     }
     private ChunkStorage getChunkStorage() {
         return plugin.getChunkStorage();
+    }
+    private Userdata getUserdata() {
+        return plugin.getUserdata();
     }
     private Economy getEconomy() {
         return plugin.getEconomy();
@@ -43,18 +47,26 @@ public class UnClaimCommand extends ChunkSubCommand {
     @Override
     public void perform(Player player, String[] args) {
         if (player.hasPermission("chunks.command.chunk.unclaim")) {
-            Chunk chunk = player.getLocation().getChunk();
-            if (getChunkStorage().isClaimed(chunk)) {
-                if (getChunkStorage().isOwner(player, chunk)) {
-                    player.sendMessage(MessageFormat.format(getMessage().getString("commands.chunk.unclaim.success"), getEconomy().format(getConfig().getDouble("unclaim.refund"))));
-                    getChunkStorage().unclaim(chunk);
-                    getChunkStorage().unclaimEffect(player, chunk);
-                    getChunkStorage().unclaimSound(player);
+            if (args.length == 1) {
+                Chunk chunk = player.getLocation().getChunk();
+                if (getChunkStorage().isClaimed(chunk)) {
+                    if (getChunkStorage().isOwner(player, chunk)) {
+                        player.sendMessage(MessageFormat.format(getMessage().getString("commands.chunk.unclaim.success"), getEconomy().format(getConfig().getDouble("unclaim.refund"))));
+                        getChunkStorage().unclaim(chunk);
+                        getChunkStorage().unclaimEffect(player, chunk);
+                        getChunkStorage().unclaimSound(player);
+                    } else {
+                        player.sendMessage(MessageFormat.format(getMessage().getString("commands.chunk.unclaim.claimed"), getChunkStorage().getOwner(chunk).getName()));
+                    }
                 } else {
-                    player.sendMessage(MessageFormat.format(getMessage().getString("commands.chunk.unclaim.claimed"), getChunkStorage().getOwner(chunk).getName()));
+                    player.sendMessage(getMessage().getString("commands.chunk.unclaim.unclaimed"));
                 }
-            } else {
-                player.sendMessage(getMessage().getString("commands.chunk.unclaim.unclaimed"));
+            }
+            if (args.length == 2) {
+                if (args[1].equalsIgnoreCase("all")) {
+                    getUserdata().unclaimALL(player);
+                    player.sendMessage(MessageFormat.format(getMessage().getString("commands.chunk.unclaim.all"), getEconomy().format(getConfig().getDouble("unclaim.refund"))));
+                }
             }
         }
     }

@@ -97,6 +97,7 @@ public class Message {
         config.set("commands.chunk.unban.success", "&6You unbanned&f {0}");
         config.set("commands.chunk.unban.already-unbanned", "{0}&c is already unbanned");
         config.set("commands.chunk.unclaim.success", "&6You unclaimed a chunk and refunded for&a {0}");
+        config.set("commands.chunk.unclaim.all", "&6You unclaimed all chunks and refunded for each&a {0}");
         config.set("commands.chunk.unclaim.claimed", "&cChunk is owned by&f {0}");
         config.set("commands.chunk.unclaim.unclaimed", "&cChunk is already unclaimed");
         config.set("events.block-break", "&c&lHey!&7 Sorry, chunk is owned by&f {0}");
