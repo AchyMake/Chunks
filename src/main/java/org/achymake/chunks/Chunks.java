@@ -115,8 +115,8 @@ public final class Chunks extends JavaPlugin {
         if (notifyUpdate()) {
             getLatest((latest) -> {
                 if (!getDescription().getVersion().equals(latest)) {
-                    getMessage().send(player,"&6" + getDescription().getName() + " Update:&f " + latest);
-                    getMessage().send(player,"&6Current Version: &f" + getDescription().getVersion());
+                    getMessage().send(player,getDescription().getName() + "&6 has new update:");
+                    getMessage().send(player,"-&a https://www.spigotmc.org/resources/108772/");
                 }
             });
         }
@@ -127,12 +127,11 @@ public final class Chunks extends JavaPlugin {
                 @Override
                 public void run() {
                     getLatest((latest) -> {
-                        getMessage().sendLog(Level.INFO, "Checking latest release");
                         if (getDescription().getVersion().equals(latest)) {
                             getMessage().sendLog(Level.INFO, "You are using the latest version");
                         } else {
-                            getMessage().sendLog(Level.INFO, "New Update: " + latest);
-                            getMessage().sendLog(Level.INFO, "Current Version: " + getDescription().getVersion());
+                            getMessage().sendLog(Level.INFO, getDescription().getName() + " has new update:");
+                            getMessage().sendLog(Level.INFO, "- https://www.spigotmc.org/resources/108772/");
                         }
                     });
                 }
