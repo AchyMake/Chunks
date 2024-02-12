@@ -40,12 +40,12 @@ public record PlayerInteractAtEntityRecovery(Chunks plugin) implements Listener 
         if (entity.getType().equals(EntityType.MINECART))return;
         if (entity.getType().equals(EntityType.BOAT))return;
         if (entity.isInvulnerable())return;
+        if (getConfig().getBoolean("hostile." + entity.getType()))return;
+        Player player = event.getPlayer();
         if (entity instanceof ArmorStand armorStand) {
             if (getDatabase().hasDeathItems(armorStand))return;
         }
-        Player player = event.getPlayer();
         if (getChunkStorage().hasAccess(player, chunk))return;
-        if (getConfig().getBoolean("hostile." + entity.getType()))return;
         event.setCancelled(true);
         player.sendMessage(MessageFormat.format(getMessage().getString("events.player-interact-at-entity"), getChunkStorage().getOwner(chunk).getName()));
     }
