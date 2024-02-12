@@ -53,11 +53,11 @@ permissions:
   chunks.command.chunk.view:
     description: view claimed chunks on current world
     default: op
+  chunks.command.chunk.view.others:
+    description: view claimed chunks on current world
+    default: op
   chunks.command.chunks:
     description: chunks admin commands
-    default: op
-  chunks.command.chunks.delete:
-    description: unclaim current chunk if claimed
     default: op
   chunks.command.chunks.edit:
     description: toggle chunk edit
@@ -76,4 +76,7 @@ permissions:
     default: op
   chunks.command.chunks.setowner:
     description: sets owner of current chunk
+    default: op
+  chunks.command.chunks.unclaim:
+    description: unclaim current chunk if claimed
     default: op

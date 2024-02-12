@@ -18,7 +18,7 @@ public class PlaceholderProvider extends PlaceholderExpansion {
     }
     @Override
     public String getVersion() {
-        return "105";
+        return "106";
     }
     @Override
     public boolean canRegister() {
