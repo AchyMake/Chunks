@@ -57,7 +57,7 @@ public class ClaimCommand extends ChunkSubCommand {
                             player.sendMessage(MessageFormat.format(getMessage().getString("commands.chunk.claim.already-claimed"), getChunkStorage().getOwner(chunk).getName()));
                         }
                     } else {
-                        if (getUserdata().getClaimCount(player) >= getConfig().getInt("max-claims")) {
+                        if (getUserdata().getClaimCount(player) >= getConfig().getInt("claim.max-claims")) {
                             if (getEconomy().getBalance(player) >= getConfig().getDouble("claim.cost")) {
                                 getChunkStorage().claim(player, chunk);
                                 getChunkStorage().claimEffect(player, chunk);
