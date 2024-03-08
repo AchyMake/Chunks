@@ -18,7 +18,7 @@ public class PlaceholderProvider extends PlaceholderExpansion {
     }
     @Override
     public String getVersion() {
-        return "106";
+        return Chunks.getInstance().getDescription().getVersion();
     }
     @Override
     public boolean canRegister() {

@@ -43,10 +43,10 @@ public record ChunkStorage(Chunks plugin) {
         return plugin.getMessage();
     }
     public double getClaimCost() {
-        return getConfig().getDouble("claim.cost");
+        return plugin.getConfig().getDouble("claim.cost");
     }
     public int getMaxClaims() {
-        return getConfig().getInt("max-claims");
+        return plugin.getConfig().getInt("claim.max-claims");
     }
     public PersistentDataContainer getData(Chunk chunk) {
         return chunk.getPersistentDataContainer();

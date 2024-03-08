@@ -60,13 +60,6 @@ public class ChunksCommand implements CommandExecutor, TabCompleter {
             }
         }
         if (args.length == 2) {
-            if (args[0].equalsIgnoreCase("unclaim")) {
-                if (sender.hasPermission("chunks.command.chunk.unclaim")) {
-                    for (OfflinePlayer offlinePlayers : sender.getServer().getOfflinePlayers()) {
-                        commands.add(offlinePlayers.getName());
-                    }
-                }
-            }
             if (args[0].equalsIgnoreCase("effect")) {
                 if (sender.hasPermission("chunks.command.chunks.effect")) {
                     commands.add("claim");
@@ -92,10 +85,17 @@ public class ChunksCommand implements CommandExecutor, TabCompleter {
                     }
                 }
             }
+            if (args[0].equalsIgnoreCase("unclaim")) {
+                if (sender.hasPermission("chunks.command.chunks.unclaim")) {
+                    for (OfflinePlayer offlinePlayers : sender.getServer().getOfflinePlayers()) {
+                        commands.add(offlinePlayers.getName());
+                    }
+                }
+            }
         }
         if (args.length == 3) {
             if (args[0].equalsIgnoreCase("unclaim")) {
-                if (sender.hasPermission("chunks.command.chunk.unclaim")) {
+                if (sender.hasPermission("chunks.command.chunks.unclaim")) {
                     commands.add("all");
                 }
             }

@@ -11,6 +11,7 @@ import org.achymake.chunks.commands.chunk.ChunkCommand;
 import org.achymake.chunks.commands.chunks.ChunksCommand;
 import org.achymake.chunks.data.*;
 import org.achymake.chunks.listeners.*;
+import org.achymake.chunks.net.UpdateChecker;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
@@ -19,12 +20,8 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
-import java.util.function.Consumer;
 import java.util.logging.Level;
 
 public final class Chunks extends JavaPlugin {
@@ -33,6 +30,7 @@ public final class Chunks extends JavaPlugin {
     private static Userdata userdata;
     private static ChunkStorage chunkStorage;
     private final List<Player> chunkEditors = new ArrayList<>();
+    private static UpdateChecker updateChecker;
     public static PluginManager manager;
     private static Economy economy = null;
     public static StateFlag FLAG_CHUNKS_CLAIM;
@@ -55,10 +53,11 @@ public final class Chunks extends JavaPlugin {
     @Override
     public void onEnable() {
         instance = this;
-        message = new Message();
+        message = new Message(this);
         manager = getServer().getPluginManager();
         userdata = new Userdata(this);
         chunkStorage = new ChunkStorage(this);
+        updateChecker = new UpdateChecker(this);
         if (isVaultDisable()) {
             getManager().disablePlugin(this);
         }
@@ -67,7 +66,7 @@ public final class Chunks extends JavaPlugin {
         events();
         reload();
         getMessage().sendLog(Level.INFO, "Enabled " + getDescription().getName() + " " + getDescription().getVersion());
-        getUpdate();
+        getUpdateChecker().getUpdate();
     }
     @Override
     public void onDisable() {
@@ -111,51 +110,6 @@ public final class Chunks extends JavaPlugin {
         getManager().registerEvents(new PlayerShearEntity(this), this);
         getManager().registerEvents(new SignChange(this), this);
     }
-    public void getUpdate(Player player) {
-        if (notifyUpdate()) {
-            getLatest((latest) -> {
-                if (!getDescription().getVersion().equals(latest)) {
-                    getMessage().send(player,getDescription().getName() + "&6 has new update:");
-                    getMessage().send(player,"-&a https://www.spigotmc.org/resources/108772/");
-                }
-            });
-        }
-    }
-    public void getUpdate() {
-        if (notifyUpdate()) {
-            getServer().getScheduler().runTaskAsynchronously(this, new Runnable() {
-                @Override
-                public void run() {
-                    getLatest((latest) -> {
-                        if (getDescription().getVersion().equals(latest)) {
-                            getMessage().sendLog(Level.INFO, "You are using the latest version");
-                        } else {
-                            getMessage().sendLog(Level.INFO, getDescription().getName() + " has new update:");
-                            getMessage().sendLog(Level.INFO, "- https://www.spigotmc.org/resources/108772/");
-                        }
-                    });
-                }
-            });
-        }
-    }
-    public void getLatest(Consumer<String> consumer) {
-        try {
-            InputStream inputStream = (new URL("https://api.spigotmc.org/legacy/update.php?resource=" + 108772)).openStream();
-            Scanner scanner = new Scanner(inputStream);
-            if (scanner.hasNext()) {
-                consumer.accept(scanner.next());
-                scanner.close();
-            }
-            if (inputStream != null) {
-                inputStream.close();
-            }
-        } catch (IOException e) {
-            getMessage().sendLog(Level.WARNING, e.getMessage());
-        }
-    }
-    private boolean notifyUpdate() {
-        return getConfig().getBoolean("notify-update");
-    }
     public void reload() {
         File file = new File(getDataFolder(), "config.yml");
         if (file.exists()) {
@@ -164,7 +118,6 @@ public final class Chunks extends JavaPlugin {
             } catch (IOException | InvalidConfigurationException e) {
                 getMessage().sendLog(Level.WARNING, e.getMessage());
             }
-            saveConfig();
         } else {
             getConfig().options().copyDefaults(true);
             saveConfig();
@@ -212,6 +165,9 @@ public final class Chunks extends JavaPlugin {
     }
     public Userdata getUserdata() {
         return userdata;
+    }
+    public UpdateChecker getUpdateChecker() {
+        return updateChecker;
     }
     public Message getMessage() {
         return message;
