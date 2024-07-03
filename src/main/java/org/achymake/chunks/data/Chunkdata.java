@@ -37,9 +37,6 @@ public record Chunkdata(Chunks plugin) {
     private Server getServer() {
         return plugin.getServer();
     }
-    public List<Player> getChunkEditors() {
-        return plugin.getChunkEditors();
-    }
     public File getFile(Chunk chunk) {
         return new File(getDataFolder(), "database/" + chunk.getWorld().getName() + "/" + getChunkKey(chunk.getX(), chunk.getZ()) + ".yml");
     }
@@ -109,8 +106,7 @@ public record Chunkdata(Chunks plugin) {
         return getUserdata().getClaimCount(getOwner(chunk));
     }
     public String getDateClaimed(Chunk chunk) {
-        String date = SimpleDateFormat.getDateInstance().format(getConfig(chunk).getLong("date-claimed"));
-        return getConfig(chunk).getString(date);
+        return SimpleDateFormat.getDateInstance().format(Long.parseLong(getConfig(chunk).getString("date-claimed")));
     }
     public boolean isClaimed(Chunk chunk) {
         return exist(chunk);
@@ -134,12 +130,9 @@ public record Chunkdata(Chunks plugin) {
     public boolean isMember(OfflinePlayer offlinePlayer, Chunk chunk) {
         return getUserdata().getMembers(getOwner(chunk)).contains(offlinePlayer);
     }
-    public boolean isChunkEditor(Player player) {
-        return getChunkEditors().contains(player);
-    }
     public boolean hasAccess(Player player, Chunk chunk) {
         if (isClaimed(chunk)) {
-            return isOwner(player, chunk) || isMember(player, chunk) || getChunkEditors().contains(player);
+            return isOwner(player, chunk) || isMember(player, chunk) || plugin.isEditor(player);
         } else {
             return true;
         }

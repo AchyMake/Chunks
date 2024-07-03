@@ -26,9 +26,9 @@ public final class Chunks extends JavaPlugin {
     private static Message message;
     private static Chunkdata chunkdata;
     private static Userdata userdata;
-    private final List<Player> chunkEditors = new ArrayList<>();
     private static Economy economy = null;
     private static UpdateChecker updateChecker;
+    private final List<Player> chunkEditors = new ArrayList<>();
     @Override
     public void onEnable() {
         instance = this;
@@ -114,17 +114,20 @@ public final class Chunks extends JavaPlugin {
         economy = rsp.getProvider();
         return economy != null;
     }
+    public boolean isEditor(Player player) {
+        return getChunkEditors().contains(player);
+    }
     private PluginManager getManager() {
         return getServer().getPluginManager();
+    }
+    public List<Player> getChunkEditors() {
+        return chunkEditors;
     }
     public UpdateChecker getUpdateChecker() {
         return updateChecker;
     }
     public Economy getEconomy() {
         return economy;
-    }
-    public List<Player> getChunkEditors() {
-        return chunkEditors;
     }
     public Userdata getUserdata() {
         return userdata;

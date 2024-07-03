@@ -28,7 +28,7 @@ public record PlayerMove(Chunks plugin) implements Listener {
         if (getChunkdata().isClaimed(chunk)) {
             OfflinePlayer owner = getChunkdata().getOwner(chunk);
             if (getChunkdata().isBanned(chunk, player)) {
-                if (getChunkdata().getChunkEditors().contains(player)) {
+                if (plugin.isEditor(player)) {
                     visit(player, owner);
                 } else {
                     event.setCancelled(true);
