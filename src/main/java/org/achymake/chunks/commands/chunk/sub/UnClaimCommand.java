@@ -5,6 +5,7 @@ import org.achymake.chunks.Chunks;
 import org.achymake.chunks.commands.chunk.ChunkSubCommand;
 import org.achymake.chunks.data.Chunkdata;
 import org.achymake.chunks.data.Message;
+import org.achymake.chunks.data.Userdata;
 import org.bukkit.Chunk;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
@@ -13,6 +14,9 @@ public class UnClaimCommand extends ChunkSubCommand {
     private final Chunks plugin;
     private FileConfiguration getConfig() {
         return plugin.getConfig();
+    }
+    private Userdata getUserdata() {
+        return plugin.getUserdata();
     }
     private Chunkdata getChunkdata() {
         return plugin.getChunkdata();
@@ -65,8 +69,12 @@ public class UnClaimCommand extends ChunkSubCommand {
             }
             if (args.length == 2) {
                 if (args[1].equalsIgnoreCase("all")) {
-                    getChunkdata().removeAll(player);
-                    getMessage().send(player, "&6You unclaimed all chunks and got refunded each for&a " + getEconomy().currencyNameSingular() + getEconomy().format(getConfig().getDouble("economy.refund")));
+                    if (getUserdata().getClaimCount(player) > 0) {
+                        getChunkdata().removeAll(player);
+                        getMessage().send(player, "&6You unclaimed all chunks and got refunded each for&a " + getEconomy().currencyNameSingular() + getEconomy().format(getConfig().getDouble("economy.refund")));
+                    } else {
+                        getMessage().send(player, "&cYou do not have any claimed chunks");
+                    }
                 }
             }
         }
