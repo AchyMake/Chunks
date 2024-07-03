@@ -9,6 +9,7 @@ import org.achymake.chunks.data.Message;
 import org.achymake.chunks.data.Userdata;
 import org.achymake.chunks.listeners.*;
 import org.achymake.chunks.net.UpdateChecker;
+import org.bukkit.Chunk;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
@@ -113,6 +114,9 @@ public final class Chunks extends JavaPlugin {
         }
         economy = rsp.getProvider();
         return economy != null;
+    }
+    public boolean isAllowed(Chunk chunk) {
+        return getConfig().getStringList("worlds").contains(chunk.getWorld().getName());
     }
     public boolean isEditor(Player player) {
         return getChunkEditors().contains(player);

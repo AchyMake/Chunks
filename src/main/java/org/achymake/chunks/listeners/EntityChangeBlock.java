@@ -18,9 +18,13 @@ public record EntityChangeBlock(Chunks plugin) implements Listener {
     private Message getMessage() {
         return plugin.getMessage();
     }
+    private boolean isAllowed(Chunk chunk) {
+        return plugin.isAllowed(chunk);
+    }
     @EventHandler(priority = EventPriority.NORMAL)
     public void onEntityChangeBlock(EntityChangeBlockEvent event) {
         Chunk chunk = event.getBlock().getChunk();
+        if (!isAllowed(chunk))return;
         if (!getChunkdata().isClaimed(chunk))return;
         Entity entity = event.getEntity();
         if (entity instanceof Player player) {

@@ -21,9 +21,13 @@ public record EntityDamageByEntity(Chunks plugin) implements Listener {
     private Message getMessage() {
         return plugin.getMessage();
     }
+    private boolean isAllowed(Chunk chunk) {
+        return plugin.isAllowed(chunk);
+    }
     @EventHandler(priority = EventPriority.NORMAL)
     public void onEntityDamageByEntity(EntityDamageByEntityEvent event) {
         Chunk chunk = event.getEntity().getLocation().getChunk();
+        if (!isAllowed(chunk))return;
         if (!getChunkdata().isClaimed(chunk))return;
         Entity target = event.getEntity();
         if (target.getType().equals(EntityType.PLAYER))return;

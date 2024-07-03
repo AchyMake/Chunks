@@ -17,10 +17,14 @@ public record PlayerCommandPreprocess(Chunks plugin) implements Listener {
     private Message getMessage() {
         return plugin.getMessage();
     }
+    private boolean isAllowed(Chunk chunk) {
+        return plugin.isAllowed(chunk);
+    }
     @EventHandler(priority = EventPriority.NORMAL)
     public void onPlayerCommandPreprocess(PlayerCommandPreprocessEvent event) {
         Player player = event.getPlayer();
         Chunk chunk = player.getLocation().getChunk();
+        if (!isAllowed(chunk))return;
         if (!getChunkdata().isClaimed(chunk))return;
         if (!event.getMessage().startsWith("/sethome"))return;
         if (getChunkdata().hasAccess(player, chunk))return;

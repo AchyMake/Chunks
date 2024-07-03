@@ -17,9 +17,13 @@ public record CauldronLevelChange(Chunks plugin) implements Listener {
     private Message getMessage() {
         return plugin.getMessage();
     }
+    private boolean isAllowed(Chunk chunk) {
+        return plugin.isAllowed(chunk);
+    }
     @EventHandler(priority = EventPriority.NORMAL)
     public void onCauldronLevelChange(CauldronLevelChangeEvent event) {
         Chunk chunk = event.getBlock().getChunk();
+        if (!isAllowed(chunk))return;
         if (!getChunkdata().isClaimed(chunk))return;
         if (event.getEntity() instanceof Player player) {
             if (getChunkdata().hasAccess(player, chunk))return;

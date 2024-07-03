@@ -23,10 +23,14 @@ public record PlayerInteractAtEntity(Chunks plugin) implements Listener {
     private Message getMessage() {
         return plugin.getMessage();
     }
+    private boolean isAllowed(Chunk chunk) {
+        return plugin.isAllowed(chunk);
+    }
     @EventHandler(priority = EventPriority.NORMAL)
     public void onPlayerInteractAtEntity(PlayerInteractAtEntityEvent event) {
         Entity entity = event.getRightClicked();
         Chunk chunk = entity.getLocation().getChunk();
+        if (!isAllowed(chunk))return;
         if (!getChunkdata().isClaimed(chunk))return;
         if (getConfig().getBoolean("hostile." + entity.getType()))return;
         if (entity.getType().equals(EntityType.PLAYER))return;

@@ -23,6 +23,9 @@ public class UnClaimCommand extends ChunkSubCommand {
     private Message getMessage() {
         return plugin.getMessage();
     }
+    private boolean isAllowed(Chunk chunk) {
+        return plugin.isAllowed(chunk);
+    }
     public UnClaimCommand(Chunks plugin) {
         this.plugin = plugin;
     }
@@ -43,17 +46,21 @@ public class UnClaimCommand extends ChunkSubCommand {
         if (player.hasPermission("chunks.command.chunk.unclaim")) {
             if (args.length == 1) {
                 Chunk chunk = player.getLocation().getChunk();
-                if (getChunkdata().isClaimed(chunk)) {
-                    if (getChunkdata().isOwner(player, chunk)) {
-                        getMessage().send(player, "&6You unclaimed current chunk and got refunded&a " + getEconomy().currencyNameSingular() + getEconomy().format(getConfig().getDouble("economy.refund")));
-                        getChunkdata().remove(player, chunk);
-                        getChunkdata().unclaimEffect(player, chunk);
-                        getChunkdata().unclaimSound(player);
+                if (isAllowed(chunk)) {
+                    if (getChunkdata().isClaimed(chunk)) {
+                        if (getChunkdata().isOwner(player, chunk)) {
+                            getMessage().send(player, "&6You unclaimed current chunk and got refunded&a " + getEconomy().currencyNameSingular() + getEconomy().format(getConfig().getDouble("economy.refund")));
+                            getChunkdata().remove(player, chunk);
+                            getChunkdata().unclaimEffect(player, chunk);
+                            getChunkdata().unclaimSound(player);
+                        } else {
+                            getMessage().send(player, "&cChunk is owned by&f " + getChunkdata().getOwner(chunk).getName());
+                        }
                     } else {
-                        getMessage().send(player, "&cChunk is owned by&f " + getChunkdata().getOwner(chunk).getName());
+                        getMessage().send(player, "&cChunk is already unclaimed");
                     }
                 } else {
-                    getMessage().send(player, "&cChunk is already unclaimed");
+                    getMessage().send(player, "&cYou are not allowed to unclaim in this world");
                 }
             }
             if (args.length == 2) {

@@ -18,6 +18,9 @@ public class UnClaimCommand extends ChunksSubCommand {
     private Message getMessage() {
         return plugin.getMessage();
     }
+    private boolean isAllowed(Chunk chunk) {
+        return plugin.isAllowed(chunk);
+    }
     public UnClaimCommand(Chunks plugin) {
         this.plugin = plugin;
     }
@@ -39,13 +42,17 @@ public class UnClaimCommand extends ChunksSubCommand {
             if (sender.hasPermission("chunks.command.chunks.unclaim")) {
                 if (args.length == 1) {
                     Chunk chunk = player.getLocation().getChunk();
-                    if (getChunkdata().isClaimed(chunk)) {
-                        getMessage().send(player, "&6You safely unclaimed&f " + getChunkdata().getOwner(chunk).getName() + "&6's chunk");
-                        getChunkdata().remove(getChunkdata().getOwner(chunk), chunk);
-                        getChunkdata().unclaimEffect(player, chunk);
-                        getChunkdata().unclaimSound(player);
+                    if (isAllowed(chunk)) {
+                        if (getChunkdata().isClaimed(chunk)) {
+                            getMessage().send(player, "&6You safely unclaimed&f " + getChunkdata().getOwner(chunk).getName() + "&6's chunk");
+                            getChunkdata().remove(getChunkdata().getOwner(chunk), chunk);
+                            getChunkdata().unclaimEffect(player, chunk);
+                            getChunkdata().unclaimSound(player);
+                        } else {
+                            getMessage().send(player, "&cCurrent chunk is already unclaimed");
+                        }
                     } else {
-                        getMessage().send(player, "&cCurrent chunk is already unclaimed");
+                        getMessage().send(player, "&cYou are not allowed to unclaim in this world");
                     }
                 }
                 if (args.length == 3) {

@@ -22,6 +22,9 @@ public class SetOwnerCommand extends ChunksSubCommand {
     private Message getMessage() {
         return plugin.getMessage();
     }
+    private boolean isAllowed(Chunk chunk) {
+        return plugin.isAllowed(chunk);
+    }
     public SetOwnerCommand(Chunks plugin) {
         this.plugin = plugin;
     }
@@ -44,13 +47,17 @@ public class SetOwnerCommand extends ChunksSubCommand {
                 if (args.length == 2) {
                     OfflinePlayer target = Bukkit.getOfflinePlayer(args[1]);
                     Chunk chunk = player.getLocation().getChunk();
-                    if (getUserdata().exist(target)) {
-                        getChunkdata().setOwner(player, target, chunk);
-                        getChunkdata().claimEffect(player, chunk);
-                        getChunkdata().claimSound(player);
-                        getMessage().send(player, "&6Chunk is now owned by&f " + getChunkdata().getOwner(chunk).getName());
+                    if (isAllowed(chunk)) {
+                        if (getUserdata().exist(target)) {
+                            getChunkdata().setOwner(player, target, chunk);
+                            getChunkdata().claimEffect(player, chunk);
+                            getChunkdata().claimSound(player);
+                            getMessage().send(player, "&6Chunk is now owned by&f " + getChunkdata().getOwner(chunk).getName());
+                        } else {
+                            getMessage().send(player, target.getName() + "&c has never joined");
+                        }
                     } else {
-                        getMessage().send(player, target.getName() + "&c has never joined");
+                        getMessage().send(player, "&cYou are not allowed to setowner in this world");
                     }
                 }
             }

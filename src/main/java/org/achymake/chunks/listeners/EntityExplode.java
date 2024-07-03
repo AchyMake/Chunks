@@ -17,9 +17,13 @@ public record EntityExplode(Chunks plugin) implements Listener {
     private Chunkdata getChunkdata() {
         return plugin.getChunkdata();
     }
+    private boolean isAllowed(Chunk chunk) {
+        return plugin.isAllowed(chunk);
+    }
     @EventHandler(priority = EventPriority.NORMAL)
     public void onEntityExplode(EntityExplodeEvent event) {
         Chunk chunk = event.getLocation().getChunk();
+        if (!isAllowed(chunk))return;
         if (!getChunkdata().isClaimed(chunk))return;
         Entity entity = event.getEntity();
         switch (entity) {

@@ -21,6 +21,9 @@ public class InfoCommand extends ChunksSubCommand {
     private Message getMessage() {
         return plugin.getMessage();
     }
+    private boolean isAllowed(Chunk chunk) {
+        return plugin.isAllowed(chunk);
+    }
     public InfoCommand(Chunks plugin) {
         this.plugin = plugin;
     }
@@ -42,19 +45,23 @@ public class InfoCommand extends ChunksSubCommand {
             if (player.hasPermission("chunks.command.chunks.info")) {
                 if (args.length == 1) {
                     Chunk chunk = player.getLocation().getChunk();
-                    if (getChunkdata().isClaimed(chunk)) {
-                        getMessage().send(player, "&6Chunks Info:&f Chunk");
-                        getMessage().send(player, "&6Owner:&f " + getChunkdata().getOwner(chunk).getName());
-                        getMessage().send(player, "&6Date claimed:&f " + getChunkdata().getDateClaimed(chunk));
-                        getMessage().send(player, "&6Chunks claimed:&f " + getChunkdata().getClaimCount(chunk));
-                        if (getUserdata().getMembers(getChunkdata().getOwner(chunk)).isEmpty()) {
-                            getMessage().send(player, getChunkdata().getOwner(chunk).getName() + "&6 has no members");
-                        } else {
-                            getMessage().send(player, getChunkdata().getOwner(chunk).getName()+"&6 members:");
-                            for (OfflinePlayer offlinePlayer : getUserdata().getMembers(getChunkdata().getOwner(chunk))) {
-                                getMessage().send(player, "- " + offlinePlayer.getName());
+                    if (isAllowed(chunk)) {
+                        if (getChunkdata().isClaimed(chunk)) {
+                            getMessage().send(player, "&6Chunks Info:&f Chunk");
+                            getMessage().send(player, "&6Owner:&f " + getChunkdata().getOwner(chunk).getName());
+                            getMessage().send(player, "&6Date claimed:&f " + getChunkdata().getDateClaimed(chunk));
+                            getMessage().send(player, "&6Chunks claimed:&f " + getChunkdata().getClaimCount(chunk));
+                            if (getUserdata().getMembers(getChunkdata().getOwner(chunk)).isEmpty()) {
+                                getMessage().send(player, getChunkdata().getOwner(chunk).getName() + "&6 has no members");
+                            } else {
+                                getMessage().send(player, getChunkdata().getOwner(chunk).getName()+"&6 members:");
+                                for (OfflinePlayer offlinePlayer : getUserdata().getMembers(getChunkdata().getOwner(chunk))) {
+                                    getMessage().send(player, "- " + offlinePlayer.getName());
+                                }
                             }
                         }
+                    } else {
+                        getMessage().send(player, "&cYou are not allowed to claim in this world");
                     }
                 }
                 if (args.length == 2) {

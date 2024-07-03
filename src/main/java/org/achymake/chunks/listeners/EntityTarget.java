@@ -18,11 +18,15 @@ public record EntityTarget(Chunks plugin) implements Listener {
     private Chunkdata getChunkdata() {
         return plugin.getChunkdata();
     }
+    private boolean isAllowed(Chunk chunk) {
+        return plugin.isAllowed(chunk);
+    }
     @EventHandler(priority = EventPriority.NORMAL)
     public void onEntityTarget(EntityTargetEvent event) {
         if (!(event.getTarget() instanceof Player player))return;
         Entity entity = event.getEntity();
         Chunk chunk = entity.getLocation().getChunk();
+        if (!isAllowed(chunk))return;
         if (!getChunkdata().isClaimed(chunk))return;
         if (getChunkdata().hasAccess(player, chunk))return;
         if (getConfig().getBoolean("hostile." + entity.getType()))return;

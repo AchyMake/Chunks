@@ -20,15 +20,22 @@ public record PlayerMove(Chunks plugin) implements Listener {
     private Message getMessage() {
         return plugin.getMessage();
     }
+    private boolean isAllowed(Chunk chunk) {
+        return plugin.isAllowed(chunk);
+    }
+    private boolean isEditor(Player player) {
+        return plugin.isEditor(player);
+    }
     @EventHandler(priority = EventPriority.NORMAL)
     public void onPlayerMove(PlayerMoveEvent event) {
         if (event.getTo().getChunk() == event.getFrom().getChunk())return;
         Player player = event.getPlayer();
         Chunk chunk = event.getTo().getChunk();
+        if (!isAllowed(chunk))return;
         if (getChunkdata().isClaimed(chunk)) {
             OfflinePlayer owner = getChunkdata().getOwner(chunk);
             if (getChunkdata().isBanned(chunk, player)) {
-                if (plugin.isEditor(player)) {
+                if (isEditor(player)) {
                     visit(player, owner);
                 } else {
                     event.setCancelled(true);

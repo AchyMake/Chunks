@@ -1,4 +1,9 @@
 notify-update: true
+#which world is it allowed to claim in
+worlds:
+  - world
+  - world_nether
+  - world_the_end
 economy:
   cost: 1000.0
   refund: 750.0

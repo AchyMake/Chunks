@@ -17,9 +17,13 @@ public record PlayerBucketEntity(Chunks plugin) implements Listener {
     private Message getMessage() {
         return plugin.getMessage();
     }
+    private boolean isAllowed(Chunk chunk) {
+        return plugin.isAllowed(chunk);
+    }
     @EventHandler(priority = EventPriority.NORMAL)
     public void onPlayerBucketEntity(PlayerBucketEntityEvent event) {
         Chunk chunk = event.getEntity().getLocation().getChunk();
+        if (!isAllowed(chunk))return;
         if (!getChunkdata().isClaimed(chunk))return;
         Player player = event.getPlayer();
         if (getChunkdata().hasAccess(player, chunk))return;

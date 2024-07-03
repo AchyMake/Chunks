@@ -2,6 +2,7 @@ package org.achymake.chunks.listeners;
 
 import org.achymake.chunks.Chunks;
 import org.achymake.chunks.data.Chunkdata;
+import org.bukkit.Chunk;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -15,10 +16,15 @@ public record BlockRedstone(Chunks plugin) implements Listener {
     private Chunkdata getChunkdata() {
         return plugin.getChunkdata();
     }
+    private boolean isAllowed(Chunk chunk) {
+        return plugin.isAllowed(chunk);
+    }
     @EventHandler(priority = EventPriority.NORMAL)
     public void onBlockRedstone(BlockRedstoneEvent event) {
+        Chunk chunk = event.getBlock().getChunk();
+        if (!isAllowed(chunk))return;
         if (!getConfig().getBoolean("claim.redstone-only-inside"))return;
-        if (getChunkdata().isClaimed(event.getBlock().getChunk()))return;
+        if (getChunkdata().isClaimed(chunk))return;
         event.setNewCurrent(0);
     }
 }
