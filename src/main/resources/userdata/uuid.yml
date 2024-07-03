@@ -1,0 +1,17 @@
+name: name
+members:
+  - uuid1
+  - uuid2
+banned:
+  - uuid1
+  - uuid2
+chunks:
+  world:
+    - chunkLong1
+    - chunkLong2
+  world_nether:
+    - chunkLong1
+    - chunkLong2
+  world_the_end:
+    - chunkLong1
+    - chunkLong2
