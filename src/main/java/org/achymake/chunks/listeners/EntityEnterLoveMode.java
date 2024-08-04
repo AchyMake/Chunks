@@ -17,18 +17,14 @@ public record EntityEnterLoveMode(Chunks plugin) implements Listener {
     private Message getMessage() {
         return plugin.getMessage();
     }
-    private boolean isAllowed(Chunk chunk) {
-        return plugin.isAllowed(chunk);
-    }
     @EventHandler(priority = EventPriority.NORMAL)
     public void onEntityEnterLoveMode(EntityEnterLoveModeEvent event) {
-        if (!(event.getHumanEntity() instanceof Player player))return;
-        Chunk chunk = event.getEntity().getLocation().getChunk();
-        if (!isAllowed(chunk))return;
-        if (!getChunkdata().isClaimed(chunk))return;
-        if (getChunkdata().hasAccess(player, chunk))return;
-        event.setCancelled(true);
-        String owner = getChunkdata().getOwner(chunk).getName();
-        getMessage().sendActionBar(player, "&cChunk is owned by&f " + owner);
+        if (event.getHumanEntity() instanceof Player player) {
+            Chunk chunk = event.getEntity().getLocation().getChunk();
+            if (!getChunkdata().isClaimed(chunk))return;
+            if (getChunkdata().hasAccess(player, chunk))return;
+            event.setCancelled(true);
+            getMessage().sendActionBar(player, "&cChunk is owned by&f " + getChunkdata().getOwner(chunk).getName());
+        }
     }
 }

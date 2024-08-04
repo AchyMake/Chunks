@@ -39,30 +39,32 @@ public class PlaceholderProvider extends PlaceholderExpansion {
         } else {
             Chunks chunks = Chunks.getInstance();
             Chunk chunk = player.getLocation().getChunk();
-            if (params.equals("owner")) {
-                if (chunks.getChunkdata().isClaimed(chunk)) {
-                    return chunks.getChunkdata().getOwner(chunk).getName();
-                }
-                return "None";
-            }
-            if (params.equals("access")) {
-                if (chunks.getChunkdata().isClaimed(chunk)) {
-                    if (chunks.getChunkdata().hasAccess(player, chunk)) {
-                        return "True";
-                    } else {
-                        return "False";
+            switch (params) {
+                case "owner" -> {
+                    if (chunks.getChunkdata().isClaimed(chunk)) {
+                        return chunks.getChunkdata().getOwner(chunk).getName();
                     }
+                    return "None";
                 }
-                return "True";
-            }
-            if (params.equals("claimed")) {
-                return String.valueOf(chunks.getUserdata().getClaimCount(player));
-            }
-            if (params.equals("max_claims")) {
-                return String.valueOf(chunks.getConfig().getInt("claim.max-claims"));
-            }
-            if (params.equals("claims_left")) {
-                return String.valueOf(chunks.getConfig().getInt("claim.max-claims") - chunks.getUserdata().getClaimCount(player));
+                case "access" -> {
+                    if (chunks.getChunkdata().isClaimed(chunk)) {
+                        if (chunks.getChunkdata().hasAccess(player, chunk)) {
+                            return "True";
+                        } else {
+                            return "False";
+                        }
+                    }
+                    return "True";
+                }
+                case "claimed" -> {
+                    return String.valueOf(chunks.getUserdata().getClaimCount(player));
+                }
+                case "max_claims" -> {
+                    return String.valueOf(chunks.getConfig().getInt("claim.max-claims"));
+                }
+                case "claims_left" -> {
+                    return String.valueOf(chunks.getConfig().getInt("claim.max-claims") - chunks.getUserdata().getClaimCount(player));
+                }
             }
         }
         return super.onPlaceholderRequest(player, params);

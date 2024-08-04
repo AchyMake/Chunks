@@ -16,13 +16,9 @@ public record BlockRedstone(Chunks plugin) implements Listener {
     private Chunkdata getChunkdata() {
         return plugin.getChunkdata();
     }
-    private boolean isAllowed(Chunk chunk) {
-        return plugin.isAllowed(chunk);
-    }
     @EventHandler(priority = EventPriority.NORMAL)
     public void onBlockRedstone(BlockRedstoneEvent event) {
         Chunk chunk = event.getBlock().getChunk();
-        if (!isAllowed(chunk))return;
         if (!getConfig().getBoolean("claim.redstone-only-inside"))return;
         if (getChunkdata().isClaimed(chunk))return;
         event.setNewCurrent(0);

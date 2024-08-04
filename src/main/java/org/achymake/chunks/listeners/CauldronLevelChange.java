@@ -17,19 +17,15 @@ public record CauldronLevelChange(Chunks plugin) implements Listener {
     private Message getMessage() {
         return plugin.getMessage();
     }
-    private boolean isAllowed(Chunk chunk) {
-        return plugin.isAllowed(chunk);
-    }
     @EventHandler(priority = EventPriority.NORMAL)
     public void onCauldronLevelChange(CauldronLevelChangeEvent event) {
         Chunk chunk = event.getBlock().getChunk();
-        if (!isAllowed(chunk))return;
         if (!getChunkdata().isClaimed(chunk))return;
+        if (!getChunkdata().isDisableCauldronLevelChange())return;
         if (event.getEntity() instanceof Player player) {
             if (getChunkdata().hasAccess(player, chunk))return;
             event.setCancelled(true);
-            String owner = getChunkdata().getOwner(chunk).getName();
-            getMessage().sendActionBar(player, "&cChunk is owned by&f " + owner);
+            getMessage().sendActionBar(player, "&cChunk is owned by&f " + getChunkdata().getOwner(chunk).getName());
         }
     }
 }

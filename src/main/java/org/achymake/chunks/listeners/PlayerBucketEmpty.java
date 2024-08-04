@@ -17,18 +17,14 @@ public record PlayerBucketEmpty(Chunks plugin) implements Listener {
     private Message getMessage() {
         return plugin.getMessage();
     }
-    private boolean isAllowed(Chunk chunk) {
-        return plugin.isAllowed(chunk);
-    }
     @EventHandler(priority = EventPriority.NORMAL)
     public void on(PlayerBucketEmptyEvent event) {
         Chunk chunk = event.getBlockClicked().getChunk();
-        if (!isAllowed(chunk))return;
-        if (!getChunkdata().isClaimed(chunk)) return;
+        if (!getChunkdata().isClaimed(chunk))return;
+        if (!getChunkdata().isDisableBuckets(event.getBucket()))return;
         Player player = event.getPlayer();
-        if (getChunkdata().hasAccess(player, chunk)) return;
+        if (getChunkdata().hasAccess(player, chunk))return;
         event.setCancelled(true);
-        String owner = getChunkdata().getOwner(chunk).getName();
-        getMessage().sendActionBar(player, "&cChunk is owned by&f " + owner);
+        getMessage().sendActionBar(player, "&cChunk is owned by&f " + getChunkdata().getOwner(chunk).getName());
     }
 }

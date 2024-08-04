@@ -1,20 +1,22 @@
 package org.achymake.chunks;
 
+import com.sk89q.worldguard.WorldGuard;
+import com.sk89q.worldguard.protection.flags.Flag;
+import com.sk89q.worldguard.protection.flags.StateFlag;
+import com.sk89q.worldguard.protection.flags.registry.FlagConflictException;
+import com.sk89q.worldguard.protection.flags.registry.FlagRegistry;
 import net.milkbowl.vault.economy.Economy;
-import org.achymake.chunks.api.PlaceholderProvider;
-import org.achymake.chunks.commands.chunk.ChunkCommand;
-import org.achymake.chunks.commands.chunks.ChunksCommand;
-import org.achymake.chunks.data.Chunkdata;
-import org.achymake.chunks.data.Message;
-import org.achymake.chunks.data.Userdata;
+import org.achymake.chunks.api.*;
+import org.achymake.chunks.commands.*;
+import org.achymake.chunks.data.*;
 import org.achymake.chunks.listeners.*;
 import org.achymake.chunks.net.UpdateChecker;
-import org.bukkit.Chunk;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scheduler.BukkitScheduler;
 
 import java.io.File;
 import java.io.IOException;
@@ -30,6 +32,23 @@ public final class Chunks extends JavaPlugin {
     private static Economy economy = null;
     private static UpdateChecker updateChecker;
     private final List<Player> chunkEditors = new ArrayList<>();
+    public static StateFlag FLAG_CHUNKS_CLAIM;
+    @Override
+    public void onLoad() {
+        FlagRegistry registry = WorldGuard.getInstance().getFlagRegistry();
+        try {
+            StateFlag flagClaim = new StateFlag("chunks-claim", false);
+            FLAG_CHUNKS_CLAIM = flagClaim;
+            registry.register(flagClaim);
+        } catch (FlagConflictException ignored) {
+            Flag<?> existingClaim = registry.get("chunks-claim");
+            if (existingClaim instanceof StateFlag) {
+                FLAG_CHUNKS_CLAIM = (StateFlag) existingClaim;
+            }
+        } catch (Exception e) {
+            getMessage().sendLog(Level.WARNING, e.getMessage());
+        }
+    }
     @Override
     public void onEnable() {
         instance = this;
@@ -78,6 +97,7 @@ public final class Chunks extends JavaPlugin {
         getManager().registerEvents(new PlayerBucketEntity(this), this);
         getManager().registerEvents(new PlayerBucketFill(this), this);
         getManager().registerEvents(new PlayerCommandPreprocess(this), this);
+        getManager().registerEvents(new PlayerHarvestBlock(this), this);
         getManager().registerEvents(new PlayerInteract(this), this);
         getManager().registerEvents(new PlayerInteractAtEntity(this), this);
         getManager().registerEvents(new PlayerJoin(this), this);
@@ -87,6 +107,9 @@ public final class Chunks extends JavaPlugin {
         getManager().registerEvents(new PlayerQuit(this), this);
         getManager().registerEvents(new PlayerShearEntity(this), this);
         getManager().registerEvents(new SignChange(this), this);
+    }
+    public StateFlag getFlagChunksClaim() {
+        return FLAG_CHUNKS_CLAIM;
     }
     public void reload() {
         File file = new File(getDataFolder(), "config.yml");
@@ -104,8 +127,8 @@ public final class Chunks extends JavaPlugin {
                 getMessage().sendLog(Level.WARNING, e.getMessage());
             }
         }
-        getUserdata().reload(getServer().getOfflinePlayers());
         getChunkdata().reload();
+        getUserdata().reload();
     }
     private boolean isEconomyInstalled() {
         RegisteredServiceProvider<Economy> rsp = getServer().getServicesManager().getRegistration(Economy.class);
@@ -115,14 +138,14 @@ public final class Chunks extends JavaPlugin {
         economy = rsp.getProvider();
         return economy != null;
     }
-    public boolean isAllowed(Chunk chunk) {
-        return getConfig().getStringList("worlds").contains(chunk.getWorld().getName());
-    }
     public boolean isEditor(Player player) {
         return getChunkEditors().contains(player);
     }
-    private PluginManager getManager() {
+    public PluginManager getManager() {
         return getServer().getPluginManager();
+    }
+    public BukkitScheduler getScheduler() {
+        return getServer().getScheduler();
     }
     public List<Player> getChunkEditors() {
         return chunkEditors;
@@ -144,5 +167,11 @@ public final class Chunks extends JavaPlugin {
     }
     public static Chunks getInstance() {
         return instance;
+    }
+    public String name() {
+        return getDescription().getName();
+    }
+    public String version() {
+        return getDescription().getVersion();
     }
 }

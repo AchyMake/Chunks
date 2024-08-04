@@ -20,21 +20,17 @@ public record EntityMount(Chunks plugin) implements Listener {
     private Message getMessage() {
         return plugin.getMessage();
     }
-    private boolean isAllowed(Chunk chunk) {
-        return plugin.isAllowed(chunk);
-    }
     @EventHandler(priority = EventPriority.NORMAL)
     public void onEntityMount(EntityMountEvent event) {
         Chunk chunk = event.getMount().getLocation().getChunk();
-        if (!isAllowed(chunk))return;
         if (!getChunkdata().isClaimed(chunk))return;
-        if (!(event.getEntity() instanceof Player player))return;
-        if (getChunkdata().hasAccess(player, chunk))return;
-        if (event.getMount() instanceof ArmorStand)return;
-        if (event.getMount() instanceof Boat)return;
-        if (event.getMount() instanceof Minecart)return;
-        event.setCancelled(true);
-        String owner = getChunkdata().getOwner(chunk).getName();
-        getMessage().sendActionBar(player, "&cChunk is owned by&f " + owner);
+        if (event.getEntity() instanceof Player player) {
+            if (event.getMount() instanceof ArmorStand)return;
+            if (event.getMount() instanceof Boat)return;
+            if (event.getMount() instanceof Minecart)return;
+            if (getChunkdata().hasAccess(player, chunk))return;
+            event.setCancelled(true);
+            getMessage().sendActionBar(player, "&cChunk is owned by&f " + getChunkdata().getOwner(chunk).getName());
+        }
     }
 }

@@ -4,14 +4,15 @@ import org.achymake.chunks.Chunks;
 import org.achymake.chunks.data.Chunkdata;
 import org.achymake.chunks.data.Message;
 import org.bukkit.Chunk;
-import org.bukkit.NamespacedKey;
+import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerMoveEvent;
-import org.bukkit.persistence.PersistentDataType;
+
+import java.util.UUID;
 
 public record PlayerMove(Chunks plugin) implements Listener {
     private Chunkdata getChunkdata() {
@@ -20,49 +21,43 @@ public record PlayerMove(Chunks plugin) implements Listener {
     private Message getMessage() {
         return plugin.getMessage();
     }
-    private boolean isAllowed(Chunk chunk) {
-        return plugin.isAllowed(chunk);
-    }
-    private boolean isEditor(Player player) {
-        return plugin.isEditor(player);
-    }
     @EventHandler(priority = EventPriority.NORMAL)
     public void onPlayerMove(PlayerMoveEvent event) {
-        if (event.getTo().getChunk() == event.getFrom().getChunk())return;
         Player player = event.getPlayer();
-        Chunk chunk = event.getTo().getChunk();
-        if (!isAllowed(chunk))return;
+        Location from = event.getFrom();
+        Location to = event.getTo();
+        if (to == null)return;
+        if (to.getChunk() == from.getChunk())return;
+        Chunk chunk = to.getChunk();
         if (getChunkdata().isClaimed(chunk)) {
-            OfflinePlayer owner = getChunkdata().getOwner(chunk);
             if (getChunkdata().isBanned(chunk, player)) {
-                if (isEditor(player)) {
-                    visit(player, owner);
+                if (plugin.getChunkEditors().contains(player)) {
+                    visit(player, getChunkdata().getOwner(chunk));
                 } else {
                     event.setCancelled(true);
-                    getMessage().sendActionBar(player, "&cYou are banned from&f " + owner.getName() + "&c's chunk");
+                    getMessage().sendActionBar(player, "&cYou are banned from&f " + getChunkdata().getOwner(chunk).getName() + "&c's chunk");
                 }
             } else {
-                visit(player, owner);
+                visit(player, getChunkdata().getOwner(chunk));
             }
         } else {
             exit(player);
         }
     }
     private void visit(Player player, OfflinePlayer owner) {
-        if (player.getPersistentDataContainer().has(NamespacedKey.minecraft("chunk-visitor"), PersistentDataType.STRING)) {
-            if (!player.getPersistentDataContainer().get(NamespacedKey.minecraft("chunk-visitor"), PersistentDataType.STRING).equals(owner.getName())) {
-                player.getPersistentDataContainer().remove(NamespacedKey.minecraft("chunk-visitor"));
+        if (plugin.getUserdata().getConfig(player).isString("visit")) {
+            if (!plugin.getUserdata().getConfig(player).getString("visit").equalsIgnoreCase(owner.getUniqueId().toString())) {
+                plugin.getUserdata().setString(player, "visit", null);
             }
         } else {
             getMessage().sendActionBar(player, "&6Visiting&f " + owner.getName() + "&6's chunk");
-            player.getPersistentDataContainer().set(NamespacedKey.minecraft("chunk-visitor"), PersistentDataType.STRING, owner.getName());
+            plugin.getUserdata().setString(player, "visit", owner.getUniqueId().toString());
         }
     }
     private void exit(Player player) {
-        if (player.getPersistentDataContainer().has(NamespacedKey.minecraft("chunk-visitor"), PersistentDataType.STRING)) {
-            String lastChunkOwner = player.getPersistentDataContainer().get(NamespacedKey.minecraft("chunk-visitor"), PersistentDataType.STRING);
-            getMessage().sendActionBar(player, "&6Exited&f " + lastChunkOwner + "&6's chunk");
-            player.getPersistentDataContainer().remove(NamespacedKey.minecraft("chunk-visitor"));
+        if (plugin.getUserdata().getConfig(player).isString("visit")) {
+            getMessage().sendActionBar(player, "&6Exited&f " + plugin.getServer().getOfflinePlayer(UUID.fromString(plugin.getUserdata().getConfig(player).getString("visit"))).getName() + "&6's chunk");
+            plugin.getUserdata().setString(player, "visit", null);
         }
     }
 }
