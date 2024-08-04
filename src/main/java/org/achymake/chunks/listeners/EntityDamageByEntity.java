@@ -19,59 +19,108 @@ public record EntityDamageByEntity(Chunks plugin) implements Listener {
     }
     @EventHandler(priority = EventPriority.NORMAL)
     public void onEntityDamageByEntity(EntityDamageByEntityEvent event) {
-        Entity target = event.getEntity();
-        Chunk chunk = target.getLocation().getChunk();
+        Entity entity = event.getEntity();
+        Chunk chunk = entity.getLocation().getChunk();
         if (!getChunkdata().isClaimed(chunk))return;
-        if (!getChunkdata().isFriendly(target))return;
-        if (target.getType().equals(EntityType.PLAYER))return;
+        if (!getChunkdata().isFriendly(entity))return;
+        if (entity.getType().equals(EntityType.PLAYER))return;
         Entity damager = event.getDamager();
         String owner = getChunkdata().getOwner(chunk).getName();
         switch (damager) {
             case Arrow arrow -> {
                 if (arrow.getShooter() instanceof Player player) {
+                    if (entity instanceof Player) {
+                        if (!getChunkdata().isPVPInsideClaims()) {
+                            event.setCancelled(true);
+                            getMessage().sendActionBar(player, "&cHey!&7 Sorry but PVP is disabled inside claims");
+                        }
+                    } else {
+                        if (getChunkdata().hasAccess(player, chunk))return;
+                        event.setCancelled(true);
+                        getMessage().sendActionBar(player, "&cChunk is owned by&f " + owner);
+                    }
+                }
+            }
+            case Player player -> {
+                if (entity instanceof Player) {
+                    if (!getChunkdata().isPVPInsideClaims()) {
+                        event.setCancelled(true);
+                        getMessage().sendActionBar(player, "&cHey!&7 Sorry but PVP is disabled inside claims");
+                    }
+                } else {
                     if (getChunkdata().hasAccess(player, chunk))return;
                     event.setCancelled(true);
                     getMessage().sendActionBar(player, "&cChunk is owned by&f " + owner);
                 }
             }
-            case Player player -> {
-                if (getChunkdata().hasAccess(player, chunk))return;
-                event.setCancelled(true);
-                getMessage().sendActionBar(player, "&cChunk is owned by&f " + owner);
-            }
             case Snowball snowball -> {
                 if (snowball.getShooter() instanceof Player player) {
-                    if (getChunkdata().hasAccess(player, chunk))return;
-                    event.setCancelled(true);
-                    getMessage().sendActionBar(player, "&cChunk is owned by&f " + owner);
+                    if (entity instanceof Player) {
+                        if (!getChunkdata().isPVPInsideClaims()) {
+                            event.setCancelled(true);
+                            getMessage().sendActionBar(player, "&cHey!&7 Sorry but PVP is disabled inside claims");
+                        }
+                    } else {
+                        if (getChunkdata().hasAccess(player, chunk))return;
+                        event.setCancelled(true);
+                        getMessage().sendActionBar(player, "&cChunk is owned by&f " + owner);
+                    }
                 }
             }
             case SpectralArrow spectralArrow -> {
                 if (spectralArrow.getShooter() instanceof Player player) {
-                    if (getChunkdata().hasAccess(player, chunk))return;
-                    event.setCancelled(true);
-                    getMessage().sendActionBar(player, "&cChunk is owned by&f " + owner);
+                    if (entity instanceof Player) {
+                        if (!getChunkdata().isPVPInsideClaims()) {
+                            event.setCancelled(true);
+                            getMessage().sendActionBar(player, "&cHey!&7 Sorry but PVP is disabled inside claims");
+                        }
+                    } else {
+                        if (getChunkdata().hasAccess(player, chunk))return;
+                        event.setCancelled(true);
+                        getMessage().sendActionBar(player, "&cChunk is owned by&f " + owner);
+                    }
                 }
             }
             case ThrownPotion thrownPotion -> {
                 if (thrownPotion.getShooter() instanceof Player player) {
-                    if (getChunkdata().hasAccess(player, chunk))return;
-                    event.setCancelled(true);
-                    getMessage().sendActionBar(player, "&cChunk is owned by&f " + owner);
+                    if (entity instanceof Player) {
+                        if (!getChunkdata().isPVPInsideClaims()) {
+                            event.setCancelled(true);
+                            getMessage().sendActionBar(player, "&cHey!&7 Sorry but PVP is disabled inside claims");
+                        }
+                    } else {
+                        if (getChunkdata().hasAccess(player, chunk))return;
+                        event.setCancelled(true);
+                        getMessage().sendActionBar(player, "&cChunk is owned by&f " + owner);
+                    }
                 }
             }
             case Trident trident -> {
                 if (trident.getShooter() instanceof Player player) {
-                    if (getChunkdata().hasAccess(player, chunk))return;
-                    event.setCancelled(true);
-                    getMessage().sendActionBar(player, "&cChunk is owned by&f " + owner);
+                    if (entity instanceof Player) {
+                        if (!getChunkdata().isPVPInsideClaims()) {
+                            event.setCancelled(true);
+                            getMessage().sendActionBar(player, "&cHey!&7 Sorry but PVP is disabled inside claims");
+                        }
+                    } else {
+                        if (getChunkdata().hasAccess(player, chunk))return;
+                        event.setCancelled(true);
+                        getMessage().sendActionBar(player, "&cChunk is owned by&f " + owner);
+                    }
                 }
             }
             case WindCharge windCharge -> {
                 if (windCharge.getShooter() instanceof Player player) {
-                    if (getChunkdata().hasAccess(player, chunk))return;
-                    event.setCancelled(true);
-                    getMessage().sendActionBar(player, "&cChunk is owned by&f " + owner);
+                    if (entity instanceof Player) {
+                        if (!getChunkdata().isPVPInsideClaims()) {
+                            event.setCancelled(true);
+                            getMessage().sendActionBar(player, "&cHey!&7 Sorry but PVP is disabled inside claims");
+                        }
+                    } else {
+                        if (getChunkdata().hasAccess(player, chunk))return;
+                        event.setCancelled(true);
+                        getMessage().sendActionBar(player, "&cChunk is owned by&f " + owner);
+                    }
                 }
             }
             default -> {

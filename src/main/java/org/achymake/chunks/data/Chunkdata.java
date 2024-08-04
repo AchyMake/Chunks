@@ -125,6 +125,9 @@ public record Chunkdata(Chunks plugin) {
     public boolean isDisableEntityExplodeBlocks() {
         return getConfig().getBoolean("settings.disable-entity-explode-blocks");
     }
+    public boolean isPVPInsideClaims() {
+        return getConfig().getBoolean("settings.disable-entity-explode-blocks");
+    }
     public void setup(OfflinePlayer offlinePlayer, Chunk chunk) {
         File file = getFile(chunk);
         YamlConfiguration config = YamlConfiguration.loadConfiguration(file);

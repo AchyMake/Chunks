@@ -14,7 +14,6 @@ economy:
   multiply: 25
 claim:
   max-claims: 32
-  redstone-only-inside: false
   particle: TOTEM
   sound:
     type: BLOCK_AMETHYST_BLOCK_BREAK
@@ -27,6 +26,8 @@ unclaim:
     volume: 0.75
     pitch: 1.0
 settings:
+  pvp-inside-claims: true
+  redstone-only-inside: false
   disable-entity-explode-blocks: true
   disable-block-break: true
   disable-block-fertilize: true
