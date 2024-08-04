@@ -8,6 +8,9 @@ depend:
   - Vault
   - PlaceholderAPI
   - WorldGuard
+softdepend:
+  - Carry
+  - Harvester
 author: AchyMake
 description: '${project.description}'
 commands:

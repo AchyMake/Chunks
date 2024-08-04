@@ -82,6 +82,13 @@ public final class Chunks extends JavaPlugin {
         getCommand("chunks").setExecutor(new ChunksCommand(this));
     }
     private void events() {
+        if (getManager().isPluginEnabled("Harvester")) {
+            getManager().registerEvents(new Harvest(this), this);
+        }
+        if (getManager().isPluginEnabled("Carry")) {
+            getManager().registerEvents(new Carry(this), this);
+            getManager().registerEvents(new Eject(this), this);
+        }
         getManager().registerEvents(new BlockBreak(this), this);
         getManager().registerEvents(new BlockFertilize(this), this);
         getManager().registerEvents(new BlockPlace(this), this);
