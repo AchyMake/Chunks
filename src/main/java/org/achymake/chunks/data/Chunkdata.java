@@ -170,7 +170,7 @@ public record Chunkdata(Chunks plugin) {
         }
     }
     public long getChunkKey(Chunk chunk) {
-        return (long) chunk.getX() & 4294967295L | (long) chunk.getZ() & 4294967295L << 32;
+        return (long) chunk.getX() & 4294967295L | ((long) chunk.getZ() & 4294967295L) << 32;
     }
     public OfflinePlayer getOwner(Chunk chunk) {
         return getServer().getOfflinePlayer(UUID.fromString(getConfig(chunk).getString("owner")));

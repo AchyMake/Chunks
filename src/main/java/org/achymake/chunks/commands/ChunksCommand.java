@@ -36,6 +36,7 @@ public class ChunksCommand implements CommandExecutor, TabCompleter {
                     if (player.hasPermission("chunks.command.chunks.reload")) {
                         plugin.reload();
                         getMessage().send(player, "&6Chunks:&f reloaded");
+                        return true;
                     }
                 }
                 if (args[0].equalsIgnoreCase("unclaim")) {
