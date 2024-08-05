@@ -91,6 +91,7 @@ public final class Chunks extends JavaPlugin {
         }
         getManager().registerEvents(new BlockBreak(this), this);
         getManager().registerEvents(new BlockFertilize(this), this);
+        getManager().registerEvents(new BlockIgnite(this), this);
         getManager().registerEvents(new BlockPlace(this), this);
         getManager().registerEvents(new BlockRedstone(this), this);
         getManager().registerEvents(new CauldronLevelChange(this), this);
@@ -113,6 +114,7 @@ public final class Chunks extends JavaPlugin {
         getManager().registerEvents(new PlayerMove(this), this);
         getManager().registerEvents(new PlayerQuit(this), this);
         getManager().registerEvents(new PlayerShearEntity(this), this);
+        getManager().registerEvents(new PlayerSignOpen(this), this);
         getManager().registerEvents(new SignChange(this), this);
     }
     public StateFlag getFlagChunksClaim() {
