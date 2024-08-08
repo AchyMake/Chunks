@@ -8,14 +8,14 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.entity.EntityTargetEvent;
+import org.bukkit.event.entity.EntityTargetLivingEntityEvent;
 
-public record EntityTarget(Chunks plugin) implements Listener {
+public record EntityTargetLivingEntity(Chunks plugin) implements Listener {
     private Chunkdata getChunkdata() {
         return plugin.getChunkdata();
     }
     @EventHandler(priority = EventPriority.NORMAL)
-    public void onEntityTarget(EntityTargetEvent event) {
+    public void onEntityTargetLivingEntity(EntityTargetLivingEntityEvent event) {
         if (event.getTarget() == null)return;
         if (event.getTarget() instanceof Player player) {
             Entity entity = event.getEntity();

@@ -19,6 +19,7 @@ public record EntityEnterLoveMode(Chunks plugin) implements Listener {
     }
     @EventHandler(priority = EventPriority.NORMAL)
     public void onEntityEnterLoveMode(EntityEnterLoveModeEvent event) {
+        if (event.getHumanEntity() == null)return;
         if (event.getHumanEntity() instanceof Player player) {
             Chunk chunk = event.getEntity().getLocation().getChunk();
             if (!getChunkdata().isClaimed(chunk))return;

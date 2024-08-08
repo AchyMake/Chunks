@@ -6,14 +6,14 @@
 
     <groupId>org.achymake</groupId>
     <artifactId>Chunks</artifactId>
-    <version>1.1.12</version>
+    <version>1.1.13</version>
     <packaging>jar</packaging>
 
     <name>Chunks</name>
     <description>Provides Chunk Claiming</description>
 
     <properties>
-        <java.version>1.21</java.version>
+        <java.version>21</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
@@ -99,16 +99,18 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>com.github.AchyMake</groupId>
+            <groupId>org.achymake.carry</groupId>
             <artifactId>Harvester</artifactId>
-            <version>1.0.2</version>
-            <scope>provided</scope>
+            <version>1.0.4</version>
+            <systemPath>${basedir}/api/Harvester-1.0.4.jar</systemPath>
+            <scope>system</scope>
         </dependency>
         <dependency>
-            <groupId>com.github.AchyMake</groupId>
+            <groupId>org.achymake.carry</groupId>
             <artifactId>Carry</artifactId>
-            <version>1.21-SNAPSHOT</version>
-            <scope>provided</scope>
+            <version>1.0.0</version>
+            <systemPath>${basedir}/api/Carry-1.0.0.jar</systemPath>
+            <scope>system</scope>
         </dependency>
     </dependencies>
 </project>

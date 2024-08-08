@@ -23,7 +23,6 @@ public record EntityDamageByEntity(Chunks plugin) implements Listener {
         Chunk chunk = entity.getLocation().getChunk();
         if (!getChunkdata().isClaimed(chunk))return;
         if (!getChunkdata().isFriendly(entity))return;
-        if (entity.getType().equals(EntityType.PLAYER))return;
         Entity damager = event.getDamager();
         String owner = getChunkdata().getOwner(chunk).getName();
         switch (damager) {
