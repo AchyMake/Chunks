@@ -19,7 +19,7 @@ public record BlockRedstone(Chunks plugin) implements Listener {
     @EventHandler(priority = EventPriority.NORMAL)
     public void onBlockRedstone(BlockRedstoneEvent event) {
         Chunk chunk = event.getBlock().getChunk();
-        if (!getConfig().getBoolean("settings.redstone-only-inside"))return;
+        if (!getChunkdata().redstoneOnlyInside())return;
         if (getChunkdata().isClaimed(chunk))return;
         event.setNewCurrent(0);
     }

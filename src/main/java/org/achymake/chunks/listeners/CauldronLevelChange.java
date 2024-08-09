@@ -21,7 +21,7 @@ public record CauldronLevelChange(Chunks plugin) implements Listener {
     public void onCauldronLevelChange(CauldronLevelChangeEvent event) {
         Chunk chunk = event.getBlock().getChunk();
         if (!getChunkdata().isClaimed(chunk))return;
-        if (!getChunkdata().isDisableCauldronLevelChange())return;
+        if (!getChunkdata().disableCauldronLevelChange())return;
         if (event.getEntity() instanceof Player player) {
             if (getChunkdata().hasAccess(player, chunk))return;
             event.setCancelled(true);

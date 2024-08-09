@@ -68,8 +68,7 @@ public class ChunkCommand implements CommandExecutor, TabCompleter {
                                             double result = cost + calculator;
                                             if (getEconomy().has(player, result)) {
                                                 getChunkdata().setup(player, chunk);
-                                                getChunkdata().claimEffect(player, chunk);
-                                                getChunkdata().claimSound(player);
+                                                getChunkdata().playEffect(player, chunk, "claim");
                                                 getEconomy().withdrawPlayer(player, result);
                                                 getMessage().send(player, "&6You claimed a chunk for&a " + getEconomy().currencyNamePlural() + getEconomy().format(result));
                                             } else {
@@ -78,8 +77,7 @@ public class ChunkCommand implements CommandExecutor, TabCompleter {
                                         } else {
                                             if (getEconomy().has(player, cost)) {
                                                 getChunkdata().setup(player, chunk);
-                                                getChunkdata().claimEffect(player, chunk);
-                                                getChunkdata().claimSound(player);
+                                                getChunkdata().playEffect(player, chunk, "claim");
                                                 getEconomy().withdrawPlayer(player, cost);
                                                 getMessage().send(player, "&6You claimed a chunk for&a " + getEconomy().currencyNamePlural() + getEconomy().format(cost));
                                             } else {
@@ -118,8 +116,7 @@ public class ChunkCommand implements CommandExecutor, TabCompleter {
                             if (getChunkdata().isOwner(player, chunk)) {
                                 getMessage().send(player, "&6You unclaimed current chunk and got refunded&a " + getEconomy().currencyNamePlural() + getEconomy().format(getConfig().getDouble("economy.refund")));
                                 getChunkdata().remove(player, chunk);
-                                getChunkdata().unclaimEffect(player, chunk);
-                                getChunkdata().unclaimSound(player);
+                                getChunkdata().playEffect(player, chunk, "unclaim");
                             } else {
                                 getMessage().send(player, "&cChunk is owned by&f " + getChunkdata().getOwner(chunk).getName());
                             }
@@ -132,7 +129,6 @@ public class ChunkCommand implements CommandExecutor, TabCompleter {
                 if (args[0].equalsIgnoreCase("view")) {
                     if (player.hasPermission("chunks.command.chunk.view")) {
                         getUserdata().chunkView(player, player);
-                        getChunkdata().claimSound(player);
                         return true;
                     }
                 }
@@ -256,7 +252,6 @@ public class ChunkCommand implements CommandExecutor, TabCompleter {
                             OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(args[1]);
                             if (getUserdata().exist(offlinePlayer)) {
                                 getUserdata().chunkView(player, offlinePlayer);
-                                getChunkdata().claimSound(player);
                                 return true;
                             }
                         }

@@ -26,7 +26,7 @@ public record EntityChangeBlock(Chunks plugin) implements Listener {
         if (!getChunkdata().isClaimed(chunk))return;
         Entity entity = event.getEntity();
         if (entity instanceof Player player) {
-            if (!getChunkdata().isDisabledChangeBlocks(block))return;
+            if (!getChunkdata().disabledChangeBlocks(block))return;
             if (getChunkdata().hasAccess(player, chunk))return;
             event.setCancelled(true);
             String owner = getChunkdata().getOwner(chunk).getName();

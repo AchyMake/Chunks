@@ -92,6 +92,38 @@ public record Userdata(Chunks plugin) {
             getMessage().sendLog(Level.WARNING, e.getMessage());
         }
     }
+    public void setInt(OfflinePlayer offlinePlayer, String path, int value) {
+        File file = getFile(offlinePlayer);
+        FileConfiguration config = YamlConfiguration.loadConfiguration(file);
+        config.set(path, value);
+        try {
+            config.save(file);
+        } catch (IOException e) {
+            getMessage().sendLog(Level.WARNING, e.getMessage());
+        }
+    }
+    public void addInt(OfflinePlayer offlinePlayer, String path, int value) {
+        File file = getFile(offlinePlayer);
+        FileConfiguration config = YamlConfiguration.loadConfiguration(file);
+        config.set(path, config.getInt(path) + value);
+        try {
+            config.save(file);
+        } catch (IOException e) {
+            getMessage().sendLog(Level.WARNING, e.getMessage());
+        }
+    }
+    public void addTaskID(Player player, String task, int value) {
+        setInt(player, "tasks." + task, value);
+    }
+    public boolean hasTaskID(Player player, String task) {
+        return getConfig(player).isInt("tasks." + task);
+    }
+    public int getTaskID(Player player, String task) {
+        return getConfig(player).getInt("tasks." + task);
+    }
+    public void removeTaskID(Player player, String task) {
+        setString(player, "tasks." + task, null);
+    }
     public void addClaim(OfflinePlayer offlinePlayer, Chunk chunk) {
         List<String> longList = getConfig(offlinePlayer).getStringList("chunks." + chunk.getWorld().getName());
         longList.add(String.valueOf(getChunkdata().getChunkKey(chunk)));
@@ -149,7 +181,7 @@ public record Userdata(Chunks plugin) {
                 int z = getChunkdata().getConfig(worldName, longString).getInt("z");
                 Chunk chunk = player.getWorld().getChunkAt(x, z);
                 if (chunk.isLoaded()) {
-                    getChunkdata().claimEffect(player, chunk, offlinePlayer);
+                    getChunkdata().playEffect(player, chunk, "claim");
                 }
             }
         }

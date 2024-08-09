@@ -21,7 +21,7 @@ public record PlayerBucketEntity(Chunks plugin) implements Listener {
     public void onPlayerBucketEntity(PlayerBucketEntityEvent event) {
         Chunk chunk = event.getEntity().getLocation().getChunk();
         if (!getChunkdata().isClaimed(chunk))return;
-        if (!getChunkdata().isDisableBuckets(event.getEntityBucket().getType()))return;
+        if (!getChunkdata().disabledBuckets(event.getEntityBucket().getType()))return;
         Player player = event.getPlayer();
         if (getChunkdata().hasAccess(player, chunk))return;
         event.setCancelled(true);

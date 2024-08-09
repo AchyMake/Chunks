@@ -15,6 +15,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
+import org.checkerframework.checker.units.qual.C;
 
 import java.io.File;
 import java.io.IOException;
@@ -83,50 +84,50 @@ public record Chunkdata(Chunks plugin) {
             return false;
         }
     }
-    public boolean isDisableBlockPlace() {
+    public boolean pvpInsideClaims() {
+        return getConfig().getBoolean("settings.pvp-inside-claims");
+    }
+    public boolean disableTNTBlockDamage() {
+        return getConfig().getBoolean("settings.disable-tnt-block-damage");
+    }
+    public boolean redstoneOnlyInside() {
+        return getConfig().getBoolean("settings.redstone-only-inside");
+    }
+    public boolean disableBlockPlace() {
         return getConfig().getBoolean("settings.disable-block-place");
     }
-    public boolean isDisableBlockFertilize() {
+    public boolean disableBlockFertilize() {
         return getConfig().getBoolean("settings.disable-block-fertilize");
     }
-    public boolean isDisableBlockBreak() {
+    public boolean disableBlockBreak() {
         return getConfig().getBoolean("settings.disable-block-break");
     }
-    public boolean isDisabledHarvestBlocks(Block block) {
-        return getConfig().getStringList("settings.disabled-harvest-blocks").contains(block.getType().toString());
-    }
-    public boolean isDisabledInteractPhysicalBlocks(Block block) {
-        return getConfig().getStringList("settings.disabled-interact-physical-blocks").contains(block.getType().toString());
-    }
-    public boolean isDisabledInteractBlocks(Block block) {
-        return getConfig().getStringList("settings.disabled-interact-blocks").contains(block.getType().toString());
-    }
-    public boolean isDisableCauldronLevelChange() {
+    public boolean disableCauldronLevelChange() {
         return getConfig().getBoolean("settings.disable-cauldron-level-change");
     }
-    public boolean isDisabledChangeBlocks(Block block) {
+    public boolean disableSignChange() {
+        return getConfig().getBoolean("settings.disable-sign-change");
+    }
+    public boolean disabledHarvestBlocks(Block block) {
+        return getConfig().getStringList("settings.disabled-harvest-blocks").contains(block.getType().toString());
+    }
+    public boolean disabledInteractPhysicalBlocks(Block block) {
+        return getConfig().getStringList("settings.disabled-interact-physical-blocks").contains(block.getType().toString());
+    }
+    public boolean disabledInteractBlocks(Block block) {
+        return getConfig().getStringList("settings.disabled-interact-blocks").contains(block.getType().toString());
+    }
+    public boolean disabledChangeBlocks(Block block) {
         return getConfig().getStringList("settings.disabled-change-blocks").contains(block.getType().toString());
     }
-    public boolean isDisableBuckets(Material material) {
-        return getConfig().getStringList("settings.disable-buckets").contains(material.toString());
-    }
-    public boolean isDisableShearBlocks(Block block) {
-        return getConfig().getStringList("settings.disable-shear-blocks").contains(block.getType().toString());
-    }
-    public boolean isDisableSignChange() {
-        return getConfig().getBoolean("settings.disable-sign-change");
+    public boolean disabledBuckets(Material material) {
+        return getConfig().getStringList("settings.disabled-buckets").contains(material.toString());
     }
     public boolean isHostile(Entity entity) {
         return getConfig().getStringList("settings.hostile").contains(entity.getType().toString());
     }
     public boolean isFriendly(Entity entity) {
         return !getConfig().getStringList("settings.hostile").contains(entity.getType().toString());
-    }
-    public boolean isDisableEntityExplodeBlocks() {
-        return getConfig().getBoolean("settings.disable-entity-explode-blocks");
-    }
-    public boolean isPVPInsideClaims() {
-        return getConfig().getBoolean("settings.disable-entity-explode-blocks");
     }
     public void setup(OfflinePlayer offlinePlayer, Chunk chunk) {
         File file = getFile(chunk);
@@ -223,6 +224,36 @@ public record Chunkdata(Chunks plugin) {
     public boolean isBanned(Chunk chunk, Player player) {
         return getBanned(chunk).contains(player.getUniqueId().toString());
     }
+    public void playEffect(Player player, Chunk chunk, String effect) {
+        if (getUserdata().getConfig(player).getInt("counter.effect") >= 1) {
+            getUserdata().removeTaskID(player, "effect");
+            getUserdata().setString(player, "counter", null);
+        } else {
+            int taskID = getServer().getScheduler().runTaskLater(plugin, new Runnable() {
+                @Override
+                public void run() {
+                    if (effect.equalsIgnoreCase("claim")) {
+                        claimEffect(player, chunk);
+                        playEffect(player, chunk, effect);
+                        claimSound(player, chunk);
+                    } else if (effect.equalsIgnoreCase("unclaim")) {
+                        unclaimEffect(player, chunk);
+                        playEffect(player, chunk, effect);
+                        unclaimSound(player, chunk);
+                    }
+                }
+            },20).getTaskId();
+            if (effect.equalsIgnoreCase("claim")) {
+                claimEffect(player, chunk);
+                claimSound(player, chunk);
+            } else if (effect.equalsIgnoreCase("unclaim")) {
+                unclaimEffect(player, chunk);
+                unclaimSound(player, chunk);
+            }
+            getUserdata().addInt(player, "counter.effect", 1);
+            getUserdata().addTaskID(player, "effect", taskID);
+        }
+    }
     public void claimEffect(Player player, Chunk chunk) {
         Location location = player.getLocation();
         Particle particle = Particle.valueOf(getConfig().getString("claim.particle"));
@@ -231,8 +262,9 @@ public record Chunkdata(Chunks plugin) {
         player.spawnParticle(particle, chunk.getBlock(15, 0, 8).getX() + 1, location.getBlockY() - 1, chunk.getBlock(15, 0, 8).getZ(), 250, 0, 12, 4, 0);
         player.spawnParticle(particle, chunk.getBlock(8, 0, 15).getX(), location.getBlockY() - 1, chunk.getBlock(8, 0, 15).getZ() + 1, 250, 4, 12, 0, 0);
     }
-    public void claimSound(Player player) {
-        player.playSound(player, Sound.valueOf(getConfig().getString("claim.sound.type")), (float) getConfig().getDouble("claim.sound.volume"), (float) getConfig().getDouble("claim.sound.pitch"));
+    public void claimSound(Player player, Chunk chunk) {
+        Location location = chunk.getBlock(8, 0, 8).getLocation().add(0, player.getLocation().getY() + 3, 0);
+        player.playSound(location, Sound.valueOf(getConfig().getString("claim.sound.type")), (float) getConfig().getDouble("claim.sound.volume"), (float) getConfig().getDouble("claim.sound.pitch"));
     }
     public void unclaimEffect(Player player, Chunk chunk) {
         Location location = player.getLocation();
@@ -242,8 +274,9 @@ public record Chunkdata(Chunks plugin) {
         player.spawnParticle(particle, chunk.getBlock(15, 0, 8).getX() + 1, location.getBlockY() - 1, chunk.getBlock(15, 0, 8).getZ(), 250, 0, 12, 4, 0);
         player.spawnParticle(particle, chunk.getBlock(8, 0, 15).getX(), location.getBlockY() - 1, chunk.getBlock(8, 0, 15).getZ() + 1, 250, 4, 12, 0, 0);
     }
-    public void unclaimSound(Player player) {
-        player.playSound(player, Sound.valueOf(getConfig().getString("unclaim.sound.type")), (float) getConfig().getDouble("unclaim.sound.volume"), (float) getConfig().getDouble("unclaim.sound.pitch"));
+    public void unclaimSound(Player player, Chunk chunk) {
+        Location location = chunk.getBlock(8, 0, 8).getLocation().add(0, player.getLocation().getY() + 3, 0);
+        player.playSound(location, Sound.valueOf(getConfig().getString("unclaim.sound.type")), (float) getConfig().getDouble("unclaim.sound.volume"), (float) getConfig().getDouble("unclaim.sound.pitch"));
     }
     public void claimEffect(Player player, Chunk chunk, OfflinePlayer offlinePlayer) {
         Location location = player.getLocation();
@@ -279,6 +312,18 @@ public record Chunkdata(Chunks plugin) {
             }
         } else {
             player.spawnParticle(particle, chunk.getBlock(0, 0, 8).getX(), location.getBlockY() - 1, chunk.getBlock(0, 0, 8).getZ(), 250, 0, 12, 4, 0);
+        }
+    }
+    public boolean isInsideClaim(Block block, Chunk chunk) {
+        if (isClaimed(chunk)) {
+            Block block1 = chunk.getBlock(0, -64, 0);
+            Block block2 = chunk.getBlock(15, 320, 15);
+            int x = block.getX();
+            int y = block.getY();
+            int z = block.getZ();
+            return x >= block1.getX() && x <= block2.getX() && y >= block1.getY() && y <= block2.getY() && z >= block1.getZ() && z <= block2.getZ();
+        } else {
+            return false;
         }
     }
     public void reload() {

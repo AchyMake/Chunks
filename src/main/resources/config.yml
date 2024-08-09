@@ -28,11 +28,12 @@ unclaim:
 settings:
   pvp-inside-claims: true
   redstone-only-inside: false
-  disable-entity-explode-blocks: true
   disable-block-break: true
   disable-block-fertilize: true
   disable-block-place: true
   disable-cauldron-level-change: true
+  disable-tnt-block-damage: true
+  disable-sign-change: true
   disabled-interact-physical-blocks:
     - ACACIA_PRESSURE_PLATE
     - BAMBOO_PRESSURE_PLATE
@@ -280,7 +281,6 @@ settings:
     - TADPOLE_BUCKET
     - TROPICAL_FISH_BUCKET
     - WATER_BUCKET
-  disable-sign-change: true
   hostile:
     - BOGGED
     - BREEZE

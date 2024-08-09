@@ -29,7 +29,7 @@ public record EntityDamageByEntity(Chunks plugin) implements Listener {
             case Arrow arrow -> {
                 if (arrow.getShooter() instanceof Player player) {
                     if (entity instanceof Player) {
-                        if (!getChunkdata().isPVPInsideClaims()) {
+                        if (!getChunkdata().pvpInsideClaims()) {
                             event.setCancelled(true);
                             getMessage().sendActionBar(player, "&cHey!&7 Sorry but PVP is disabled inside claims");
                         }
@@ -42,7 +42,7 @@ public record EntityDamageByEntity(Chunks plugin) implements Listener {
             }
             case Player player -> {
                 if (entity instanceof Player) {
-                    if (!getChunkdata().isPVPInsideClaims()) {
+                    if (!getChunkdata().pvpInsideClaims()) {
                         event.setCancelled(true);
                         getMessage().sendActionBar(player, "&cHey!&7 Sorry but PVP is disabled inside claims");
                     }
@@ -55,7 +55,7 @@ public record EntityDamageByEntity(Chunks plugin) implements Listener {
             case Snowball snowball -> {
                 if (snowball.getShooter() instanceof Player player) {
                     if (entity instanceof Player) {
-                        if (!getChunkdata().isPVPInsideClaims()) {
+                        if (!getChunkdata().pvpInsideClaims()) {
                             event.setCancelled(true);
                             getMessage().sendActionBar(player, "&cHey!&7 Sorry but PVP is disabled inside claims");
                         }
@@ -69,7 +69,7 @@ public record EntityDamageByEntity(Chunks plugin) implements Listener {
             case SpectralArrow spectralArrow -> {
                 if (spectralArrow.getShooter() instanceof Player player) {
                     if (entity instanceof Player) {
-                        if (!getChunkdata().isPVPInsideClaims()) {
+                        if (!getChunkdata().pvpInsideClaims()) {
                             event.setCancelled(true);
                             getMessage().sendActionBar(player, "&cHey!&7 Sorry but PVP is disabled inside claims");
                         }
@@ -83,7 +83,7 @@ public record EntityDamageByEntity(Chunks plugin) implements Listener {
             case ThrownPotion thrownPotion -> {
                 if (thrownPotion.getShooter() instanceof Player player) {
                     if (entity instanceof Player) {
-                        if (!getChunkdata().isPVPInsideClaims()) {
+                        if (!getChunkdata().pvpInsideClaims()) {
                             event.setCancelled(true);
                             getMessage().sendActionBar(player, "&cHey!&7 Sorry but PVP is disabled inside claims");
                         }
@@ -97,7 +97,7 @@ public record EntityDamageByEntity(Chunks plugin) implements Listener {
             case Trident trident -> {
                 if (trident.getShooter() instanceof Player player) {
                     if (entity instanceof Player) {
-                        if (!getChunkdata().isPVPInsideClaims()) {
+                        if (!getChunkdata().pvpInsideClaims()) {
                             event.setCancelled(true);
                             getMessage().sendActionBar(player, "&cHey!&7 Sorry but PVP is disabled inside claims");
                         }
@@ -111,7 +111,7 @@ public record EntityDamageByEntity(Chunks plugin) implements Listener {
             case WindCharge windCharge -> {
                 if (windCharge.getShooter() instanceof Player player) {
                     if (entity instanceof Player) {
-                        if (!getChunkdata().isPVPInsideClaims()) {
+                        if (!getChunkdata().pvpInsideClaims()) {
                             event.setCancelled(true);
                             getMessage().sendActionBar(player, "&cHey!&7 Sorry but PVP is disabled inside claims");
                         }

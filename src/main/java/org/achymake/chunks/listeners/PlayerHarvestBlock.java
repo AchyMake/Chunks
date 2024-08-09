@@ -24,7 +24,7 @@ public record PlayerHarvestBlock(Chunks plugin) implements Listener {
         Block block = event.getHarvestedBlock();
         Chunk chunk = block.getChunk();
         if (!getChunkdata().isClaimed(chunk))return;
-        if (!getChunkdata().isDisabledHarvestBlocks(block))return;
+        if (!getChunkdata().disabledHarvestBlocks(block))return;
         if (getChunkdata().hasAccess(player, chunk))return;
         event.setCancelled(true);
         getMessage().sendActionBar(player, "&cChunk is owned by&f " + getChunkdata().getOwner(chunk).getName());

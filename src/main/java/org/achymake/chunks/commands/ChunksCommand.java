@@ -45,8 +45,7 @@ public class ChunksCommand implements CommandExecutor, TabCompleter {
                         if (getChunkdata().isClaimed(chunk)) {
                             getMessage().send(player, "&6You safely unclaimed&f " + getChunkdata().getOwner(chunk).getName() + "&6's chunk");
                             getChunkdata().remove(getChunkdata().getOwner(chunk), chunk);
-                            getChunkdata().unclaimEffect(player, chunk);
-                            getChunkdata().unclaimSound(player);
+                            getChunkdata().playEffect(player, chunk, "unclaim");
                         } else {
                             getMessage().send(player, "&cCurrent chunk is already unclaimed");
                         }
@@ -117,14 +116,12 @@ public class ChunksCommand implements CommandExecutor, TabCompleter {
                     if (player.hasPermission("chunks.command.chunks.effect")) {
                         if (args[1].equalsIgnoreCase("claim")) {
                             Chunk chunk = player.getLocation().getChunk();
-                            getChunkdata().claimEffect(player, chunk);
-                            getChunkdata().claimSound(player);
+                            getChunkdata().playEffect(player, chunk, args[1]);
                             getMessage().sendActionBar(player, "&6Started the effects of Claiming");
                         }
                         if (args[1].equalsIgnoreCase("unclaim")) {
                             Chunk chunk = player.getLocation().getChunk();
-                            getChunkdata().unclaimEffect(player, chunk);
-                            getChunkdata().unclaimSound(player);
+                            getChunkdata().playEffect(player, chunk, args[1]);
                             getMessage().sendActionBar(player, "&6Started the effects of Unclaiming");
                         }
                         return true;
@@ -155,8 +152,7 @@ public class ChunksCommand implements CommandExecutor, TabCompleter {
                         if (getChunkdata().isAllowedClaim(chunk)) {
                             if (getUserdata().exist(target)) {
                                 getChunkdata().setOwner(player, target, chunk);
-                                getChunkdata().claimEffect(player, chunk);
-                                getChunkdata().claimSound(player);
+                                getChunkdata().playEffect(player, chunk, "claim");
                                 getMessage().send(player, "&6Chunk is now owned by&f " + getChunkdata().getOwner(chunk).getName());
                             } else {
                                 getMessage().send(player, target.getName() + "&c has never joined");

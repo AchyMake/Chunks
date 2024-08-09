@@ -16,6 +16,6 @@ public record PlayerJoin(Chunks plugin) implements Listener {
     public void onPlayerJoin(PlayerJoinEvent event) {
         Player player = event.getPlayer();
         if (!player.hasPermission("chunks.event.join.update"))return;
-        getUpdateChecker().getUpdate(event.getPlayer());
+        getUpdateChecker().getUpdate(player);
     }
 }

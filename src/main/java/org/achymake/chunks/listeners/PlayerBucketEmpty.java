@@ -21,7 +21,7 @@ public record PlayerBucketEmpty(Chunks plugin) implements Listener {
     public void on(PlayerBucketEmptyEvent event) {
         Chunk chunk = event.getBlockClicked().getChunk();
         if (!getChunkdata().isClaimed(chunk))return;
-        if (!getChunkdata().isDisableBuckets(event.getBucket()))return;
+        if (!getChunkdata().disabledBuckets(event.getBucket()))return;
         Player player = event.getPlayer();
         if (getChunkdata().hasAccess(player, chunk))return;
         event.setCancelled(true);

@@ -24,7 +24,7 @@ public record BlockFertilize(Chunks plugin) implements Listener {
     @EventHandler(priority = EventPriority.NORMAL)
     public void onBlockFertilize(BlockFertilizeEvent event) {
         if (event.getPlayer() == null)return;
-        if (!getChunkdata().isDisableBlockFertilize())return;
+        if (!getChunkdata().disableBlockFertilize())return;
         List<BlockState> blockList = new ArrayList<>();
         Player player = event.getPlayer();
         for (BlockState block : event.getBlocks()) {

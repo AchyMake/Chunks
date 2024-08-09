@@ -56,17 +56,22 @@ public final class Chunks extends JavaPlugin {
         chunkdata = new Chunkdata(this);
         userdata = new Userdata(this);
         updateChecker = new UpdateChecker(this);
-        if (isEconomyInstalled()) {
-            getMessage().sendLog(Level.INFO, "Chunks is hooked with 'Vault'");
-        } else {
+        RegisteredServiceProvider<Economy> rsp = getServer().getServicesManager().getRegistration(Economy.class);
+        if (rsp == null) {
             getMessage().sendLog(Level.WARNING, "'Vault' does not have any 'Economy' installed");
             getManager().disablePlugin(this);
+        }
+        if (rsp.getProvider() == null) {
+            getMessage().sendLog(Level.WARNING, "'Vault' does not have any 'Economy' installed");
+            getManager().disablePlugin(this);
+        } else {
+            economy = rsp.getProvider();
         }
         new PlaceholderProvider().register();
         commands();
         events();
         reload();
-        getMessage().sendLog(Level.INFO, "Enabled " + getDescription().getName() + " " + getDescription().getVersion());
+        getMessage().sendLog(Level.INFO, "Enabled " + name() + " " + version());
         getUpdateChecker().getUpdate();
     }
     @Override
@@ -75,7 +80,7 @@ public final class Chunks extends JavaPlugin {
         if (!getChunkEditors().isEmpty()) {
             getChunkEditors().clear();
         }
-        getMessage().sendLog(Level.INFO, "Disabled " + getDescription().getName() + " " + getDescription().getVersion());
+        getMessage().sendLog(Level.INFO, "Disabled " + name() + " " + version());
     }
     private void commands() {
         getCommand("chunk").setExecutor(new ChunkCommand(this));
@@ -138,14 +143,6 @@ public final class Chunks extends JavaPlugin {
         }
         getChunkdata().reload();
         getUserdata().reload();
-    }
-    private boolean isEconomyInstalled() {
-        RegisteredServiceProvider<Economy> rsp = getServer().getServicesManager().getRegistration(Economy.class);
-        if (rsp == null) {
-            return false;
-        }
-        economy = rsp.getProvider();
-        return economy != null;
     }
     public boolean isEditor(Player player) {
         return getChunkEditors().contains(player);

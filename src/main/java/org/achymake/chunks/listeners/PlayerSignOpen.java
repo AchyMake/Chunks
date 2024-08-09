@@ -21,7 +21,7 @@ public record PlayerSignOpen(Chunks plugin) implements Listener {
     public void onPlayerSignOpen(PlayerSignOpenEvent event) {
         Chunk chunk = event.getSign().getChunk();
         if (!getChunkdata().isClaimed(chunk))return;
-        if (!getChunkdata().isDisableSignChange())return;
+        if (!getChunkdata().disableSignChange())return;
         Player player = event.getPlayer();
         if (getChunkdata().hasAccess(player, chunk))return;
         event.setCancelled(true);

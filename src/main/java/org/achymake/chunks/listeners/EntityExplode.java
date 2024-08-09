@@ -4,8 +4,7 @@ import org.achymake.chunks.Chunks;
 import org.achymake.chunks.data.Chunkdata;
 import org.bukkit.Chunk;
 import org.bukkit.block.Block;
-import org.bukkit.entity.*;
-import org.bukkit.entity.minecart.ExplosiveMinecart;
+import org.bukkit.entity.EntityType;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -20,29 +19,23 @@ public record EntityExplode(Chunks plugin) implements Listener {
     }
     @EventHandler(priority = EventPriority.NORMAL)
     public void onEntityExplode(EntityExplodeEvent event) {
-        Chunk chunk = event.getLocation().getChunk();
-        if (!getChunkdata().isDisableEntityExplodeBlocks())return;
+        if (!getChunkdata().disableTNTBlockDamage())return;
         List<Block> blockList = new ArrayList<>();
+        EntityType entityType = event.getEntityType();
         for (Block block : event.blockList()) {
-            if (!getChunkdata().isClaimed(block.getChunk()))return;
-            blockList.add(block);
-        }
-        Entity entity = event.getEntity();
-        switch (entity) {
-            case TNTPrimed tntPrimed -> {
-                if (getChunkdata().isTNTAllowed(chunk))return;
-                event.blockList().removeAll(blockList);
-                blockList.clear();
-            }
-            case ExplosiveMinecart explosiveMinecart -> {
-                if (getChunkdata().isTNTAllowed(chunk))return;
-                event.blockList().removeAll(blockList);
-                blockList.clear();
-            }
-            default -> {
-                event.blockList().removeAll(blockList);
-                blockList.clear();
+            Chunk chunk = block.getChunk();
+            if (getChunkdata().isClaimed(chunk)) {
+                if (entityType.equals(EntityType.TNT) || entityType.equals(EntityType.TNT_MINECART)) {
+                    if (getChunkdata().isTNTAllowed(chunk))return;
+                    blockList.add(block);
+                }
+            } else {
+                if (entityType.equals(EntityType.TNT) || entityType.equals(EntityType.TNT_MINECART)) {
+                    blockList.add(block);
+                }
             }
         }
+        event.blockList().removeAll(blockList);
+        blockList.clear();
     }
 }

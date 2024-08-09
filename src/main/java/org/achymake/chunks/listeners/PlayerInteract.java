@@ -26,7 +26,7 @@ public record PlayerInteract(Chunks plugin) implements Listener {
         Block block = event.getClickedBlock();
         Player player = event.getPlayer();
         if (event.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
-            if (getChunkdata().isDisabledInteractBlocks(block)) {
+            if (getChunkdata().disabledInteractBlocks(block)) {
                 if (event.getHand() != EquipmentSlot.HAND)return;
                 Chunk chunk = block.getChunk();
                 if (!getChunkdata().isClaimed(chunk))return;
@@ -37,7 +37,7 @@ public record PlayerInteract(Chunks plugin) implements Listener {
         } else if (event.getAction().equals(Action.PHYSICAL)) {
             Chunk chunk = block.getChunk();
             if (!getChunkdata().isClaimed(chunk))return;
-            if (!getChunkdata().isDisabledInteractPhysicalBlocks(block))return;
+            if (!getChunkdata().disabledInteractPhysicalBlocks(block))return;
             if (getChunkdata().hasAccess(player, chunk))return;
             event.setCancelled(true);
         }

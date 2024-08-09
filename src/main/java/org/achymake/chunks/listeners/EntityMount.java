@@ -25,10 +25,10 @@ public record EntityMount(Chunks plugin) implements Listener {
         Chunk chunk = event.getMount().getLocation().getChunk();
         if (!getChunkdata().isClaimed(chunk))return;
         if (event.getEntity() instanceof Player player) {
+            if (getChunkdata().hasAccess(player, chunk))return;
             if (event.getMount() instanceof ArmorStand)return;
             if (event.getMount() instanceof Boat)return;
             if (event.getMount() instanceof Minecart)return;
-            if (getChunkdata().hasAccess(player, chunk))return;
             event.setCancelled(true);
             getMessage().sendActionBar(player, "&cChunk is owned by&f " + getChunkdata().getOwner(chunk).getName());
         }

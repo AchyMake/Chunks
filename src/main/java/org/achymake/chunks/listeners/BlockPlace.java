@@ -21,7 +21,7 @@ public record BlockPlace(Chunks plugin) implements Listener {
     public void onBlockPlace(BlockPlaceEvent event) {
         Chunk chunk = event.getBlock().getChunk();
         if (!getChunkdata().isClaimed(chunk))return;
-        if (!getChunkdata().isDisableBlockPlace())return;
+        if (!getChunkdata().disableBlockPlace())return;
         Player player = event.getPlayer();
         if (getChunkdata().hasAccess(player, chunk))return;
         event.setCancelled(true);
