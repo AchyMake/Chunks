@@ -31,7 +31,7 @@ public record UpdateChecker(Chunks plugin) {
                     getLatest((latest) -> {
                         if (!plugin.version().equals(latest)) {
                             getMessage().send(player, plugin.name() + "&6 has new update:");
-                            getMessage().send(player, "-&a https://www.spigotmc.org/resources/118371/");
+                            getMessage().send(player, "-&a https://www.spigotmc.org/resources/108772/");
                         }
                     });
                 }
@@ -48,7 +48,7 @@ public record UpdateChecker(Chunks plugin) {
                             getMessage().sendLog(Level.INFO, "You are using the latest version");
                         } else {
                             getMessage().sendLog(Level.INFO, plugin.name() + " has new update:");
-                            getMessage().sendLog(Level.INFO, "- https://www.spigotmc.org/resources/118371/");
+                            getMessage().sendLog(Level.INFO, "- https://www.spigotmc.org/resources/108772/");
                         }
                     });
                 }
@@ -57,7 +57,7 @@ public record UpdateChecker(Chunks plugin) {
     }
     public void getLatest(Consumer<String> consumer) {
         try {
-            InputStream inputStream = (new URL("https://api.spigotmc.org/legacy/update.php?resource=" + 118371)).openStream();
+            InputStream inputStream = (new URL("https://api.spigotmc.org/legacy/update.php?resource=" + 108772)).openStream();
             Scanner scanner = new Scanner(inputStream);
             if (scanner.hasNext()) {
                 consumer.accept(scanner.next());
