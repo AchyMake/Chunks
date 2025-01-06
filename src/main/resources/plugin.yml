@@ -1,0 +1,11 @@
+name: Chunks
+version: '${project.version}'
+main: org.achymake.chunks.Chunks
+api-version: '1.21'
+prefix: Chunks
+load: STARTUP
+depend: [Vault]
+softdepend: [PlaceholderAPI, WorldGuard]
+authors: [AchyMake]
+description: Provides Chunk Claiming
+website: Chunks
