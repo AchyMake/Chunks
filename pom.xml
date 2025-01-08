@@ -6,7 +6,7 @@
 
     <groupId>org.achymake</groupId>
     <artifactId>Chunks</artifactId>
-    <version>1.1.40</version>
+    <version>1.1.41</version>
     <packaging>jar</packaging>
 
     <name>Chunks</name>

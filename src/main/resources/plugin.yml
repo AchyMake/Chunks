@@ -2,10 +2,88 @@ name: Chunks
 version: '${project.version}'
 main: org.achymake.chunks.Chunks
 api-version: '1.21'
-prefix: Chunks
+prefix: '${project.name}'
 load: STARTUP
-depend: [Vault]
-softdepend: [PlaceholderAPI, WorldGuard]
-authors: [AchyMake]
-description: Provides Chunk Claiming
-website: Chunks
+depend:
+  - Vault
+  - WorldGuard
+softdepend:
+  - PlaceholderAPI
+author: AchyMake
+description: '${project.description}'
+website: '${project.url}'
+commands:
+  chunk:
+    description: chunk claiming commands
+    permission: chunks.command.chunk
+    permission-message: You are do not have the permission to execute the command
+    usage: /chunk help
+  chunks:
+    description: chunks admin commands
+    permission: chunks.command.chunks
+    permission-message: You are do not have the permission to execute the command
+    usage: /chunks help
+permissions:
+  chunks.command.chunk:
+    description: chunk command
+    default: op
+  chunks.command.chunk.ban:
+    description: bans player from claims
+    default: op
+  chunks.command.chunk.banned:
+    description: list of banned players from claims
+    default: op
+  chunks.command.chunk.claim:
+    description: claims chunk
+    default: op
+  chunks.command.chunk.claim.multiple.default:
+    description: claims chunk
+    default: op
+  chunks.command.chunk.help:
+    description: list of commands
+    default: op
+  chunks.command.chunk.members:
+    description: list of members
+    default: op
+  chunks.command.chunk.tnt:
+    description: toggle tnt on standing chunk
+    default: op
+  chunks.command.chunk.unban:
+    description: unbans player from claims
+    default: op
+  chunks.command.chunk.unclaim:
+    description: unclaim standing chunk if owner
+    default: op
+  chunks.command.chunk.view:
+    description: view claimed chunks on current world
+    default: op
+  chunks.command.chunk.view.others:
+    description: view claimed chunks on current world
+    default: op
+  chunks.command.chunks:
+    description: chunks admin commands
+    default: op
+  chunks.command.chunks.edit:
+    description: toggle chunk edit
+    default: op
+  chunks.command.chunks.effect:
+    description: showcase claim or unclaim effects
+    default: op
+  chunks.command.chunks.help:
+    description: list of chunks admin commands
+    default: op
+  chunks.command.chunks.info:
+    description: info of the current chunk
+    default: op
+  chunks.command.chunks.reload:
+    description: reload plugin files
+    default: op
+  chunks.command.chunks.setowner:
+    description: sets owner of current chunk
+    default: op
+  chunks.command.chunks.unclaim:
+    description: unclaim current chunk if claimed
+    default: op
+  chunks.event.join.update:
+    description: get updates on join
+    default: op

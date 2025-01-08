@@ -1,5 +1,7 @@
 package org.achymake.chunks;
 
+import com.sk89q.worldguard.WorldGuard;
+import com.sk89q.worldguard.protection.flags.StateFlag;
 import net.milkbowl.vault.economy.Economy;
 import org.achymake.chunks.commands.*;
 import org.achymake.chunks.data.*;
@@ -28,13 +30,22 @@ public final class Chunks extends JavaPlugin {
     private EntityHandler entityHandler;
     private ScheduleHandler scheduleHandler;
     private WorldHandler worldHandler;
-    private WorldGuardProvider worldGuardProvider;
     private UpdateChecker updateChecker;
     private BukkitScheduler bukkitScheduler;
     private PluginManager pluginManager;
+    private StateFlag CHUNK_CLAIM;
     private Economy economy = null;
     @Override
     public void onLoad() {
+        var registry = getWorldGuard().getFlagRegistry();
+        CHUNK_CLAIM = new StateFlag("chunk-claim", true);
+        registry.register(CHUNK_CLAIM);
+    }
+    public StateFlag getFlag() {
+        return CHUNK_CLAIM;
+    }
+    @Override
+    public void onEnable() {
         instance = this;
         message = new Message();
         userdata = new Userdata();
@@ -43,16 +54,9 @@ public final class Chunks extends JavaPlugin {
         entityHandler = new EntityHandler();
         scheduleHandler = new ScheduleHandler();
         worldHandler = new WorldHandler();
-        worldGuardProvider = new WorldGuardProvider();
         updateChecker = new UpdateChecker();
         bukkitScheduler = getServer().getScheduler();
         pluginManager = getServer().getPluginManager();
-        if (isWorldGuardEnabled()) {
-            getWorldGuardProvider().register();
-        }
-    }
-    @Override
-    public void onEnable() {
         var rsp = getServer().getServicesManager().getRegistration(Economy.class);
         if (rsp == null) {
             sendWarning("Economy not found");
@@ -179,9 +183,6 @@ public final class Chunks extends JavaPlugin {
     public UpdateChecker getUpdateChecker() {
         return updateChecker;
     }
-    public WorldGuardProvider getWorldGuardProvider() {
-        return worldGuardProvider;
-    }
     public WorldHandler getWorldHandler() {
         return worldHandler;
     }
@@ -233,8 +234,8 @@ public final class Chunks extends JavaPlugin {
     public OfflinePlayer getOfflinePlayer(String string) {
         return getServer().getOfflinePlayer(string);
     }
-    public boolean isWorldGuardEnabled() {
-        return getPluginManager().isPluginEnabled("WorldGuard");
+    public WorldGuard getWorldGuard() {
+        return WorldGuard.getInstance();
     }
     public boolean isPlaceholderAPIEnabled() {
         return getPluginManager().isPluginEnabled("PlaceholderAPI");

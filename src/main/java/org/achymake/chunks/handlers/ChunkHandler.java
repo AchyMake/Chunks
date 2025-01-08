@@ -1,5 +1,10 @@
 package org.achymake.chunks.handlers;
 
+import com.sk89q.worldedit.bukkit.BukkitAdapter;
+import com.sk89q.worldedit.math.BlockVector3;
+import com.sk89q.worldguard.protection.ApplicableRegionSet;
+import com.sk89q.worldguard.protection.flags.StateFlag;
+import com.sk89q.worldguard.protection.regions.ProtectedCuboidRegion;
 import net.milkbowl.vault.economy.Economy;
 import org.achymake.chunks.Chunks;
 import org.achymake.chunks.data.Userdata;
@@ -137,10 +142,27 @@ public class ChunkHandler {
     public long getChunkKey(Chunk chunk) {
         return (long) chunk.getX() & 4294967295L | ((long) chunk.getZ() & 4294967295L) << 32;
     }
+    private boolean isAllowed(ApplicableRegionSet applicableRegionSet) {
+        for (var regionIn : applicableRegionSet) {
+            var flag = regionIn.getFlag(getInstance().getFlag());
+            if (flag == StateFlag.State.ALLOW) {
+                return true;
+            } else if (flag == StateFlag.State.DENY) {
+                return false;
+            }
+        }
+        return false;
+    }
     public boolean isAllowedClaim(Chunk chunk) {
         if (getConfig().getStringList("worlds").contains(chunk.getWorld().getName())) {
-            if (getInstance().isWorldGuardEnabled()) {
-                return getInstance().getWorldGuardProvider().isAllowedClaim(chunk);
+            var regionManager = getInstance().getWorldGuard().getPlatform().getRegionContainer().get(BukkitAdapter.adapt(chunk.getWorld()));
+            if (regionManager != null) {
+                var x = chunk.getX() << 4;
+                var z = chunk.getZ() << 4;
+                var protectedCuboidRegion = new ProtectedCuboidRegion("_", BlockVector3.at(x, -64, z), BlockVector3.at(x + 15, 320, z + 15));
+                if (regionManager.getApplicableRegions(protectedCuboidRegion).getRegions().isEmpty()) {
+                    return true;
+                } else return isAllowed(regionManager.getApplicableRegions(protectedCuboidRegion));
             } else return true;
         } else return false;
     }
