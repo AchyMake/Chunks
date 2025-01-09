@@ -14,6 +14,7 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.Player;
 
 import java.io.File;
 import java.io.IOException;
@@ -61,39 +62,45 @@ public class ChunkHandler {
         } else return false;
     }
     public OfflinePlayer getOwner(Chunk chunk) {
-        var config = getConfig(chunk);
-        if (config.isString("owner")) {
-            return getInstance().getOfflinePlayer(UUID.fromString(config.getString("owner")));
+        if (exists(chunk)) {
+            var ownerString = getConfig(chunk).getString("owner");
+            if (ownerString != null) {
+                return getInstance().getOfflinePlayer(UUID.fromString(ownerString));
+            } else return null;
         } else return null;
     }
     public void setOwner(Chunk chunk, OfflinePlayer offlinePlayer) {
+        var worldName = chunk.getWorld().getName();
         var file = getFile(chunk);
         var config = YamlConfiguration.loadConfiguration(file);
-        config.set("name", offlinePlayer.getName());
         config.set("owner", offlinePlayer.getUniqueId().toString());
         config.set("settings.tnt", false);
+        var chunks = getUserdata().getChunksStringList(offlinePlayer, worldName);
+        chunks.add(String.valueOf(getChunkKey(chunk)));
         try {
             config.save(file);
+            getUserdata().setStringList(offlinePlayer, "chunks." + worldName, chunks);
         } catch (IOException e) {
             getInstance().sendWarning(e.getMessage());
         }
-        var chunks = getUserdata().getConfig(offlinePlayer).getStringList("chunks." + chunk.getWorld().getName());
-        chunks.add(String.valueOf(getChunkKey(chunk)));
-        getUserdata().setStringList(offlinePlayer, "chunks." + chunk.getWorld().getName(), chunks);
     }
     public boolean isTNTAllowed(Chunk chunk) {
-        return getConfig(chunk).getBoolean("settings.tnt");
+        if (isClaimed(chunk)) {
+            return getConfig(chunk).getBoolean("settings.tnt");
+        } else return false;
     }
     public boolean toggleTNT(Chunk chunk) {
-        var file = getFile(chunk);
-        var config = YamlConfiguration.loadConfiguration(file);
-        config.set("settings.tnt", !config.getBoolean("settings.tnt"));
-        try {
-            config.save(file);
-        } catch (IOException e) {
-            getInstance().sendWarning(e.getMessage());
-        }
-        return isTNTAllowed(chunk);
+        if (isClaimed(chunk)) {
+            var file = getFile(chunk);
+            var config = YamlConfiguration.loadConfiguration(file);
+            config.set("settings.tnt", !config.getBoolean("settings.tnt"));
+            try {
+                config.save(file);
+            } catch (IOException e) {
+                getInstance().sendWarning(e.getMessage());
+            }
+            return isTNTAllowed(chunk);
+        } else return false;
     }
     public boolean isExpired(Chunk chunk) {
         if (isClaimed(chunk)) {
@@ -101,22 +108,29 @@ public class ChunkHandler {
         } else return false;
     }
     public String getName(Chunk chunk) {
-        var config = getConfig(chunk);
-        if (config.isString("name")) {
-            return config.getString("name");
-        } else return getOwner(chunk).getName();
+        if (isClaimed(chunk)) {
+            return getOwner(chunk).getName();
+        } else return "null";
     }
     public boolean isOwner(Chunk chunk, OfflinePlayer offlinePlayer) {
         return getOwner(chunk) == offlinePlayer;
     }
     public boolean isMember(Chunk chunk, OfflinePlayer offlinePlayer) {
-        return getUserdata().getMembers(getOwner(chunk)).contains(offlinePlayer);
+        if (exists(chunk)) {
+            if (isClaimed(chunk)) {
+                return getUserdata().getMembers(getOwner(chunk)).contains(offlinePlayer);
+            } else return true;
+        } else return true;
     }
     public boolean isBanned(Chunk chunk, OfflinePlayer offlinePlayer) {
-        return getUserdata().getBanned(getOwner(chunk)).contains(offlinePlayer);
+        if (exists(chunk)) {
+            if (isClaimed(chunk)) {
+                return getUserdata().getBanned(getOwner(chunk)).contains(offlinePlayer);
+            } else return false;
+        } else return false;
     }
-    public boolean hasAccess(Chunk chunk, OfflinePlayer offlinePlayer) {
-        return isOwner(chunk, offlinePlayer) || isMember(chunk, offlinePlayer) || getUserdata().isEditor(offlinePlayer);
+    public boolean hasAccess(Chunk chunk, Player player) {
+        return isOwner(chunk, player) || isMember(chunk, player) || getUserdata().isEditor(player);
     }
     public void removeOwner(Chunk chunk) {
         if (isClaimed(chunk)) {
@@ -124,7 +138,7 @@ public class ChunkHandler {
             var file = getFile(chunk);
             var config = YamlConfiguration.loadConfiguration(file);
             getEconomy().depositPlayer(owner, getConfig().getDouble("economy.refund"));
-            var chunks = getUserdata().getConfig(owner).getStringList("chunks." + chunk.getWorld().getName());
+            var chunks = getUserdata().getChunksStringList(owner, chunk.getWorld().getName());
             chunks.remove(String.valueOf(getChunkKey(chunk)));
             getUserdata().setStringList(owner, "chunks." + chunk.getWorld().getName(), chunks);
             var recentOwners = config.getStringList("recent-owners");

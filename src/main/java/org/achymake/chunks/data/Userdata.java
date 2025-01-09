@@ -41,8 +41,8 @@ public class Userdata {
     public FileConfiguration getConfig(OfflinePlayer offlinePlayer) {
         return YamlConfiguration.loadConfiguration(getFile(offlinePlayer));
     }
-    public boolean isEditor(OfflinePlayer offlinePlayer) {
-        return getEditors().contains(offlinePlayer);
+    public boolean isEditor(Player player) {
+        return getEditors().contains(player);
     }
     public boolean hasReachedChunkLimit(Player player) {
         return getClaimCount(player) >= getMaxClaims(player);
@@ -73,12 +73,12 @@ public class Userdata {
         }
         return banned;
     }
-    public List<String> getChunksStringList(OfflinePlayer offlinePlayer, World world) {
-        return getConfig(offlinePlayer).getStringList("chunks." + world.getName());
+    public List<String> getChunksStringList(OfflinePlayer offlinePlayer, String worldName) {
+        return getConfig(offlinePlayer).getStringList("chunks." + worldName);
     }
     public List<Chunk> getChunks(OfflinePlayer offlinePlayer, World world) {
         var chunks = new ArrayList<Chunk>();
-        var chunksStringList = getChunksStringList(offlinePlayer, world);
+        var chunksStringList = getChunksStringList(offlinePlayer, world.getName());
         if (!chunksStringList.isEmpty()) {
             chunksStringList.forEach(longString -> chunks.add(getChunk(world, longString)));
         }
@@ -105,13 +105,13 @@ public class Userdata {
         }
     }
     public int getClaimCount(OfflinePlayer offlinePlayer) {
-        var worlds = getConfig(offlinePlayer).getConfigurationSection("chunks").getKeys(false);
-        if (!worlds.isEmpty()) {
+        var worldNames = getConfig(offlinePlayer).getConfigurationSection("chunks").getKeys(false);
+        if (!worldNames.isEmpty()) {
             var integers = new ArrayList<Integer>();
-            for (var world : worlds) {
+            for (var worldName : worldNames) {
                 if (!integers.isEmpty()) {
-                    integers.set(0, integers.getFirst() + getConfig(offlinePlayer).getStringList("chunks." + world).size());
-                } else integers.addFirst(getConfig(offlinePlayer).getStringList("chunks." + world).size());
+                    integers.set(0, integers.getFirst() + getConfig(offlinePlayer).getStringList("chunks." + worldName).size());
+                } else integers.addFirst(getConfig(offlinePlayer).getStringList("chunks." + worldName).size());
             }
             return integers.getFirst();
         } else return 0;
@@ -207,38 +207,6 @@ public class Userdata {
     public void playSound(Player player, String soundName, float volume, float pitch) {
         player.playSound(player, Sound.valueOf(soundName.toUpperCase()), volume, pitch);
     }
-    public List<String> getUUIDStringList() {
-        var listed = new ArrayList<String>();
-        var folder = new File(getInstance().getDataFolder(), "userdata");
-        if (folder.exists() && folder.isDirectory()) {
-            for (var file : folder.listFiles()) {
-                if (file.exists() && file.isFile()) {
-                    listed.add(file.getName().replace(".yml", ""));
-                }
-            }
-        }
-        return listed;
-    }
-    public List<UUID> getUUIDS() {
-        var listed = new ArrayList<UUID>();
-        var uuidStringList = getUUIDStringList();
-        if (!uuidStringList.isEmpty()) {
-            for (var uuidString : uuidStringList) {
-                listed.add(UUID.fromString(uuidString));
-            }
-        }
-        return listed;
-    }
-    public List<OfflinePlayer> getOfflinePlayers() {
-        var listed = new ArrayList<OfflinePlayer>();
-        var uuidList = getUUIDS();
-        if (!uuidList.isEmpty()) {
-            for (var uuid : uuidList) {
-                listed.add(getInstance().getOfflinePlayer(uuid));
-            }
-        }
-        return listed;
-    }
     private void setup(OfflinePlayer offlinePlayer) {
         var file = getFile(offlinePlayer);
         var config = YamlConfiguration.loadConfiguration(file);
@@ -262,12 +230,7 @@ public class Userdata {
                 getInstance().sendWarning(e.getMessage());
             }
             if (!offlinePlayer.getName().equals(config.getString("name"))) {
-                config.set("name", offlinePlayer.getName());
-                try {
-                    config.save(file);
-                } catch (IOException e) {
-                    getInstance().sendWarning(e.getMessage());
-                }
+                setString(offlinePlayer, "name", offlinePlayer.getName());
             }
         } else setup(offlinePlayer);
     }
@@ -275,15 +238,25 @@ public class Userdata {
         return player.getGameMode().equals(GameMode.SURVIVAL);
     }
     public void disableFly(Player player) {
-        if (getChunkHandler().isFlyAllowed()) {
-            player.setAllowFlight(false);
-            player.setFlying(false);
-        }
+        if (!getChunkHandler().isFlyAllowed())return;
+        player.setAllowFlight(false);
+        player.setFlying(false);
     }
     public void disable() {
-        if (!getEditors().isEmpty()) {
-            getEditors().clear();
+        if (getEditors().isEmpty())return;
+        getEditors().clear();
+    }
+    public List<OfflinePlayer> getOfflinePlayers() {
+        var listed = new ArrayList<OfflinePlayer>();
+        var folder = new File(getInstance().getDataFolder(), "userdata");
+        if (folder.exists() && folder.isDirectory()) {
+            for (var file : folder.listFiles()) {
+                if (file.exists() && file.isFile()) {
+                    listed.add(getInstance().getOfflinePlayer(UUID.fromString(file.getName().replace(".yml", ""))));
+                }
+            }
         }
+        return listed;
     }
     public List<Player> getEditors() {
         return editors;

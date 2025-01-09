@@ -3,7 +3,7 @@ version: '${project.version}'
 main: org.achymake.chunks.Chunks
 api-version: '1.21'
 prefix: '${project.name}'
-load: STARTUP
+load: POSTWORLD
 depend:
   - Vault
   - WorldGuard

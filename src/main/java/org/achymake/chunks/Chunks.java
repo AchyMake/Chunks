@@ -33,8 +33,8 @@ public final class Chunks extends JavaPlugin {
     private UpdateChecker updateChecker;
     private BukkitScheduler bukkitScheduler;
     private PluginManager pluginManager;
-    private StateFlag CHUNK_CLAIM;
     private Economy economy = null;
+    private StateFlag CHUNK_CLAIM;
     @Override
     public void onLoad() {
         var registry = getWorldGuard().getFlagRegistry();
@@ -65,7 +65,7 @@ public final class Chunks extends JavaPlugin {
         commands();
         events();
         reload();
-        if (isPlaceholderAPIEnabled()) {
+        if (getPluginManager().isPluginEnabled("PlaceholderAPI")) {
             new PlaceholderProvider().register();
         }
         sendInfo("Economy hook to " + getEconomy().getName());
@@ -75,10 +75,10 @@ public final class Chunks extends JavaPlugin {
     @Override
     public void onDisable() {
         getUserdata().disable();
-        getScheduleHandler().disable();
-        if (isPlaceholderAPIEnabled()) {
+        if (getPluginManager().isPluginEnabled("PlaceholderAPI")) {
             new PlaceholderProvider().unregister();
         }
+        getScheduleHandler().disable();
         sendInfo("Disabled for " + getMinecraftProvider() + " " + getMinecraftVersion());
     }
     private void commands() {
@@ -236,8 +236,5 @@ public final class Chunks extends JavaPlugin {
     }
     public WorldGuard getWorldGuard() {
         return WorldGuard.getInstance();
-    }
-    public boolean isPlaceholderAPIEnabled() {
-        return getPluginManager().isPluginEnabled("PlaceholderAPI");
     }
 }
