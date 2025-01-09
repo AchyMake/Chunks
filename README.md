@@ -37,17 +37,35 @@ public final class YourPlugin extends JavaPlugin {
     @Override
     public void onDisable() {
     }
-    public ChunkHandler getChunkHandler(Chunk chunk) {
-        return Chunks.getInstance().getChunkHandler(chunk);
-    }
-    public boolean isClaimed(Chunk chunk) {
-        return Chunks.getInstance().isClaimed(chunk);
-    }
-    public OfflinePlayer getOwner(Chunk chunk) {
-        return Chunks.getInstance().getOwner(chunk);
-    }
     public static YourPlugin getInstance() {
         return instance;
+    }
+    /**
+     * @return chunks instance
+     */
+    public Chunks getChunks() {
+        return Chunks.getInstance();
+    }
+    /**
+     * @param chunk
+     * @return true if chunk is claimed
+     */
+    public boolean isClaimed(Chunk chunk) {
+        return getChunks().getChunkHandler().isClaimed(chunk);
+    }
+    /**
+     * @param chunk
+     * @return OfflinePlayer if claimed else null
+     */
+    public OfflinePlayer getOwner(Chunk chunk) {
+        return getChunks().getChunkHandler().getOwner(chunk);
+    }
+    /**
+     * @param chunk
+     * @return string of OfflinePlayer name
+     */
+    public String getChunkName(Chunk chunk) {
+        return getChunks().getChunkHandler().getName(chunk);
     }
 }
 ```
