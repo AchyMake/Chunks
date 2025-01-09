@@ -69,10 +69,12 @@ public class ChunkHandler {
             } else return null;
         } else return null;
     }
-    public void setOwner(Chunk chunk, OfflinePlayer offlinePlayer) {
+    public boolean setOwner(Chunk chunk, OfflinePlayer offlinePlayer) {
         var worldName = chunk.getWorld().getName();
         var file = getFile(chunk);
         var config = YamlConfiguration.loadConfiguration(file);
+        var recentOwners = config.getStringList("recent-owners");
+        recentOwners.remove(offlinePlayer.getUniqueId().toString());
         config.set("owner", offlinePlayer.getUniqueId().toString());
         config.set("settings.tnt", false);
         var chunks = getUserdata().getChunksStringList(offlinePlayer, worldName);
@@ -80,9 +82,33 @@ public class ChunkHandler {
         try {
             config.save(file);
             getUserdata().setStringList(offlinePlayer, "chunks." + worldName, chunks);
+            return true;
         } catch (IOException e) {
             getInstance().sendWarning(e.getMessage());
+            return false;
         }
+    }
+    public boolean removeOwner(Chunk chunk) {
+        if (isClaimed(chunk)) {
+            var owner = getOwner(chunk);
+            var file = getFile(chunk);
+            var config = YamlConfiguration.loadConfiguration(file);
+            getEconomy().depositPlayer(owner, getConfig().getDouble("economy.refund"));
+            var chunks = getUserdata().getChunksStringList(owner, chunk.getWorld().getName());
+            chunks.remove(String.valueOf(getChunkKey(chunk)));
+            getUserdata().setStringList(owner, "chunks." + chunk.getWorld().getName(), chunks);
+            var recentOwners = config.getStringList("recent-owners");
+            recentOwners.add(owner.getUniqueId().toString());
+            config.set("owner", null);
+            config.set("recent-owners", recentOwners);
+            try {
+                config.save(file);
+                return true;
+            } catch (IOException e) {
+                getInstance().sendWarning(e.getMessage());
+                return false;
+            }
+        } else return false;
     }
     public boolean isTNTAllowed(Chunk chunk) {
         if (isClaimed(chunk)) {
@@ -131,27 +157,6 @@ public class ChunkHandler {
     }
     public boolean hasAccess(Chunk chunk, Player player) {
         return isOwner(chunk, player) || isMember(chunk, player) || getUserdata().isEditor(player);
-    }
-    public void removeOwner(Chunk chunk) {
-        if (isClaimed(chunk)) {
-            var owner = getOwner(chunk);
-            var file = getFile(chunk);
-            var config = YamlConfiguration.loadConfiguration(file);
-            getEconomy().depositPlayer(owner, getConfig().getDouble("economy.refund"));
-            var chunks = getUserdata().getChunksStringList(owner, chunk.getWorld().getName());
-            chunks.remove(String.valueOf(getChunkKey(chunk)));
-            getUserdata().setStringList(owner, "chunks." + chunk.getWorld().getName(), chunks);
-            var recentOwners = config.getStringList("recent-owners");
-            recentOwners.remove(owner.getUniqueId().toString());
-            recentOwners.add(owner.getUniqueId().toString());
-            config.set("owner", null);
-            config.set("recent-owners", recentOwners);
-            try {
-                config.save(file);
-            } catch (IOException e) {
-                getInstance().sendWarning(e.getMessage());
-            }
-        }
     }
     public long getChunkKey(Chunk chunk) {
         return (long) chunk.getX() & 4294967295L | ((long) chunk.getZ() & 4294967295L) << 32;

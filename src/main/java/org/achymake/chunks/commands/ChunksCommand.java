@@ -55,9 +55,9 @@ public class ChunksCommand implements CommandExecutor, TabCompleter {
                         var chunk = player.getLocation().getChunk();
                         if (getChunkHandler().isClaimed(chunk)) {
                             var owner = getChunkHandler().getOwner(chunk);
-                            player.sendMessage(getMessage().addColor("&6chunks info&f: Chunk"));
+                            player.sendMessage(getMessage().addColor("&6Chunks Info&f: Chunk"));
                             player.sendMessage(getMessage().addColor("&6owner&f: " + owner.getName()));
-                            player.sendMessage(getMessage().addColor("chunks-claimed&f: " + getUserdata().getClaimCount(owner)));
+                            player.sendMessage(getMessage().addColor("&6chunks-claimed&f: " + getUserdata().getClaimCount(owner)));
                             if (!getUserdata().getMembers(owner).isEmpty()) {
                                 player.sendMessage(getMessage().addColor(getChunkHandler().getName(chunk) + "&6 members:"));
                                 for (var offlinePlayer : getUserdata().getMembers(owner)) {
@@ -213,21 +213,33 @@ public class ChunksCommand implements CommandExecutor, TabCompleter {
                     }
                 } else if (args[0].equalsIgnoreCase("info")) {
                     if (player.hasPermission("chunks.command.chunks.info")) {
-                        for (var offlinePlayers : getInstance().getOfflinePlayers()) {
-                            commands.add(offlinePlayers.getName());
-                        }
+                        getInstance().getOnlinePlayers().forEach(target -> {
+                            if (!target.isInvulnerable()) {
+                                if (target.getName().startsWith(args[1])) {
+                                    commands.add(target.getName());
+                                }
+                            }
+                        });
                     }
                 } else if (args[0].equalsIgnoreCase("setowner")) {
                     if (player.hasPermission("chunks.command.chunks.setowner")) {
-                        for (var offlinePlayers : getInstance().getOfflinePlayers()) {
-                            commands.add(offlinePlayers.getName());
-                        }
+                        getInstance().getOnlinePlayers().forEach(target -> {
+                            if (!target.isInvulnerable()) {
+                                if (target.getName().startsWith(args[1])) {
+                                    commands.add(target.getName());
+                                }
+                            }
+                        });
                     }
                 } else if (args[0].equalsIgnoreCase("unclaim")) {
                     if (player.hasPermission("chunks.command.chunks.unclaim")) {
-                        for (var offlinePlayers : getInstance().getOfflinePlayers()) {
-                            commands.add(offlinePlayers.getName());
-                        }
+                        getInstance().getOnlinePlayers().forEach(target -> {
+                            if (!target.isInvulnerable()) {
+                                if (target.getName().startsWith(args[1])) {
+                                    commands.add(target.getName());
+                                }
+                            }
+                        });
                     }
                 }
             } else if (args.length == 3) {

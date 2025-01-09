@@ -55,19 +55,21 @@ public class ChunkCommand implements CommandExecutor, TabCompleter {
                                         var result = cost + calculator;
                                         var eco = getEconomy().currencyNamePlural() + getEconomy().format(result);
                                         if (getEconomy().has(player, result)) {
-                                            getEconomy().withdrawPlayer(player, result);
-                                            getChunkHandler().setOwner(chunk, player);
-                                            getUserdata().playEffect(player, player);
-                                            player.sendMessage(getMessage().get("commands.chunk.claim.success", eco));
+                                            if (getChunkHandler().setOwner(chunk, player)) {
+                                                getEconomy().withdrawPlayer(player, result);
+                                                getUserdata().playEffect(player, player);
+                                                player.sendMessage(getMessage().get("commands.chunk.claim.success", eco));
+                                            }
                                         } else player.sendMessage(getMessage().get("commands.chunk.claim.insufficient-funds", eco));
                                     } else {
                                         var eco = getEconomy().currencyNamePlural() + getEconomy().format(cost);
                                         if (getEconomy().has(player, cost)) {
-                                            getEconomy().withdrawPlayer(player, cost);
-                                            getChunkHandler().setOwner(chunk, player);
-                                            getUserdata().claimEffect(player, chunk);
-                                            getUserdata().claimSound(player);
-                                            player.sendMessage(getMessage().get("commands.chunk.claim.success", eco));
+                                            if (getChunkHandler().setOwner(chunk, player)) {
+                                                getEconomy().withdrawPlayer(player, cost);
+                                                getUserdata().claimEffect(player, chunk);
+                                                getUserdata().claimSound(player);
+                                                player.sendMessage(getMessage().get("commands.chunk.claim.success", eco));
+                                            }
                                         } else player.sendMessage(getMessage().get("commands.chunk.claim.insufficient-funds", eco));
                                     }
                                 } else player.sendMessage(getMessage().get("commands.chunk.claim.reached-limit", String.valueOf(getUserdata().getClaimCount(player)), String.valueOf(getUserdata().getMaxClaims(player))));
@@ -90,10 +92,11 @@ public class ChunkCommand implements CommandExecutor, TabCompleter {
                         var chunk = player.getLocation().getChunk();
                         if (getChunkHandler().isClaimed(chunk)) {
                             if (getChunkHandler().isOwner(chunk, player)) {
-                                getUserdata().unclaimEffect(player, chunk);
-                                getUserdata().unclaimSound(player);
-                                getChunkHandler().removeOwner(chunk);
-                                player.sendMessage(getMessage().get("commands.chunk.unclaim.success", getEconomy().currencyNamePlural() + getEconomy().format(getConfig().getDouble("economy.refund"))));
+                                if (getChunkHandler().removeOwner(chunk)) {
+                                    getUserdata().unclaimEffect(player, chunk);
+                                    getUserdata().unclaimSound(player);
+                                    player.sendMessage(getMessage().get("commands.chunk.unclaim.success", getEconomy().currencyNamePlural() + getEconomy().format(getConfig().getDouble("economy.refund"))));
+                                }
                             } else player.sendMessage(getMessage().get("commands.chunk.unclaim.claimed", getChunkHandler().getName(chunk)));
                         } else player.sendMessage(getMessage().get("commands.chunk.unclaim.unclaimed"));
                         return true;
@@ -283,10 +286,10 @@ public class ChunkCommand implements CommandExecutor, TabCompleter {
                     }
                 } else if (args[0].equalsIgnoreCase("view")) {
                     if (player.hasPermission("chunks.command.chunk.view.others")) {
-                        for (var players : getInstance().getOnlinePlayers()) {
-                            if (!players.isInvulnerable()) {
-                                if (players.getName().startsWith(args[1])) {
-                                    commands.add(players.getName());
+                        for (var target : getInstance().getOnlinePlayers()) {
+                            if (!target.isInvulnerable()) {
+                                if (target.getName().startsWith(args[1])) {
+                                    commands.add(target.getName());
                                 }
                             }
                         }
@@ -298,20 +301,20 @@ public class ChunkCommand implements CommandExecutor, TabCompleter {
                     }
                 } else if (args[0].equalsIgnoreCase("ban")) {
                     if (player.hasPermission("chunks.command.chunk.ban")) {
-                        for (var players : getInstance().getOnlinePlayers()) {
-                            if (!players.isInvulnerable()) {
-                                if (players.getName().startsWith(args[1])) {
-                                    commands.add(players.getName());
+                        for (var target : getInstance().getOnlinePlayers()) {
+                            if (!target.isInvulnerable()) {
+                                if (target.getName().startsWith(args[1])) {
+                                    commands.add(target.getName());
                                 }
                             }
                         }
                     }
                 } else if (args[0].equalsIgnoreCase("unban")) {
                     if (player.hasPermission("chunks.command.chunk.unban")) {
-                        for (var players : getInstance().getOnlinePlayers()) {
-                            if (!players.isInvulnerable()) {
-                                if (players.getName().startsWith(args[1])) {
-                                    commands.add(players.getName());
+                        if (!getUserdata().getBanned(player).isEmpty()) {
+                            for (var target : getUserdata().getBanned(player)) {
+                                if (target.getName().startsWith(args[1])) {
+                                    commands.add(target.getName());
                                 }
                             }
                         }
@@ -321,17 +324,19 @@ public class ChunkCommand implements CommandExecutor, TabCompleter {
                 if (args[0].equalsIgnoreCase("members")) {
                     if (player.hasPermission("chunks.command.chunk.members")) {
                         if (args[1].equalsIgnoreCase("add")) {
-                            for (var players : getInstance().getOnlinePlayers()) {
-                                if (!players.isInvulnerable()) {
-                                    if (players.getName().startsWith(args[2])) {
-                                        commands.add(players.getName());
+                            for (var target : getInstance().getOnlinePlayers()) {
+                                if (!target.isInvulnerable()) {
+                                    if (target.getName().startsWith(args[2])) {
+                                        commands.add(target.getName());
                                     }
                                 }
                             }
                         } else if (args[1].equalsIgnoreCase("remove")) {
-                            for (var offlinePlayer : getUserdata().getMembers(player)) {
-                                if (offlinePlayer.getName().startsWith(args[2])) {
-                                    commands.add(offlinePlayer.getName());
+                            if (!getUserdata().getMembers(player).isEmpty()) {
+                                for (var offlinePlayer : getUserdata().getMembers(player)) {
+                                    if (offlinePlayer.getName().startsWith(args[2])) {
+                                        commands.add(offlinePlayer.getName());
+                                    }
                                 }
                             }
                         }
