@@ -156,7 +156,9 @@ public class ChunkHandler {
         } else return false;
     }
     public boolean hasAccess(Chunk chunk, Player player) {
-        return isOwner(chunk, player) || isMember(chunk, player) || getUserdata().isEditor(player);
+        if (isAllowedClaim(chunk)) {
+            return isOwner(chunk, player) || isMember(chunk, player) || getUserdata().isEditor(player);
+        } else return false;
     }
     public long getChunkKey(Chunk chunk) {
         return (long) chunk.getX() & 4294967295L | ((long) chunk.getZ() & 4294967295L) << 32;
