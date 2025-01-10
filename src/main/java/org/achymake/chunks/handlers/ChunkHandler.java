@@ -139,25 +139,25 @@ public class ChunkHandler {
         } else return "null";
     }
     public boolean isOwner(Chunk chunk, OfflinePlayer offlinePlayer) {
-        return getOwner(chunk) == offlinePlayer;
+        if (isClaimed(chunk)) {
+            return getOwner(chunk) == offlinePlayer;
+        } else return true;
     }
     public boolean isMember(Chunk chunk, OfflinePlayer offlinePlayer) {
-        if (exists(chunk)) {
-            if (isClaimed(chunk)) {
-                return getUserdata().getMembers(getOwner(chunk)).contains(offlinePlayer);
-            } else return true;
+        if (isClaimed(chunk)) {
+            return getUserdata().getMembers(getOwner(chunk)).contains(offlinePlayer);
         } else return true;
     }
     public boolean isBanned(Chunk chunk, OfflinePlayer offlinePlayer) {
-        if (exists(chunk)) {
-            if (isClaimed(chunk)) {
-                return getUserdata().getBanned(getOwner(chunk)).contains(offlinePlayer);
-            } else return false;
+        if (isClaimed(chunk)) {
+            return getUserdata().getBanned(getOwner(chunk)).contains(offlinePlayer);
         } else return false;
     }
     public boolean hasAccess(Chunk chunk, Player player) {
         if (isAllowedClaim(chunk)) {
-            return isOwner(chunk, player) || isMember(chunk, player) || getUserdata().isEditor(player);
+            if (isClaimed(chunk)) {
+                return isOwner(chunk, player) || isMember(chunk, player) || getUserdata().isEditor(player);
+            } else return true;
         } else return false;
     }
     public long getChunkKey(Chunk chunk) {
@@ -165,14 +165,16 @@ public class ChunkHandler {
     }
     private boolean isAllowed(ApplicableRegionSet applicableRegionSet) {
         for (var regionIn : applicableRegionSet) {
-            var flag = regionIn.getFlag(getInstance().getFlag());
-            if (flag == StateFlag.State.ALLOW) {
-                return true;
-            } else if (flag == StateFlag.State.DENY) {
-                return false;
-            }
+            if (regionIn != null) {
+                var flag = regionIn.getFlag(getInstance().getFlag());
+                if (flag == StateFlag.State.ALLOW) {
+                    return true;
+                } else if (flag == StateFlag.State.DENY) {
+                    return false;
+                }
+            } else return true;
         }
-        return false;
+        return true;
     }
     public boolean isAllowedClaim(Chunk chunk) {
         if (getConfig().getStringList("worlds").contains(chunk.getWorld().getName())) {
@@ -181,9 +183,7 @@ public class ChunkHandler {
                 var x = chunk.getX() << 4;
                 var z = chunk.getZ() << 4;
                 var protectedCuboidRegion = new ProtectedCuboidRegion("_", BlockVector3.at(x, -64, z), BlockVector3.at(x + 15, 320, z + 15));
-                if (regionManager.getApplicableRegions(protectedCuboidRegion).getRegions().isEmpty()) {
-                    return true;
-                } else return isAllowed(regionManager.getApplicableRegions(protectedCuboidRegion));
+                return isAllowed(regionManager.getApplicableRegions(protectedCuboidRegion));
             } else return true;
         } else return false;
     }

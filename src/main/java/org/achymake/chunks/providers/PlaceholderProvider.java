@@ -46,11 +46,9 @@ public class PlaceholderProvider extends PlaceholderExpansion {
                     } else return "None";
                 }
                 case "access" -> {
-                    if (instance.getChunkHandler().isClaimed(chunk)) {
-                        if (instance.getChunkHandler().hasAccess(chunk, player)) {
-                            return "&aTrue&f";
-                        } else return "&cFalse&f";
-                    } else return "&aTrue&f";
+                    if (instance.getChunkHandler().hasAccess(chunk, player)) {
+                        return "&aTrue&f";
+                    } else return "&cFalse&f";
                 }
                 case "claims" -> {
                     return String.valueOf(instance.getUserdata().getClaimCount(player));
