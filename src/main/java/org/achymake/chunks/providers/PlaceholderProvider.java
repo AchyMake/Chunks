@@ -43,7 +43,9 @@ public class PlaceholderProvider extends PlaceholderExpansion {
                 case "owner" -> {
                     if (instance.getChunkHandler().isClaimed(chunk)) {
                         return instance.getChunkHandler().getName(chunk);
-                    } else return "None";
+                    } else if (instance.getChunkHandler().hasAccess(chunk, player)) {
+                        return "None";
+                    } else return "Server";
                 }
                 case "access" -> {
                     if (instance.getChunkHandler().hasAccess(chunk, player)) {

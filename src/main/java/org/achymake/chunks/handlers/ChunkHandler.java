@@ -74,9 +74,10 @@ public class ChunkHandler {
         var file = getFile(chunk);
         var config = YamlConfiguration.loadConfiguration(file);
         var recentOwners = config.getStringList("recent-owners");
-        recentOwners.remove(offlinePlayer.getUniqueId().toString());
+        recentOwners.removeIf(uuidString -> uuidString.equals(offlinePlayer.getUniqueId().toString()));
         config.set("owner", offlinePlayer.getUniqueId().toString());
         config.set("settings.tnt", false);
+        config.set("recent-owners", recentOwners);
         var chunks = getUserdata().getChunksStringList(offlinePlayer, worldName);
         chunks.add(String.valueOf(getChunkKey(chunk)));
         try {

@@ -13,6 +13,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 public class Userdata {
@@ -118,12 +119,16 @@ public class Userdata {
     }
     public int getMaxClaims(Player player) {
         if (!player.isOp()) {
+            var listed = new ArrayList<Integer>();
             for (var rank : getConfig().getConfigurationSection("max-claims").getKeys(false)) {
                 if (player.hasPermission("chunks.command.chunk.claim.multiple." + rank)) {
-                    return getConfig().getInt("max-claims." + rank);
+                    listed.add(getConfig().getInt("max-claims." + rank));
                 }
             }
-            return getConfig().getInt("max-claims.default");
+            listed.sort(Integer::compareTo);
+            if (!listed.isEmpty()) {
+                 return listed.getLast();
+            } else return getConfig().getInt("max-claims.default");
         } else return getConfig().getInt("max-claims.op");
     }
     public void playEffect(Player player, OfflinePlayer offlinePlayer) {
