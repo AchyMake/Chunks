@@ -50,7 +50,7 @@ public class ChunkHandler {
     public List<OfflinePlayer> getRecentOwners(Chunk chunk) {
         var listed = new ArrayList<OfflinePlayer>();
         if (exists(chunk)) {
-            for (var uuidString : getConfig(chunk).getStringList("recent-owners")) {
+            for (var uuidString : getConfig(chunk).getStringList("recent-owners").reversed()) {
                 listed.add(getInstance().getOfflinePlayer(UUID.fromString(uuidString)));
             }
         }
