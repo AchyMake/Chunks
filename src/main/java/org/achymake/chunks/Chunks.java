@@ -28,6 +28,7 @@ public final class Chunks extends JavaPlugin {
     private ChunkHandler chunkHandler;
     private DateHandler dateHandler;
     private EntityHandler entityHandler;
+    private MaterialHandler materialHandler;
     private ScheduleHandler scheduleHandler;
     private WorldHandler worldHandler;
     private UpdateChecker updateChecker;
@@ -52,6 +53,7 @@ public final class Chunks extends JavaPlugin {
         chunkHandler = new ChunkHandler();
         dateHandler = new DateHandler();
         entityHandler = new EntityHandler();
+        materialHandler = new MaterialHandler();
         scheduleHandler = new ScheduleHandler();
         worldHandler = new WorldHandler();
         updateChecker = new UpdateChecker();
@@ -188,6 +190,9 @@ public final class Chunks extends JavaPlugin {
     }
     public ScheduleHandler getScheduleHandler() {
         return scheduleHandler;
+    }
+    public MaterialHandler getMaterialHandler() {
+        return materialHandler;
     }
     public EntityHandler getEntityHandler() {
         return entityHandler;
