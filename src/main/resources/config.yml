@@ -19,7 +19,7 @@ max-claims:
   staff: 64
   op: 9999
 claim:
-  manipulate-fly: true
+  manipulate-fly: false
   expires: 31
   particle:
     type: TOTEM_OF_UNDYING

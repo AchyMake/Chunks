@@ -31,6 +31,7 @@ public class PlayerToggleFlight implements Listener {
     }
     @EventHandler(priority = EventPriority.NORMAL)
     public void onPlayerToggleFlight(PlayerToggleFlightEvent event) {
+        if (!getChunkHandler().manipulateFly())return;
         var player = event.getPlayer();
         if (!getUserdata().isSurvival(player))return;
         var chunk = player.getLocation().getChunk();

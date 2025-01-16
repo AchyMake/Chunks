@@ -250,7 +250,7 @@ public class ChunkHandler {
     public boolean isBedDisabled(Material blockType) {
         return getConfig().getBoolean("disable-beds." + blockType);
     }
-    public boolean isFlyAllowed() {
+    public boolean manipulateFly() {
         return getConfig().getBoolean("claim.manipulate-fly");
     }
 }

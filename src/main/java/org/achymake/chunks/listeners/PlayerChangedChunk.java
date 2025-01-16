@@ -38,9 +38,11 @@ public class PlayerChangedChunk implements Listener {
             var to = event.getTo().getChunk();
             if (getChunkHandler().isClaimed(to)) {
                 if (!getChunkHandler().hasAccess(to, player)) {
-                    if (player.isFlying() && getUserdata().isSurvival(player)) {
-                        getUserdata().disableFly(player);
-                        getMessage().sendActionBar(player, getMessage().get("events.fly.unclaimed"));
+                    if (getChunkHandler().manipulateFly()) {
+                        if (player.isFlying() && getUserdata().isSurvival(player)) {
+                            getUserdata().disableFly(player);
+                            getMessage().sendActionBar(player, getMessage().get("events.fly.unclaimed"));
+                        }
                     }
                 }
                 if (getChunkHandler().isBanned(to, player)) {

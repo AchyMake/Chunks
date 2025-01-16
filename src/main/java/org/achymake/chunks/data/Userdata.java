@@ -13,7 +13,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.UUID;
 
 public class Userdata {
@@ -243,7 +242,6 @@ public class Userdata {
         return player.getGameMode().equals(GameMode.SURVIVAL);
     }
     public void disableFly(Player player) {
-        if (!getChunkHandler().isFlyAllowed())return;
         player.setAllowFlight(false);
         player.setFlying(false);
     }
