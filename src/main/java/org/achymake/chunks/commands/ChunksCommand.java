@@ -73,13 +73,14 @@ public class ChunksCommand implements CommandExecutor, TabCompleter {
                             return true;
                         } else if (getChunkHandler().exists(chunk)) {
                             if (!getChunkHandler().getRecentOwners(chunk).isEmpty()) {
+                                player.sendMessage(getMessage().addColor("&6Chunks Info&f: Chunk"));
                                 player.sendMessage(getMessage().addColor("&6recent-owners:"));
                                 for (var offlinePlayer : getChunkHandler().getRecentOwners(chunk)) {
                                     player.sendMessage(getMessage().addColor("- " + offlinePlayer.getName()));
                                 }
                             }
-                            return true;
-                        }
+                        } else player.sendMessage(getMessage().addColor("&cChunk has never been claimed"));
+                        return true;
                     }
                 } else if (args[0].equalsIgnoreCase("help")) {
                     if (player.hasPermission("chunks.command.chunks.help")) {
