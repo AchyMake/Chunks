@@ -119,7 +119,15 @@ public class ChunksCommand implements CommandExecutor, TabCompleter {
                     }
                 }
             } else if (args.length == 2) {
-                if (args[0].equalsIgnoreCase("effect")) {
+                if (args[0].equalsIgnoreCase("reload")) {
+                    if (player.hasPermission("chunks.command.chunks.reload")) {
+                        if (args[1].equalsIgnoreCase("userdata")) {
+                            getUserdata().reload();
+                            player.sendMessage(getMessage().addColor("&6Chunks&f: reloaded > userdata"));
+                            return true;
+                        }
+                    }
+                } else if (args[0].equalsIgnoreCase("effect")) {
                     if (player.hasPermission("chunks.command.chunks.effect")) {
                         var chunk = player.getLocation().getChunk();
                         if (args[1].equalsIgnoreCase("claim")) {
@@ -206,7 +214,11 @@ public class ChunksCommand implements CommandExecutor, TabCompleter {
                     commands.add("unclaim");
                 }
             } else if (args.length == 2) {
-                if (args[0].equalsIgnoreCase("effect")) {
+                if (args[0].equalsIgnoreCase("reload")) {
+                    if (player.hasPermission("chunks.command.chunks.reload")) {
+                        commands.add("userdata");
+                    }
+                } else if (args[0].equalsIgnoreCase("effect")) {
                     if (player.hasPermission("chunks.command.chunks.effect")) {
                         commands.add("claim");
                         commands.add("unclaim");

@@ -9,14 +9,12 @@ import org.achymake.chunks.handlers.*;
 import org.achymake.chunks.listeners.*;
 import org.achymake.chunks.providers.*;
 import org.bukkit.OfflinePlayer;
-import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitScheduler;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
@@ -38,9 +36,8 @@ public final class Chunks extends JavaPlugin {
     private StateFlag CHUNK_CLAIM;
     @Override
     public void onLoad() {
-        var registry = getWorldGuard().getFlagRegistry();
         CHUNK_CLAIM = new StateFlag("chunk-claim", true);
-        registry.register(CHUNK_CLAIM);
+        getWorldGuard().getFlagRegistry().register(CHUNK_CLAIM);
     }
     public StateFlag getFlag() {
         return CHUNK_CLAIM;
@@ -67,9 +64,7 @@ public final class Chunks extends JavaPlugin {
         commands();
         events();
         reload();
-        if (getPluginManager().isPluginEnabled("PlaceholderAPI")) {
-            new PlaceholderProvider().register();
-        }
+        new PlaceholderProvider().register();
         sendInfo("Economy hook to " + getEconomy().getName());
         sendInfo("Enabled for " + getMinecraftProvider() + " " + getMinecraftVersion());
         getUpdateChecker().getUpdate();
@@ -77,9 +72,7 @@ public final class Chunks extends JavaPlugin {
     @Override
     public void onDisable() {
         getUserdata().disable();
-        if (getPluginManager().isPluginEnabled("PlaceholderAPI")) {
-            new PlaceholderProvider().unregister();
-        }
+        new PlaceholderProvider().unregister();
         getScheduleHandler().disable();
         sendInfo("Disabled for " + getMinecraftProvider() + " " + getMinecraftVersion());
     }
@@ -145,27 +138,11 @@ public final class Chunks extends JavaPlugin {
         }
     }
     public void reload() {
-        var file = new File(getDataFolder(), "config.yml");
-        if (file.exists()) {
-            try {
-                getConfig().load(file);
-            } catch (IOException | InvalidConfigurationException e) {
-                sendWarning(e.getMessage());
-            }
-        } else {
+        if (!new File(getDataFolder(), "config.yml").exists()) {
             getConfig().options().copyDefaults(true);
-            try {
-                getConfig().save(file);
-            } catch (IOException e) {
-                sendWarning(e.getMessage());
-            }
-        }
+            saveConfig();
+        } else reloadConfig();
         getMessage().reload();
-    }
-    public void reloadUserdata() {
-        if (!getOfflinePlayers().isEmpty()) {
-            getOfflinePlayers().forEach(offlinePlayer -> getUserdata().reload(offlinePlayer));
-        }
     }
     public Collection<? extends Player> getOnlinePlayers() {
         return getServer().getOnlinePlayers();

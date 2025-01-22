@@ -224,19 +224,19 @@ public class Userdata {
             getInstance().sendWarning(e.getMessage());
         }
     }
-    public void reload(OfflinePlayer offlinePlayer) {
-        if (exists(offlinePlayer)) {
-            var file = getFile(offlinePlayer);
+    public void reload(Player player) {
+        if (exists(player)) {
+            var file = getFile(player);
             var config = YamlConfiguration.loadConfiguration(file);
             try {
                 config.load(file);
+                if (!player.getName().equals(config.getString("name"))) {
+                    setString(player, "name", player.getName());
+                }
             } catch (IOException | InvalidConfigurationException e) {
                 getInstance().sendWarning(e.getMessage());
             }
-            if (!offlinePlayer.getName().equals(config.getString("name"))) {
-                setString(offlinePlayer, "name", offlinePlayer.getName());
-            }
-        } else setup(offlinePlayer);
+        } else setup(player);
     }
     public boolean isSurvival(Player player) {
         return player.getGameMode().equals(GameMode.SURVIVAL);
@@ -260,6 +260,21 @@ public class Userdata {
             }
         }
         return listed;
+    }
+    public void reload() {
+        var folder = new File(getInstance().getDataFolder(), "userdata");
+        if (folder.exists() && folder.isDirectory()) {
+            for (var file : folder.listFiles()) {
+                if (file.exists() && file.isFile()) {
+                    var config = YamlConfiguration.loadConfiguration(file);
+                    try {
+                        config.load(file);
+                    } catch (IOException | InvalidConfigurationException e) {
+                        getInstance().sendWarning(e.getMessage());
+                    }
+                }
+            }
+        }
     }
     public List<Player> getEditors() {
         return editors;

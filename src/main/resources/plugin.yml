@@ -7,7 +7,6 @@ load: POSTWORLD
 depend:
   - Vault
   - WorldGuard
-softdepend:
   - PlaceholderAPI
 author: AchyMake
 description: '${project.description}'
