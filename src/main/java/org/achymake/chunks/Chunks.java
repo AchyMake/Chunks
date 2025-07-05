@@ -129,12 +129,8 @@ public final class Chunks extends JavaPlugin {
         new PlayerUnleashEntity();
         new SignChange();
         new VehicleDamage();
-        if (getPluginManager().isPluginEnabled("Carry")) {
-            new PlayerAddPassenger();
-            new PlayerEjectPassenger();
-        }
-        if (getPluginManager().isPluginEnabled("Harvester")) {
-            new Replant();
+        if (getPluginManager().isPluginEnabled("Replant")) {
+            new PlayerReplant();
         }
     }
     public void reload() {

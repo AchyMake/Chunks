@@ -3,13 +3,13 @@ package org.achymake.chunks.listeners;
 import org.achymake.chunks.Chunks;
 import org.achymake.chunks.data.Message;
 import org.achymake.chunks.handlers.ChunkHandler;
-import org.achymake.harvester.events.ReplantEvent;
+import org.achymake.replant.events.PlayerReplantEvent;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.PluginManager;
 
-public class Replant implements Listener {
+public class PlayerReplant implements Listener {
     private Chunks getInstance() {
         return Chunks.getInstance();
     }
@@ -22,11 +22,11 @@ public class Replant implements Listener {
     private PluginManager getPluginManager() {
         return getInstance().getPluginManager();
     }
-    public Replant() {
+    public PlayerReplant() {
         getPluginManager().registerEvents(this, getInstance());
     }
     @EventHandler(priority = EventPriority.NORMAL)
-    public void onReplant(ReplantEvent event) {
+    public void onPlayerReplant(PlayerReplantEvent event) {
         var chunk = event.getBlock().getChunk();
         if (!getChunkHandler().isClaimed(chunk))return;
         var player = event.getPlayer();

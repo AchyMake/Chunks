@@ -1,13 +1,15 @@
 name: Chunks
 version: '${project.version}'
 main: org.achymake.chunks.Chunks
-api-version: '1.21'
+api-version: '1.21.7'
 prefix: '${project.name}'
 load: POSTWORLD
 depend:
   - Vault
   - WorldGuard
   - PlaceholderAPI
+softdepend:
+  - Replant
 author: AchyMake
 description: '${project.description}'
 website: '${project.url}'
