@@ -10,6 +10,7 @@ depend:
   - PlaceholderAPI
 softdepend:
   - Replant
+  - Carry
 author: AchyMake
 description: '${project.description}'
 website: '${project.url}'

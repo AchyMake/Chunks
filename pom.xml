@@ -6,7 +6,7 @@
 
     <groupId>org.achymake</groupId>
     <artifactId>Chunks</artifactId>
-    <version>1.1.53</version>
+    <version>1.1.54</version>
     <packaging>jar</packaging>
 
     <name>Chunks</name>
@@ -103,6 +103,12 @@
             <groupId>com.github.AchyMake</groupId>
             <artifactId>Replant</artifactId>
             <version>1.0.8</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.github.AchyMake</groupId>
+            <artifactId>CarryAPI</artifactId>
+            <version>LATEST</version>
             <scope>provided</scope>
         </dependency>
     </dependencies>

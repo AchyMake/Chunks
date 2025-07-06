@@ -132,6 +132,10 @@ public final class Chunks extends JavaPlugin {
         if (getPluginManager().isPluginEnabled("Replant")) {
             new PlayerReplant();
         }
+        if (getPluginManager().isPluginEnabled("Carry")) {
+            new PlayerAddPassenger();
+            new PlayerEjectPassenger();
+        }
     }
     public void reload() {
         if (!new File(getDataFolder(), "config.yml").exists()) {
