@@ -133,8 +133,8 @@ public final class Chunks extends JavaPlugin {
             new PlayerReplant();
         }
         if (getPluginManager().isPluginEnabled("Carry")) {
-            new PlayerAddPassenger();
-            new PlayerEjectPassenger();
+            new PlayerCaptureEntity();
+            new PlayerReleaseEntity();
         }
     }
     public void reload() {

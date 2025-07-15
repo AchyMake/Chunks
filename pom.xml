@@ -108,7 +108,7 @@
         <dependency>
             <groupId>com.github.AchyMake</groupId>
             <artifactId>Carry</artifactId>
-            <version>1.0.1</version>
+            <version>34d763df43</version>
             <scope>provided</scope>
         </dependency>
     </dependencies>
