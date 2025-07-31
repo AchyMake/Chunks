@@ -1,6 +1,6 @@
 package org.achymake.chunks.listeners;
 
-import org.achymake.carry.events.PlayerReleaseEntityEvent;
+import org.achymake.carry.events.PlayerAddPassengerEvent;
 import org.achymake.chunks.Chunks;
 import org.achymake.chunks.data.Message;
 import org.achymake.chunks.handlers.ChunkHandler;
@@ -9,7 +9,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.PluginManager;
 
-public class PlayerReleaseEntity implements Listener {
+public class PlayerAddPassenger implements Listener {
     private Chunks getInstance() {
         return Chunks.getInstance();
     }
@@ -22,12 +22,12 @@ public class PlayerReleaseEntity implements Listener {
     private PluginManager getPluginManager() {
         return getInstance().getPluginManager();
     }
-    public PlayerReleaseEntity() {
+    public PlayerAddPassenger() {
         getPluginManager().registerEvents(this, getInstance());
     }
     @EventHandler(priority = EventPriority.NORMAL)
-    public void onPlayerReleaseEntity(PlayerReleaseEntityEvent event) {
-        var chunk = event.getClickedBlock().getChunk();
+    public void onPlayerAddPassenger(PlayerAddPassengerEvent event) {
+        var chunk = event.getRightClicked().getLocation().getChunk();
         if (!getChunkHandler().isClaimed(chunk))return;
         var player = event.getPlayer();
         if (getChunkHandler().hasAccess(chunk, player))return;
