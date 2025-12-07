@@ -24,10 +24,12 @@ public class BlockRedstone implements Listener {
     @EventHandler(priority = EventPriority.NORMAL)
     public void onBlockRedstone(BlockRedstoneEvent event) {
         if (!getChunkHandler().isRedstoneOnlyInClaims())return;
-        if (getChunkHandler().isClaimed(event.getBlock().getChunk()))return;
-        if (event.getBlock().getType().equals(getInstance().getMaterialHandler().get("powered_rail")))return;
-        if (event.getBlock().getType().equals(getInstance().getMaterialHandler().get("detector_rail")))return;
-        if (event.getBlock().getType().equals(getInstance().getMaterialHandler().get("activator_rail")))return;
+        var block = event.getBlock();
+        if (getChunkHandler().isClaimed(block.getChunk()))return;
+        var type = block.getType();
+        if (type.equals(getInstance().getMaterialHandler().get("powered_rail")))return;
+        if (type.equals(getInstance().getMaterialHandler().get("detector_rail")))return;
+        if (type.equals(getInstance().getMaterialHandler().get("activator_rail")))return;
         event.setNewCurrent(event.getOldCurrent());
     }
 }

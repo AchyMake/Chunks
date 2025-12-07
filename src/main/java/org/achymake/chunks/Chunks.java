@@ -37,7 +37,7 @@ public final class Chunks extends JavaPlugin {
     @Override
     public void onLoad() {
         CHUNK_CLAIM = new StateFlag("chunk-claim", true);
-        getWorldGuard().getFlagRegistry().register(CHUNK_CLAIM);
+        getWorldGuard().getFlagRegistry().register(getFlag());
     }
     public StateFlag getFlag() {
         return CHUNK_CLAIM;
@@ -133,8 +133,7 @@ public final class Chunks extends JavaPlugin {
             new PlayerReplant();
         }
         if (getPluginManager().isPluginEnabled("Carry")) {
-            new PlayerAddPassenger();
-            new PlayerEjectPassenger();
+            new PlayerPickEntity();
         }
     }
     public void reload() {

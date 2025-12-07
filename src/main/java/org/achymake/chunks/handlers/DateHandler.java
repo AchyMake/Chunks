@@ -18,9 +18,10 @@ public class DateHandler {
     }
     public boolean isExpired(OfflinePlayer offlinePlayer) {
         if (getConfig().getInt("claim.expires") > 0) {
-            var expired = getDate(offlinePlayer.getLastPlayed());
+            var lastPlayed = offlinePlayer.getLastPlayed();
+            var expired = getDate(lastPlayed);
             expired.setDate(expired.getDate() + getConfig().getInt("claim.expires"));
-            return getDate(offlinePlayer.getLastPlayed()).after(expired);
+            return getDate(lastPlayed).after(expired);
         } else return false;
     }
 }

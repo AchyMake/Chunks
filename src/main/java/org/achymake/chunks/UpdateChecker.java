@@ -23,49 +23,38 @@ public class UpdateChecker {
     private ScheduleHandler getScheduler() {
         return getInstance().getScheduleHandler();
     }
-    private String getName() {
-        return getInstance().name();
-    }
-    private String getVersion() {
-        return getInstance().version();
-    }
-    private boolean notifyUpdate() {
-        return getConfig().getBoolean("notify-update");
+    public String getResourceID() {
+        return "108772";
     }
     public void getUpdate(Player player) {
-        if (player.hasPermission("chunks.event.join.update")) {
-            if (notifyUpdate()) {
-                getScheduler().runLater(new Runnable() {
-                    @Override
-                    public void run() {
-                        getLatest((latest) -> {
-                            if (!getVersion().equals(latest)) {
-                                player.sendMessage(getMessage().addColor(getName() + "&6 has new update"));
-                                player.sendMessage(getMessage().addColor("-&a https://www.spigotmc.org/resources/108772/"));
-                            }
-                        });
-                    }
-                }, 3);
+        if (!player.hasPermission("chunks.event.join.update"))return;
+        if (!getConfig().getBoolean("notify-update"))return;
+        getScheduler().runLater(new Runnable() {
+            @Override
+            public void run() {
+                getLatest((latest) -> {
+                    if (getInstance().version().equals(latest))return;
+                    player.sendMessage(getMessage().addColor(getInstance().name() + "&6 has new update"));
+                    player.sendMessage(getMessage().addColor("-&a https://www.spigotmc.org/resources/" + getResourceID() + "/"));
+                });
             }
-        }
+        }, 3);
     }
     public void getUpdate() {
-        if (notifyUpdate()) {
-            getScheduler().runAsynchronously(new Runnable() {
-                @Override
-                public void run() {
-                    getLatest((latest) -> {
-                        if (!getVersion().equals(latest)) {
-                            getInstance().sendInfo(getName() + " has new update:");
-                            getInstance().sendInfo("- https://www.spigotmc.org/resources/108772/");
-                        }
-                    });
-                }
-            });
-        }
+        if (!getConfig().getBoolean("notify-update"))return;
+        getScheduler().runAsynchronously(new Runnable() {
+            @Override
+            public void run() {
+                getLatest((latest) -> {
+                    if (getInstance().version().equals(latest))return;
+                    getInstance().sendInfo(getInstance().name() + " has new update:");
+                    getInstance().sendInfo("- https://www.spigotmc.org/resources/" + getResourceID() + "/");
+                });
+            }
+        });
     }
     public void getLatest(Consumer<String> consumer) {
-        try (var inputStream = new URL("https://api.spigotmc.org/legacy/update.php?resource=" + 108772).openStream()) {
+        try (var inputStream = new URL("https://api.spigotmc.org/legacy/update.php?resource=" + getResourceID()).openStream()) {
             var scanner = new Scanner(inputStream);
             if (scanner.hasNext()) {
                 consumer.accept(scanner.next());

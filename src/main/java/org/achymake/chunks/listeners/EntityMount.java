@@ -32,13 +32,15 @@ public class EntityMount implements Listener {
     }
     @EventHandler(priority = EventPriority.NORMAL)
     public void onEntityMount(EntityMountEvent event) {
-        var chunk = event.getMount().getLocation().getChunk();
+        var mount = event.getMount();
+        var chunk = mount.getLocation().getChunk();
         if (!getChunkHandler().isClaimed(chunk))return;
         if (event.getEntity() instanceof Player player) {
             if (getChunkHandler().hasAccess(chunk, player))return;
-            if (event.getMount().getType().equals(getEntityHandler().getEntityType("armor_stand")))return;
-            if (event.getMount().getType().equals(getEntityHandler().getEntityType("boat")))return;
-            if (event.getMount().getType().equals(getEntityHandler().getEntityType("minecart")))return;
+            var mountType = mount.getType();
+            if (mountType.equals(getEntityHandler().getEntityType("armor_stand")))return;
+            if (mountType.equals(getEntityHandler().getEntityType("boat")))return;
+            if (mountType.equals(getEntityHandler().getEntityType("minecart")))return;
             event.setCancelled(true);
             getMessage().sendActionBar(player, getMessage().get("events.cancelled.claimed", getChunkHandler().getName(chunk)));
         }
