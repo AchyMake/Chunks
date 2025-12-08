@@ -32,7 +32,7 @@ claim:
     pitch: 1.0
 unclaim:
   particle:
-    type: SPELL_INSTANT
+    type: NAUTILUS
     spread: 4
     height: 6
     amount: 75

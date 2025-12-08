@@ -1,6 +1,6 @@
 package org.achymake.chunks.listeners;
 
-import org.achymake.carry.events.PlayerPickEntityEvent;
+import org.achymake.capture.events.PlayerPickEntityEvent;
 import org.achymake.chunks.Chunks;
 import org.achymake.chunks.data.Message;
 import org.achymake.chunks.handlers.ChunkHandler;
