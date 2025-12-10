@@ -132,7 +132,7 @@ public final class Chunks extends JavaPlugin {
         if (getPluginManager().isPluginEnabled("Replant")) {
             new PlayerReplant();
         }
-        if (getPluginManager().isPluginEnabled("Carry")) {
+        if (getPluginManager().isPluginEnabled("Capture")) {
             new PlayerPickEntity();
         }
     }
