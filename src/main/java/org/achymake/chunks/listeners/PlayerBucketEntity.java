@@ -28,6 +28,7 @@ public class PlayerBucketEntity implements Listener {
     @EventHandler(priority = EventPriority.NORMAL)
     public void onPlayerBucketEntity(PlayerBucketEntityEvent event) {
         var chunk = event.getEntity().getLocation().getChunk();
+        if (!getChunkHandler().isAllowedClaim(chunk))return;
         if (!getChunkHandler().isClaimed(chunk))return;
         if (!getChunkHandler().isBucketDisabled(event.getEntityBucket().getType()))return;
         var player = event.getPlayer();

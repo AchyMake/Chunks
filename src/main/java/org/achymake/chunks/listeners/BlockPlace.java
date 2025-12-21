@@ -27,8 +27,9 @@ public class BlockPlace implements Listener {
     }
     @EventHandler(priority = EventPriority.NORMAL)
     public void onBlockPlace(BlockPlaceEvent event) {
-        if (!getChunkHandler().isBlockPlaceDisabled())return;
         var chunk = event.getBlock().getChunk();
+        if (!getChunkHandler().isAllowedClaim(chunk))return;
+        if (!getChunkHandler().isBlockPlaceDisabled())return;
         if (!getChunkHandler().isClaimed(chunk))return;
         var player = event.getPlayer();
         if (getChunkHandler().hasAccess(chunk, player))return;

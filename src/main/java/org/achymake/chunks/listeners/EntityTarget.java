@@ -30,6 +30,7 @@ public class EntityTarget implements Listener {
     public void onEntityTarget(EntityTargetEvent event) {
         if (event.getTarget() instanceof Player player) {
             var chunk = event.getEntity().getLocation().getChunk();
+            if (!getChunkHandler().isAllowedClaim(chunk))return;
             if (!getChunkHandler().isClaimed(chunk))return;
             if (!getEntityHandler().isFriendly(event.getEntityType()))return;
             if (getChunkHandler().hasAccess(chunk, player))return;

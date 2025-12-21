@@ -28,6 +28,7 @@ public class PlayerBedEnter implements Listener {
     @EventHandler(priority = EventPriority.NORMAL)
     public void onPlayerBedEnter(PlayerBedEnterEvent event) {
         var chunk = event.getBed().getChunk();
+        if (!getChunkHandler().isAllowedClaim(chunk))return;
         if (!getChunkHandler().isClaimed(chunk))return;
         if (!getChunkHandler().isBedDisabled(event.getBed().getType()))return;
         var player = event.getPlayer();

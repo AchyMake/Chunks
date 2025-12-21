@@ -23,6 +23,7 @@ public class ChunkLoad implements Listener {
     }
     @EventHandler(priority = EventPriority.NORMAL)
     public void onChunkLoad(ChunkLoadEvent event) {
+        if (!getChunkHandler().isAllowedClaim(event.getChunk()))return;
         getChunkHandler().reload(event.getChunk());
     }
 }

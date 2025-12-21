@@ -38,6 +38,7 @@ public class PlayerFish implements Listener {
         if (caught == null)return;
         if (isInWaterOrBubbleColumn(caught))return;
         var chunk = caught.getLocation().getChunk();
+        if (!getChunkHandler().isAllowedClaim(chunk))return;
         if (!getChunkHandler().isClaimed(chunk))return;
         if (!getEntityHandler().isFriendly(caught.getType()))return;
         var player = event.getPlayer();

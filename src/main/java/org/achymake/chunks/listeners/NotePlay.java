@@ -23,8 +23,10 @@ public class NotePlay implements Listener {
     }
     @EventHandler(priority = EventPriority.NORMAL)
     public void onNotePlay(NotePlayEvent event) {
+        var block = event.getBlock();
+        if (!getChunkHandler().isAllowedClaim(block.getChunk()))return;
         if (!getChunkHandler().isRedstoneOnlyInClaims())return;
-        if (getChunkHandler().isClaimed(event.getBlock().getChunk()))return;
+        if (getChunkHandler().isClaimed(block.getChunk()))return;
         event.setCancelled(true);
     }
 }

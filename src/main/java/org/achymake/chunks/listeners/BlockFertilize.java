@@ -30,6 +30,7 @@ public class BlockFertilize implements Listener {
     }
     @EventHandler(priority = EventPriority.NORMAL)
     public void onBlockFertilize(BlockFertilizeEvent event) {
+        if (!getChunkHandler().isAllowedClaim(event.getBlock().getChunk()))return;
         if (!getChunkHandler().isBlockFertilizeDisabled())return;
         var player = event.getPlayer();
         if (player == null)return;

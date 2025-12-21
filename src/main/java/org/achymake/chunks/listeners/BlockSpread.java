@@ -25,6 +25,7 @@ public class BlockSpread implements Listener {
     @EventHandler(priority = EventPriority.NORMAL)
     public void onBlockSpread(BlockSpreadEvent event) {
         var sourceChunk = event.getSource().getChunk();
+        if (!getChunkHandler().isAllowedClaim(sourceChunk))return;
         var blockChunk = event.getBlock().getChunk();
         if (event.getSource().getType().equals(Material.FIRE)) {
             if (getChunkHandler().isClaimed(sourceChunk)) {

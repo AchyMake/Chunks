@@ -17,4 +17,7 @@ public class EntityHandler {
     public boolean isFriendly(EntityType entityType) {
         return getConfig().getBoolean("friendly." + entityType);
     }
+    public boolean isTNT(EntityType entityType) {
+        return entityType.equals(getEntityType("tnt")) || entityType.equals(getEntityType("tnt_minecart"));
+    }
 }

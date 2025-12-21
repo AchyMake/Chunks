@@ -28,6 +28,7 @@ public class PlayerTakeLecternBook implements Listener {
     @EventHandler(priority = EventPriority.NORMAL)
     public void onPlayerTakeLecternBook(PlayerTakeLecternBookEvent event) {
         var chunk = event.getLectern().getLocation().getChunk();
+        if (!getChunkHandler().isAllowedClaim(chunk))return;
         if (!getChunkHandler().isClaimed(chunk))return;
         var player = event.getPlayer();
         if (getChunkHandler().hasAccess(chunk, player))return;

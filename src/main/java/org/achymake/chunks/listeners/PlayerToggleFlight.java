@@ -35,6 +35,7 @@ public class PlayerToggleFlight implements Listener {
         var player = event.getPlayer();
         if (!getUserdata().isSurvival(player))return;
         var chunk = player.getLocation().getChunk();
+        if (!getChunkHandler().isAllowedClaim(chunk))return;
         if (getChunkHandler().isClaimed(chunk)) {
             if (getChunkHandler().hasAccess(chunk, player))return;
             event.setCancelled(true);

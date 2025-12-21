@@ -28,6 +28,7 @@ public class PlayerUnleashEntity implements Listener {
     @EventHandler(priority = EventPriority.NORMAL)
     public void onPlayerUnleashEntity(PlayerUnleashEntityEvent event) {
         var chunk = event.getEntity().getLocation().getChunk();
+        if (!getChunkHandler().isAllowedClaim(chunk))return;
         if (!getChunkHandler().isClaimed(chunk))return;
         var player = event.getPlayer();
         if (getChunkHandler().hasAccess(chunk, player))return;

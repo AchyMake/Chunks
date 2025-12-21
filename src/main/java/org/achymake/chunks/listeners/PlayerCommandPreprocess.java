@@ -25,6 +25,7 @@ public class PlayerCommandPreprocess implements Listener {
     public void onPlayerCommandPreprocess(PlayerCommandPreprocessEvent event) {
         var player = event.getPlayer();
         var chunk = player.getLocation().getChunk();
+        if (!getChunkHandler().isAllowedClaim(chunk))return;
         if (!getChunkHandler().isClaimed(chunk))return;
         if (!event.getMessage().toLowerCase().startsWith("/sethome"))return;
         if (getChunkHandler().hasAccess(chunk, player))return;

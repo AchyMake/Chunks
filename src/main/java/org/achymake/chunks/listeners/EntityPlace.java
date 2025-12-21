@@ -29,6 +29,7 @@ public class EntityPlace implements Listener {
     public void onEntityPlace(EntityPlaceEvent event) {
         if (event.getPlayer() == null)return;
         var chunk = event.getEntity().getLocation().getChunk();
+        if (!getChunkHandler().isAllowedClaim(chunk))return;
         if (!getChunkHandler().isClaimed(chunk))return;
         if (!getChunkHandler().isBlockPlaceDisabled())return;
         var player = event.getPlayer();

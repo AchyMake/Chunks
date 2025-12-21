@@ -23,8 +23,9 @@ public class BlockDispenseArmor implements Listener {
     }
     @EventHandler(priority = EventPriority.NORMAL)
     public void onBlockDispenseArmor(BlockDispenseArmorEvent event) {
-        if (!getChunkHandler().isRedstoneOnlyInClaims())return;
         var chunk = event.getBlock().getChunk();
+        if (!getChunkHandler().isAllowedClaim(chunk))return;
+        if (!getChunkHandler().isRedstoneOnlyInClaims())return;
         if (getChunkHandler().isClaimed(chunk))return;
         event.setCancelled(true);
     }

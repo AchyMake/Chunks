@@ -30,6 +30,7 @@ public class CauldronLevelChange implements Listener {
     public void onCauldronLevelChange(CauldronLevelChangeEvent event) {
         if (event.getEntity() instanceof Player player) {
             var chunk = event.getBlock().getChunk();
+            if (!getChunkHandler().isAllowedClaim(chunk))return;
             if (!getChunkHandler().isClaimed(chunk))return;
             if (!getChunkHandler().isCauldronLevelChangeDisabled())return;
             if (getChunkHandler().hasAccess(chunk, player))return;

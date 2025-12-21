@@ -28,6 +28,7 @@ public class PlayerBucketEmpty implements Listener {
     @EventHandler(priority = EventPriority.NORMAL)
     public void onPlayerBucketEmpty(PlayerBucketEmptyEvent event) {
         var chunk = event.getBlockClicked().getChunk();
+        if (!getChunkHandler().isAllowedClaim(chunk))return;
         if (!getChunkHandler().isClaimed(chunk))return;
         if (!getChunkHandler().isBucketDisabled(event.getBucket()))return;
         var player = event.getPlayer();

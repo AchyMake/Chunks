@@ -32,6 +32,7 @@ public class PlayerChangedChunk implements Listener {
     @EventHandler(priority = EventPriority.MONITOR)
     public void onPlayerChangedChunk(PlayerChangedChunkEvent event) {
         var player = event.getPlayer();
+        if (!getChunkHandler().isAllowedClaim(event.getTo().getChunk()))return;
         if (event.isCancelled()) {
             player.teleport(event.getFrom());
         } else {

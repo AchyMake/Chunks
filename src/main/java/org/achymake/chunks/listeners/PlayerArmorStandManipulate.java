@@ -27,9 +27,10 @@ public class PlayerArmorStandManipulate implements Listener {
     }
     @EventHandler(priority = EventPriority.NORMAL)
     public void onPlayerArmorStandManipulate(PlayerArmorStandManipulateEvent event) {
-        var chunk = event.getRightClicked().getLocation().getChunk();
-        if (!getChunkHandler().isClaimed(chunk))return;
         var player = event.getPlayer();
+        var chunk = event.getRightClicked().getLocation().getChunk();
+        if (!getChunkHandler().isAllowedClaim(chunk))return;
+        if (!getChunkHandler().isClaimed(chunk))return;
         if (getChunkHandler().hasAccess(chunk, player))return;
         event.setCancelled(true);
         getMessage().sendActionBar(player, getMessage().get("events.cancelled.claimed", getChunkHandler().getName(chunk)));

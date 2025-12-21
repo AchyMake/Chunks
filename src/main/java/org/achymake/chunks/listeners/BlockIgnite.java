@@ -28,6 +28,7 @@ public class BlockIgnite implements Listener {
     }
     @EventHandler(priority = EventPriority.NORMAL)
     public void onBlockIgnite(BlockIgniteEvent event) {
+        if (!getChunkHandler().isAllowedClaim(event.getBlock().getChunk()))return;
         if (event.getIgnitingBlock() == null)return;
         if (event.getIgnitingEntity() instanceof Player player) {
             var chunk = event.getIgnitingBlock().getChunk();

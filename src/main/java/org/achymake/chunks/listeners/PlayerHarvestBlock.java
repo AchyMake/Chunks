@@ -28,6 +28,7 @@ public class PlayerHarvestBlock implements Listener {
     @EventHandler(priority = EventPriority.NORMAL)
     public void onPlayerHarvestBlock(PlayerHarvestBlockEvent event) {
         var chunk = event.getHarvestedBlock().getChunk();
+        if (!getChunkHandler().isAllowedClaim(chunk))return;
         if (!getChunkHandler().isClaimed(chunk))return;
         if (!getChunkHandler().isHarvestBlockDisabled(event.getHarvestedBlock().getType()))return;
         var player = event.getPlayer();

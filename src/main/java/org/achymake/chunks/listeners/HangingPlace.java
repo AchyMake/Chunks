@@ -29,6 +29,7 @@ public class HangingPlace implements Listener {
     public void onHangingPlace(HangingPlaceEvent event) {
         if (event.getPlayer() == null)return;
         var chunk = event.getBlock().getChunk();
+        if (!getChunkHandler().isAllowedClaim(chunk))return;
         if (!getChunkHandler().isClaimed(chunk))return;
         if (!getChunkHandler().isBlockPlaceDisabled())return;
         var player = event.getPlayer();

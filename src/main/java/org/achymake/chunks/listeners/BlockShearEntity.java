@@ -23,8 +23,9 @@ public class BlockShearEntity implements Listener {
     }
     @EventHandler(priority = EventPriority.NORMAL)
     public void onBlockShearEntity(BlockShearEntityEvent event) {
-        if (!getChunkHandler().isRedstoneOnlyInClaims())return;
         var block = event.getBlock();
+        if (!getChunkHandler().isAllowedClaim(block.getChunk()))return;
+        if (!getChunkHandler().isRedstoneOnlyInClaims())return;
         var blockChunk = block.getChunk();
         var entity = event.getEntity();
         var entityChunk = entity.getLocation().getChunk();

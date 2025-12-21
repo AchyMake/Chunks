@@ -29,6 +29,7 @@ public class HangingBreakByEntity implements Listener {
     @EventHandler(priority = EventPriority.NORMAL)
     public void onHangingBreakByEntity(HangingBreakByEntityEvent event) {
         var chunk = event.getEntity().getLocation().getChunk();
+        if (!getChunkHandler().isAllowedClaim(chunk))return;
         if (event.getRemover() instanceof Player player) {
             if (!getChunkHandler().isClaimed(chunk))return;
             if (getChunkHandler().hasAccess(chunk, player))return;

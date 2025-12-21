@@ -28,6 +28,7 @@ public class BlockBreak implements Listener {
     @EventHandler(priority = EventPriority.NORMAL)
     public void onBlockBreak(BlockBreakEvent event) {
         var chunk = event.getBlock().getChunk();
+        if (!getChunkHandler().isAllowedClaim(chunk))return;
         if (!getChunkHandler().isClaimed(chunk))return;
         if (!getChunkHandler().isBlockBreakDisabled())return;
         var player = event.getPlayer();

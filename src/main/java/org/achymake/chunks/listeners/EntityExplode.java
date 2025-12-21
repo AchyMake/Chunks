@@ -30,14 +30,14 @@ public class EntityExplode implements Listener {
     }
     @EventHandler(priority = EventPriority.NORMAL)
     public void onEntityExplode(EntityExplodeEvent event) {
+        if (!getChunkHandler().isAllowedClaim(event.getEntity().getLocation().getChunk()))return;
         if (!getChunkHandler().isTNTBlockDamageDisabled())return;
         var blockList = new ArrayList<Block>();
         for (var block : event.blockList()) {
             if (getChunkHandler().isClaimed(block.getChunk())) {
-                if (event.getEntityType().equals(getEntityHandler().getEntityType("tnt")) || event.getEntityType().equals(getEntityHandler().getEntityType("tnt_minecart"))) {
-                    if (getChunkHandler().isTNTAllowed(block.getChunk()))return;
-                    blockList.add(block);
-                }
+                if (!getEntityHandler().isTNT(event.getEntityType()))return;
+                if (getChunkHandler().isTNTAllowed(block.getChunk()))return;
+                blockList.add(block);
             } else blockList.add(block);
         }
         event.blockList().removeAll(blockList);

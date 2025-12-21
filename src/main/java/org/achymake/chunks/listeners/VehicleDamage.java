@@ -30,6 +30,7 @@ public class VehicleDamage implements Listener {
     public void onVehicleDamage(VehicleDamageEvent event) {
         if (event.getAttacker() instanceof Player player) {
             var chunk = event.getVehicle().getLocation().getChunk();
+            if (!getChunkHandler().isAllowedClaim(chunk))return;
             if (!getChunkHandler().isClaimed(chunk))return;
             if (getChunkHandler().hasAccess(chunk, player))return;
             event.setCancelled(true);

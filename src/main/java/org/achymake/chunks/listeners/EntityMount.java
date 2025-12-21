@@ -34,6 +34,7 @@ public class EntityMount implements Listener {
     public void onEntityMount(EntityMountEvent event) {
         var mount = event.getMount();
         var chunk = mount.getLocation().getChunk();
+        if (!getChunkHandler().isAllowedClaim(chunk))return;
         if (!getChunkHandler().isClaimed(chunk))return;
         if (event.getEntity() instanceof Player player) {
             if (getChunkHandler().hasAccess(chunk, player))return;

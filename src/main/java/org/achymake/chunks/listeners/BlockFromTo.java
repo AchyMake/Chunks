@@ -25,6 +25,7 @@ public class BlockFromTo implements Listener {
     @EventHandler(priority = EventPriority.NORMAL)
     public void onBlockFromTo(BlockFromToEvent event) {
         var block = event.getBlock();
+        if (!getChunkHandler().isAllowedClaim(block.getChunk()))return;
         if (!block.isLiquid())return;
         if (!getChunkHandler().isFluidFromOutsideDisabled())return;
         var blockFace = event.getFace();

@@ -31,6 +31,7 @@ public class PlayerInteract implements Listener {
         var block = event.getClickedBlock();
         if (block == null)return;
         var chunk = block.getChunk();
+        if (!getChunkHandler().isAllowedClaim(chunk))return;
         if (!getChunkHandler().isClaimed(chunk))return;
         var player = event.getPlayer();
         if (getChunkHandler().hasAccess(chunk, player))return;

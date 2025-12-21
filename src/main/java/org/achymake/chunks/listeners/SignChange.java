@@ -28,6 +28,7 @@ public class SignChange implements Listener {
     @EventHandler(priority = EventPriority.NORMAL)
     public void onSignChange(SignChangeEvent event) {
         var chunk = event.getBlock().getChunk();
+        if (!getChunkHandler().isAllowedClaim(chunk))return;
         if (!getChunkHandler().isClaimed(chunk))return;
         if (!getChunkHandler().isSignChangeDisabled())return;
         var player = event.getPlayer();

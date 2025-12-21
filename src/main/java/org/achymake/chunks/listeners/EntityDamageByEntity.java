@@ -34,12 +34,13 @@ public class EntityDamageByEntity implements Listener {
     public void onEntityDamageByEntity(EntityDamageByEntityEvent event) {
         var entity = event.getEntity();
         var chunk = entity.getLocation().getChunk();
+        if (!getChunkHandler().isAllowedClaim(chunk))return;
         if (!getChunkHandler().isClaimed(chunk))return;
         var damager = event.getDamager();
         switch (damager) {
             case Arrow arrow -> {
                 if (arrow.getShooter() instanceof Player player) {
-                    if (entity instanceof Player target) {
+                    if (entity instanceof Player) {
                         if (getChunkHandler().isPvpInsideClaims())return;
                         event.setCancelled(true);
                         getMessage().sendActionBar(player, getMessage().get("events.cancelled.pvp"));
@@ -51,7 +52,7 @@ public class EntityDamageByEntity implements Listener {
                 }
             }
             case Player player -> {
-                if (entity instanceof Player target) {
+                if (entity instanceof Player) {
                     if (getChunkHandler().isPvpInsideClaims())return;
                     event.setCancelled(true);
                     getMessage().sendActionBar(player, getMessage().get("events.cancelled.pvp"));
@@ -63,7 +64,7 @@ public class EntityDamageByEntity implements Listener {
             }
             case Snowball snowball -> {
                 if (snowball.getShooter() instanceof Player player) {
-                    if (entity instanceof Player target) {
+                    if (entity instanceof Player) {
                         if (getChunkHandler().isPvpInsideClaims())return;
                         event.setCancelled(true);
                         getMessage().sendActionBar(player, getMessage().get("events.cancelled.pvp"));
@@ -76,7 +77,7 @@ public class EntityDamageByEntity implements Listener {
             }
             case SpectralArrow spectralArrow -> {
                 if (spectralArrow.getShooter() instanceof Player player) {
-                    if (entity instanceof Player target) {
+                    if (entity instanceof Player) {
                         if (getChunkHandler().isPvpInsideClaims())return;
                         event.setCancelled(true);
                         getMessage().sendActionBar(player, getMessage().get("events.cancelled.pvp"));
@@ -89,7 +90,7 @@ public class EntityDamageByEntity implements Listener {
             }
             case ThrownPotion thrownPotion -> {
                 if (thrownPotion.getShooter() instanceof Player player) {
-                    if (entity instanceof Player target) {
+                    if (entity instanceof Player) {
                         if (getChunkHandler().isPvpInsideClaims())return;
                         event.setCancelled(true);
                         getMessage().sendActionBar(player, getMessage().get("events.cancelled.pvp"));
@@ -102,7 +103,7 @@ public class EntityDamageByEntity implements Listener {
             }
             case Trident trident -> {
                 if (trident.getShooter() instanceof Player player) {
-                    if (entity instanceof Player target) {
+                    if (entity instanceof Player) {
                         if (getChunkHandler().isPvpInsideClaims())return;
                         event.setCancelled(true);
                         getMessage().sendActionBar(player, getMessage().get("events.cancelled.pvp"));
@@ -115,7 +116,7 @@ public class EntityDamageByEntity implements Listener {
             }
             case WindCharge windCharge -> {
                 if (windCharge.getShooter() instanceof Player player) {
-                    if (entity instanceof Player target) {
+                    if (entity instanceof Player) {
                         if (getChunkHandler().isPvpInsideClaims())return;
                         event.setCancelled(true);
                         getMessage().sendActionBar(player, getMessage().get("events.cancelled.pvp"));

@@ -24,6 +24,7 @@ public class BlockPistonRetract implements Listener {
     @EventHandler(priority = EventPriority.NORMAL)
     public void onBlockPistonRetract(BlockPistonRetractEvent event) {
         var chunk = event.getBlock().getChunk();
+        if (!getChunkHandler().isAllowedClaim(chunk))return;
         if (getChunkHandler().isRedstoneOnlyInClaims()) {
             if (getChunkHandler().isClaimed(chunk))return;
             event.setCancelled(true);
