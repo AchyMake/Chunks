@@ -4,6 +4,7 @@ import org.achymake.chunks.Chunks;
 import org.achymake.chunks.data.Message;
 import org.achymake.chunks.data.Userdata;
 import org.achymake.chunks.handlers.ChunkHandler;
+import org.achymake.chunks.handlers.WorldHandler;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -22,6 +23,9 @@ public class ChunksCommand implements CommandExecutor, TabCompleter {
     }
     private ChunkHandler getChunkHandler() {
         return getInstance().getChunkHandler();
+    }
+    private WorldHandler getWorldHandler() {
+        return getInstance().getWorldHandler();
     }
     private Message getMessage() {
         return getInstance().getMessage();
@@ -162,7 +166,7 @@ public class ChunksCommand implements CommandExecutor, TabCompleter {
                     if (player.hasPermission("chunks.command.chunks.setowner")) {
                         var chunk = player.getLocation().getChunk();
                         var target = getInstance().getOfflinePlayer(args[1]);
-                        if (getChunkHandler().isAllowedClaim(chunk)) {
+                        if (getWorldHandler().isAllowedClaim(chunk)) {
                             if (getUserdata().exists(target)) {
                                 getChunkHandler().setOwner(chunk, target);
                                 getUserdata().playEffect(player, target);

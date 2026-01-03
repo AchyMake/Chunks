@@ -3,6 +3,7 @@ package org.achymake.chunks.listeners;
 import org.achymake.chunks.Chunks;
 import org.achymake.chunks.data.Message;
 import org.achymake.chunks.handlers.ChunkHandler;
+import org.achymake.chunks.handlers.WorldHandler;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -16,6 +17,9 @@ public class PlayerInteract implements Listener {
     }
     private ChunkHandler getChunkHandler() {
         return getInstance().getChunkHandler();
+    }
+    private WorldHandler getWorldHandler() {
+        return getInstance().getWorldHandler();
     }
     private Message getMessage() {
         return getInstance().getMessage();
@@ -31,21 +35,21 @@ public class PlayerInteract implements Listener {
         var block = event.getClickedBlock();
         if (block == null)return;
         var chunk = block.getChunk();
-        if (!getChunkHandler().isAllowedClaim(chunk))return;
+        if (!getWorldHandler().isAllowedClaim(chunk))return;
         if (!getChunkHandler().isClaimed(chunk))return;
         var player = event.getPlayer();
         if (getChunkHandler().hasAccess(chunk, player))return;
         if (event.getAction().equals(Action.PHYSICAL)) {
-            if (!getChunkHandler().isPhysicalBlockDisabled(block.getType()))return;
+            if (!getInstance().isPhysicalBlockDisabled(block.getType()))return;
             event.setCancelled(true);
         } else if (event.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
-            if (getChunkHandler().isInteractBlockDisabled(block.getType())) {
+            if (getInstance().isInteractBlockDisabled(block.getType())) {
                 event.setCancelled(true);
                 getMessage().sendActionBar(player, getMessage().get("events.cancelled.claimed", getChunkHandler().getName(chunk)));
-            } else if (getChunkHandler().isBedDisabled(block.getType())) {
+            } else if (getInstance().isBedDisabled(block.getType())) {
                 event.setCancelled(true);
                 getMessage().sendActionBar(player, getMessage().get("events.cancelled.claimed", getChunkHandler().getName(chunk)));
-            } else if (getChunkHandler().isHarvestBlockDisabled(block.getType())) {
+            } else if (getInstance().isHarvestBlockDisabled(block.getType())) {
                 event.setCancelled(true);
                 getMessage().sendActionBar(player, getMessage().get("events.cancelled.claimed", getChunkHandler().getName(chunk)));
             }

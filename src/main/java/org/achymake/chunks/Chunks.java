@@ -8,6 +8,7 @@ import org.achymake.chunks.data.*;
 import org.achymake.chunks.handlers.*;
 import org.achymake.chunks.listeners.*;
 import org.achymake.chunks.providers.*;
+import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
@@ -217,5 +218,56 @@ public final class Chunks extends JavaPlugin {
     }
     public WorldGuard getWorldGuard() {
         return WorldGuard.getInstance();
+    }
+    public boolean isPvpInsideClaims() {
+        return getConfig().getBoolean("pvp-inside-claims");
+    }
+    public boolean isTNTBlockDamageDisabled() {
+        return getConfig().getBoolean("disable-tnt-block-damage");
+    }
+    public boolean isRedstoneOnlyInClaims() {
+        return getConfig().getBoolean("redstone-only-in-claims");
+    }
+    public boolean isBlockPlaceDisabled() {
+        return getConfig().getBoolean("disable-block-place");
+    }
+    public boolean isBlockFertilizeDisabled() {
+        return getConfig().getBoolean("disable-block-fertilize");
+    }
+    public boolean isBlockBreakDisabled() {
+        return getConfig().getBoolean("disable-block-break");
+    }
+    public boolean isCauldronLevelChangeDisabled() {
+        return getConfig().getBoolean("disable-cauldron-level-change");
+    }
+    public boolean isSignChangeDisabled() {
+        return getConfig().getBoolean("disable-sign-change");
+    }
+    public boolean isFluidFromOutsideDisabled() {
+        return getConfig().getBoolean("disable-fluid-from-outside");
+    }
+    public boolean isPistonFromOutsideDisabled() {
+        return getConfig().getBoolean("disable-piston-from-outside");
+    }
+    public boolean isHarvestBlockDisabled(Material blockType) {
+        return getConfig().getBoolean("disable-harvest-blocks." + blockType);
+    }
+    public boolean isPhysicalBlockDisabled(Material blockType) {
+        return getConfig().getBoolean("disable-physical-blocks." + blockType);
+    }
+    public boolean isInteractBlockDisabled(Material blockType) {
+        return getConfig().getBoolean("disable-interact-blocks." + blockType);
+    }
+    public boolean isChangeBlockDisabled(Material blockType) {
+        return getConfig().getBoolean("disable-change-blocks." + blockType);
+    }
+    public boolean isBucketDisabled(Material material) {
+        return getConfig().getBoolean("disable-buckets." + material);
+    }
+    public boolean isBedDisabled(Material blockType) {
+        return getConfig().getBoolean("disable-beds." + blockType);
+    }
+    public boolean manipulateFly() {
+        return getConfig().getBoolean("claim.manipulate-fly");
     }
 }

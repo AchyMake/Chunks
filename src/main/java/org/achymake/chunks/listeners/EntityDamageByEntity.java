@@ -4,6 +4,7 @@ import org.achymake.chunks.Chunks;
 import org.achymake.chunks.data.Message;
 import org.achymake.chunks.handlers.ChunkHandler;
 import org.achymake.chunks.handlers.EntityHandler;
+import org.achymake.chunks.handlers.WorldHandler;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -21,6 +22,9 @@ public class EntityDamageByEntity implements Listener {
     private EntityHandler getEntityHandler() {
         return getInstance().getEntityHandler();
     }
+    private WorldHandler getWorldHandler() {
+        return getInstance().getWorldHandler();
+    }
     private Message getMessage() {
         return getInstance().getMessage();
     }
@@ -34,14 +38,14 @@ public class EntityDamageByEntity implements Listener {
     public void onEntityDamageByEntity(EntityDamageByEntityEvent event) {
         var entity = event.getEntity();
         var chunk = entity.getLocation().getChunk();
-        if (!getChunkHandler().isAllowedClaim(chunk))return;
+        if (!getWorldHandler().isAllowedClaim(chunk))return;
         if (!getChunkHandler().isClaimed(chunk))return;
         var damager = event.getDamager();
         switch (damager) {
             case Arrow arrow -> {
                 if (arrow.getShooter() instanceof Player player) {
                     if (entity instanceof Player) {
-                        if (getChunkHandler().isPvpInsideClaims())return;
+                        if (getInstance().isPvpInsideClaims())return;
                         event.setCancelled(true);
                         getMessage().sendActionBar(player, getMessage().get("events.cancelled.pvp"));
                     } else if (getEntityHandler().isFriendly(entity.getType())) {
@@ -53,7 +57,7 @@ public class EntityDamageByEntity implements Listener {
             }
             case Player player -> {
                 if (entity instanceof Player) {
-                    if (getChunkHandler().isPvpInsideClaims())return;
+                    if (getInstance().isPvpInsideClaims())return;
                     event.setCancelled(true);
                     getMessage().sendActionBar(player, getMessage().get("events.cancelled.pvp"));
                 } else if (getEntityHandler().isFriendly(entity.getType())) {
@@ -65,7 +69,7 @@ public class EntityDamageByEntity implements Listener {
             case Snowball snowball -> {
                 if (snowball.getShooter() instanceof Player player) {
                     if (entity instanceof Player) {
-                        if (getChunkHandler().isPvpInsideClaims())return;
+                        if (getInstance().isPvpInsideClaims())return;
                         event.setCancelled(true);
                         getMessage().sendActionBar(player, getMessage().get("events.cancelled.pvp"));
                     } else if (getEntityHandler().isFriendly(entity.getType())) {
@@ -78,7 +82,7 @@ public class EntityDamageByEntity implements Listener {
             case SpectralArrow spectralArrow -> {
                 if (spectralArrow.getShooter() instanceof Player player) {
                     if (entity instanceof Player) {
-                        if (getChunkHandler().isPvpInsideClaims())return;
+                        if (getInstance().isPvpInsideClaims())return;
                         event.setCancelled(true);
                         getMessage().sendActionBar(player, getMessage().get("events.cancelled.pvp"));
                     } else if (getEntityHandler().isFriendly(entity.getType())) {
@@ -91,7 +95,7 @@ public class EntityDamageByEntity implements Listener {
             case ThrownPotion thrownPotion -> {
                 if (thrownPotion.getShooter() instanceof Player player) {
                     if (entity instanceof Player) {
-                        if (getChunkHandler().isPvpInsideClaims())return;
+                        if (getInstance().isPvpInsideClaims())return;
                         event.setCancelled(true);
                         getMessage().sendActionBar(player, getMessage().get("events.cancelled.pvp"));
                     } else if (getEntityHandler().isFriendly(entity.getType())) {
@@ -104,7 +108,7 @@ public class EntityDamageByEntity implements Listener {
             case Trident trident -> {
                 if (trident.getShooter() instanceof Player player) {
                     if (entity instanceof Player) {
-                        if (getChunkHandler().isPvpInsideClaims())return;
+                        if (getInstance().isPvpInsideClaims())return;
                         event.setCancelled(true);
                         getMessage().sendActionBar(player, getMessage().get("events.cancelled.pvp"));
                     } else if (getEntityHandler().isFriendly(entity.getType())) {
@@ -117,7 +121,7 @@ public class EntityDamageByEntity implements Listener {
             case WindCharge windCharge -> {
                 if (windCharge.getShooter() instanceof Player player) {
                     if (entity instanceof Player) {
-                        if (getChunkHandler().isPvpInsideClaims())return;
+                        if (getInstance().isPvpInsideClaims())return;
                         event.setCancelled(true);
                         getMessage().sendActionBar(player, getMessage().get("events.cancelled.pvp"));
                     } else if (getEntityHandler().isFriendly(entity.getType())) {

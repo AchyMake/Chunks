@@ -3,6 +3,7 @@ package org.achymake.chunks.listeners;
 import org.achymake.chunks.Chunks;
 import org.achymake.chunks.data.Message;
 import org.achymake.chunks.handlers.ChunkHandler;
+import org.achymake.chunks.handlers.WorldHandler;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -17,6 +18,9 @@ public class BlockIgnite implements Listener {
     private ChunkHandler getChunkHandler() {
         return getInstance().getChunkHandler();
     }
+    private WorldHandler getWorldHandler() {
+        return getInstance().getWorldHandler();
+    }
     private Message getMessage() {
         return getInstance().getMessage();
     }
@@ -28,7 +32,7 @@ public class BlockIgnite implements Listener {
     }
     @EventHandler(priority = EventPriority.NORMAL)
     public void onBlockIgnite(BlockIgniteEvent event) {
-        if (!getChunkHandler().isAllowedClaim(event.getBlock().getChunk()))return;
+        if (!getWorldHandler().isAllowedClaim(event.getBlock().getChunk()))return;
         if (event.getIgnitingBlock() == null)return;
         if (event.getIgnitingEntity() instanceof Player player) {
             var chunk = event.getIgnitingBlock().getChunk();

@@ -2,7 +2,7 @@ package org.achymake.chunks.listeners;
 
 import org.achymake.chunks.Chunks;
 import org.achymake.chunks.events.PlayerChangedChunkEvent;
-import org.achymake.chunks.handlers.ChunkHandler;
+import org.achymake.chunks.handlers.WorldHandler;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -13,8 +13,8 @@ public class PlayerMove implements Listener {
     private Chunks getInstance() {
         return Chunks.getInstance();
     }
-    private ChunkHandler getChunkHandler() {
-        return getInstance().getChunkHandler();
+    private WorldHandler getWorldHandler() {
+        return getInstance().getWorldHandler();
     }
     private PluginManager getPluginManager() {
         return getInstance().getPluginManager();
@@ -26,7 +26,7 @@ public class PlayerMove implements Listener {
     public void onPlayerMove(PlayerMoveEvent event) {
         if (event.getTo() == null)return;
         if (event.getFrom().getChunk() == event.getTo().getChunk())return;
-        if (!getChunkHandler().isAllowedClaim(event.getTo().getChunk()))return;
+        if (!getWorldHandler().isAllowedClaim(event.getTo().getChunk()))return;
         getPluginManager().callEvent(new PlayerChangedChunkEvent(event.getPlayer(), event.getFrom(), event.getTo()));
     }
 }

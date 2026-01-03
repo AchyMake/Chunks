@@ -2,6 +2,7 @@ package org.achymake.chunks.listeners;
 
 import org.achymake.chunks.Chunks;
 import org.achymake.chunks.handlers.ChunkHandler;
+import org.achymake.chunks.handlers.WorldHandler;
 import org.bukkit.Material;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -16,6 +17,9 @@ public class BlockSpread implements Listener {
     private ChunkHandler getChunkHandler() {
         return getInstance().getChunkHandler();
     }
+    private WorldHandler getWorldHandler() {
+        return getInstance().getWorldHandler();
+    }
     private PluginManager getPluginManager() {
         return getInstance().getPluginManager();
     }
@@ -25,7 +29,7 @@ public class BlockSpread implements Listener {
     @EventHandler(priority = EventPriority.NORMAL)
     public void onBlockSpread(BlockSpreadEvent event) {
         var sourceChunk = event.getSource().getChunk();
-        if (!getChunkHandler().isAllowedClaim(sourceChunk))return;
+        if (!getWorldHandler().isAllowedClaim(sourceChunk))return;
         var blockChunk = event.getBlock().getChunk();
         if (event.getSource().getType().equals(Material.FIRE)) {
             if (getChunkHandler().isClaimed(sourceChunk)) {

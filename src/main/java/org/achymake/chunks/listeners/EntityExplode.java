@@ -3,6 +3,7 @@ package org.achymake.chunks.listeners;
 import org.achymake.chunks.Chunks;
 import org.achymake.chunks.handlers.ChunkHandler;
 import org.achymake.chunks.handlers.EntityHandler;
+import org.achymake.chunks.handlers.WorldHandler;
 import org.bukkit.block.Block;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -22,6 +23,9 @@ public class EntityExplode implements Listener {
     private EntityHandler getEntityHandler() {
         return getInstance().getEntityHandler();
     }
+    private WorldHandler getWorldHandler() {
+        return getInstance().getWorldHandler();
+    }
     private PluginManager getPluginManager() {
         return getInstance().getPluginManager();
     }
@@ -30,8 +34,8 @@ public class EntityExplode implements Listener {
     }
     @EventHandler(priority = EventPriority.NORMAL)
     public void onEntityExplode(EntityExplodeEvent event) {
-        if (!getChunkHandler().isAllowedClaim(event.getEntity().getLocation().getChunk()))return;
-        if (!getChunkHandler().isTNTBlockDamageDisabled())return;
+        if (!getWorldHandler().isAllowedClaim(event.getEntity().getLocation().getChunk()))return;
+        if (!getInstance().isTNTBlockDamageDisabled())return;
         var blockList = new ArrayList<Block>();
         for (var block : event.blockList()) {
             if (getChunkHandler().isClaimed(block.getChunk())) {

@@ -4,6 +4,7 @@ import org.achymake.chunks.Chunks;
 import org.achymake.chunks.data.Message;
 import org.achymake.chunks.handlers.ChunkHandler;
 import org.achymake.chunks.handlers.EntityHandler;
+import org.achymake.chunks.handlers.WorldHandler;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.event.EventHandler;
@@ -22,6 +23,9 @@ public class PlayerFish implements Listener {
     private EntityHandler getEntityHandler() {
         return getInstance().getEntityHandler();
     }
+    private WorldHandler getWorldHandler() {
+        return getInstance().getWorldHandler();
+    }
     private Message getMessage() {
         return getInstance().getMessage();
     }
@@ -38,7 +42,7 @@ public class PlayerFish implements Listener {
         if (caught == null)return;
         if (isInWaterOrBubbleColumn(caught))return;
         var chunk = caught.getLocation().getChunk();
-        if (!getChunkHandler().isAllowedClaim(chunk))return;
+        if (!getWorldHandler().isAllowedClaim(chunk))return;
         if (!getChunkHandler().isClaimed(chunk))return;
         if (!getEntityHandler().isFriendly(caught.getType()))return;
         var player = event.getPlayer();

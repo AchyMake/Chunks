@@ -3,6 +3,7 @@ package org.achymake.chunks.listeners;
 import org.achymake.chunks.Chunks;
 import org.achymake.chunks.data.Userdata;
 import org.achymake.chunks.handlers.ChunkHandler;
+import org.achymake.chunks.handlers.WorldHandler;
 import org.bukkit.block.BlockState;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -22,6 +23,9 @@ public class BlockFertilize implements Listener {
     private ChunkHandler getChunkHandler() {
         return getInstance().getChunkHandler();
     }
+    private WorldHandler getWorldHandler() {
+        return getInstance().getWorldHandler();
+    }
     private PluginManager getPluginManager() {
         return getInstance().getPluginManager();
     }
@@ -30,8 +34,8 @@ public class BlockFertilize implements Listener {
     }
     @EventHandler(priority = EventPriority.NORMAL)
     public void onBlockFertilize(BlockFertilizeEvent event) {
-        if (!getChunkHandler().isAllowedClaim(event.getBlock().getChunk()))return;
-        if (!getChunkHandler().isBlockFertilizeDisabled())return;
+        if (!getWorldHandler().isAllowedClaim(event.getBlock().getChunk()))return;
+        if (!getInstance().isBlockFertilizeDisabled())return;
         var player = event.getPlayer();
         if (player == null)return;
         if (getUserdata().isEditor(player))return;

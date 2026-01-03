@@ -3,6 +3,7 @@ package org.achymake.chunks.listeners;
 import org.achymake.chunks.Chunks;
 import org.achymake.chunks.data.Message;
 import org.achymake.chunks.handlers.ChunkHandler;
+import org.achymake.chunks.handlers.WorldHandler;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -17,6 +18,9 @@ public class CauldronLevelChange implements Listener {
     private ChunkHandler getChunkHandler() {
         return getInstance().getChunkHandler();
     }
+    private WorldHandler getWorldHandler() {
+        return getInstance().getWorldHandler();
+    }
     private Message getMessage() {
         return getInstance().getMessage();
     }
@@ -30,9 +34,9 @@ public class CauldronLevelChange implements Listener {
     public void onCauldronLevelChange(CauldronLevelChangeEvent event) {
         if (event.getEntity() instanceof Player player) {
             var chunk = event.getBlock().getChunk();
-            if (!getChunkHandler().isAllowedClaim(chunk))return;
+            if (!getWorldHandler().isAllowedClaim(chunk))return;
             if (!getChunkHandler().isClaimed(chunk))return;
-            if (!getChunkHandler().isCauldronLevelChangeDisabled())return;
+            if (!getInstance().isCauldronLevelChangeDisabled())return;
             if (getChunkHandler().hasAccess(chunk, player))return;
             event.setCancelled(true);
             getMessage().sendActionBar(player, getMessage().get("events.cancelled.claimed", getChunkHandler().getName(chunk)));

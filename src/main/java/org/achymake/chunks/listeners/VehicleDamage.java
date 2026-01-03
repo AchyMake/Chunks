@@ -3,6 +3,7 @@ package org.achymake.chunks.listeners;
 import org.achymake.chunks.Chunks;
 import org.achymake.chunks.data.Message;
 import org.achymake.chunks.handlers.ChunkHandler;
+import org.achymake.chunks.handlers.WorldHandler;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -17,6 +18,9 @@ public class VehicleDamage implements Listener {
     private ChunkHandler getChunkHandler() {
         return getInstance().getChunkHandler();
     }
+    private WorldHandler getWorldHandler() {
+        return getInstance().getWorldHandler();
+    }
     private Message getMessage() {
         return getInstance().getMessage();
     }
@@ -30,7 +34,7 @@ public class VehicleDamage implements Listener {
     public void onVehicleDamage(VehicleDamageEvent event) {
         if (event.getAttacker() instanceof Player player) {
             var chunk = event.getVehicle().getLocation().getChunk();
-            if (!getChunkHandler().isAllowedClaim(chunk))return;
+            if (!getWorldHandler().isAllowedClaim(chunk))return;
             if (!getChunkHandler().isClaimed(chunk))return;
             if (getChunkHandler().hasAccess(chunk, player))return;
             event.setCancelled(true);

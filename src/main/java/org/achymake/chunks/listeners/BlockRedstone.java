@@ -2,6 +2,7 @@ package org.achymake.chunks.listeners;
 
 import org.achymake.chunks.Chunks;
 import org.achymake.chunks.handlers.ChunkHandler;
+import org.achymake.chunks.handlers.WorldHandler;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -15,6 +16,9 @@ public class BlockRedstone implements Listener {
     private ChunkHandler getChunkHandler() {
         return getInstance().getChunkHandler();
     }
+    private WorldHandler getWorldHandler() {
+        return getInstance().getWorldHandler();
+    }
     private PluginManager getPluginManager() {
         return getInstance().getPluginManager();
     }
@@ -24,8 +28,8 @@ public class BlockRedstone implements Listener {
     @EventHandler(priority = EventPriority.NORMAL)
     public void onBlockRedstone(BlockRedstoneEvent event) {
         var block = event.getBlock();
-        if (!getChunkHandler().isAllowedClaim(block.getChunk()))return;
-        if (!getChunkHandler().isRedstoneOnlyInClaims())return;
+        if (!getWorldHandler().isAllowedClaim(block.getChunk()))return;
+        if (!getInstance().isRedstoneOnlyInClaims())return;
         if (getChunkHandler().isClaimed(block.getChunk()))return;
         var type = block.getType();
         if (type.equals(getInstance().getMaterialHandler().get("powered_rail")))return;

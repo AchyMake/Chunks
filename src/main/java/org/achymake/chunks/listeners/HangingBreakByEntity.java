@@ -3,6 +3,7 @@ package org.achymake.chunks.listeners;
 import org.achymake.chunks.Chunks;
 import org.achymake.chunks.data.Message;
 import org.achymake.chunks.handlers.ChunkHandler;
+import org.achymake.chunks.handlers.WorldHandler;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -17,6 +18,9 @@ public class HangingBreakByEntity implements Listener {
     private ChunkHandler getChunkHandler() {
         return getInstance().getChunkHandler();
     }
+    private WorldHandler getWorldHandler() {
+        return getInstance().getWorldHandler();
+    }
     private Message getMessage() {
         return getInstance().getMessage();
     }
@@ -29,7 +33,7 @@ public class HangingBreakByEntity implements Listener {
     @EventHandler(priority = EventPriority.NORMAL)
     public void onHangingBreakByEntity(HangingBreakByEntityEvent event) {
         var chunk = event.getEntity().getLocation().getChunk();
-        if (!getChunkHandler().isAllowedClaim(chunk))return;
+        if (!getWorldHandler().isAllowedClaim(chunk))return;
         if (event.getRemover() instanceof Player player) {
             if (!getChunkHandler().isClaimed(chunk))return;
             if (getChunkHandler().hasAccess(chunk, player))return;

@@ -3,6 +3,7 @@ package org.achymake.chunks.listeners;
 import org.achymake.chunks.Chunks;
 import org.achymake.chunks.data.Message;
 import org.achymake.chunks.handlers.ChunkHandler;
+import org.achymake.chunks.handlers.WorldHandler;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -15,6 +16,9 @@ public class PlayerArmorStandManipulate implements Listener {
     }
     private ChunkHandler getChunkHandler() {
         return getInstance().getChunkHandler();
+    }
+    private WorldHandler getWorldHandler() {
+        return getInstance().getWorldHandler();
     }
     private Message getMessage() {
         return getInstance().getMessage();
@@ -29,7 +33,7 @@ public class PlayerArmorStandManipulate implements Listener {
     public void onPlayerArmorStandManipulate(PlayerArmorStandManipulateEvent event) {
         var player = event.getPlayer();
         var chunk = event.getRightClicked().getLocation().getChunk();
-        if (!getChunkHandler().isAllowedClaim(chunk))return;
+        if (!getWorldHandler().isAllowedClaim(chunk))return;
         if (!getChunkHandler().isClaimed(chunk))return;
         if (getChunkHandler().hasAccess(chunk, player))return;
         event.setCancelled(true);

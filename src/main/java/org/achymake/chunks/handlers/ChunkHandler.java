@@ -1,15 +1,9 @@
 package org.achymake.chunks.handlers;
 
-import com.sk89q.worldedit.bukkit.BukkitAdapter;
-import com.sk89q.worldedit.math.BlockVector3;
-import com.sk89q.worldguard.protection.ApplicableRegionSet;
-import com.sk89q.worldguard.protection.flags.StateFlag;
-import com.sk89q.worldguard.protection.regions.ProtectedCuboidRegion;
 import net.milkbowl.vault.economy.Economy;
 import org.achymake.chunks.Chunks;
 import org.achymake.chunks.data.Userdata;
 import org.bukkit.Chunk;
-import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -34,6 +28,9 @@ public class ChunkHandler {
     }
     private DateHandler getDateHandler() {
         return getInstance().getDateHandler();
+    }
+    private WorldHandler getWorldHandler() {
+        return getInstance().getWorldHandler();
     }
     private Economy getEconomy() {
         return getInstance().getEconomy();
@@ -155,7 +152,7 @@ public class ChunkHandler {
         } else return false;
     }
     public boolean hasAccess(Chunk chunk, Player player) {
-        if (isAllowedClaim(chunk)) {
+        if (getWorldHandler().isAllowedClaim(chunk)) {
             if (isClaimed(chunk)) {
                 return isOwner(chunk, player) || isMember(chunk, player) || getUserdata().isEditor(player);
             } else return true;
@@ -163,30 +160,6 @@ public class ChunkHandler {
     }
     public long getChunkKey(Chunk chunk) {
         return (long) chunk.getX() & 4294967295L | ((long) chunk.getZ() & 4294967295L) << 32;
-    }
-    private boolean isAllowed(ApplicableRegionSet applicableRegionSet) {
-        for (var regionIn : applicableRegionSet) {
-            if (regionIn != null) {
-                var flag = regionIn.getFlag(getInstance().getFlag());
-                if (flag == StateFlag.State.ALLOW) {
-                    return true;
-                } else if (flag == StateFlag.State.DENY) {
-                    return false;
-                }
-            } else return true;
-        }
-        return true;
-    }
-    public boolean isAllowedClaim(Chunk chunk) {
-        if (getConfig().getStringList("worlds").contains(chunk.getWorld().getName())) {
-            var regionManager = getInstance().getWorldGuard().getPlatform().getRegionContainer().get(BukkitAdapter.adapt(chunk.getWorld()));
-            if (regionManager != null) {
-                var x = chunk.getX() << 4;
-                var z = chunk.getZ() << 4;
-                var protectedCuboidRegion = new ProtectedCuboidRegion("_", BlockVector3.at(x, -64, z), BlockVector3.at(x + 15, 320, z + 15));
-                return isAllowed(regionManager.getApplicableRegions(protectedCuboidRegion));
-            } else return true;
-        } else return false;
     }
     public void reload(Chunk chunk) {
         var file = getFile(chunk);
@@ -201,56 +174,5 @@ public class ChunkHandler {
                 removeOwner(chunk);
             }
         }
-    }
-    public boolean isPvpInsideClaims() {
-        return getConfig().getBoolean("pvp-inside-claims");
-    }
-    public boolean isTNTBlockDamageDisabled() {
-        return getConfig().getBoolean("disable-tnt-block-damage");
-    }
-    public boolean isRedstoneOnlyInClaims() {
-        return getConfig().getBoolean("redstone-only-in-claims");
-    }
-    public boolean isBlockPlaceDisabled() {
-        return getConfig().getBoolean("disable-block-place");
-    }
-    public boolean isBlockFertilizeDisabled() {
-        return getConfig().getBoolean("disable-block-fertilize");
-    }
-    public boolean isBlockBreakDisabled() {
-        return getConfig().getBoolean("disable-block-break");
-    }
-    public boolean isCauldronLevelChangeDisabled() {
-        return getConfig().getBoolean("disable-cauldron-level-change");
-    }
-    public boolean isSignChangeDisabled() {
-        return getConfig().getBoolean("disable-sign-change");
-    }
-    public boolean isFluidFromOutsideDisabled() {
-        return getConfig().getBoolean("disable-fluid-from-outside");
-    }
-    public boolean isPistonFromOutsideDisabled() {
-        return getConfig().getBoolean("disable-piston-from-outside");
-    }
-    public boolean isHarvestBlockDisabled(Material blockType) {
-        return getConfig().getBoolean("disable-harvest-blocks." + blockType);
-    }
-    public boolean isPhysicalBlockDisabled(Material blockType) {
-        return getConfig().getBoolean("disable-physical-blocks." + blockType);
-    }
-    public boolean isInteractBlockDisabled(Material blockType) {
-        return getConfig().getBoolean("disable-interact-blocks." + blockType);
-    }
-    public boolean isChangeBlockDisabled(Material blockType) {
-        return getConfig().getBoolean("disable-change-blocks." + blockType);
-    }
-    public boolean isBucketDisabled(Material material) {
-        return getConfig().getBoolean("disable-buckets." + material);
-    }
-    public boolean isBedDisabled(Material blockType) {
-        return getConfig().getBoolean("disable-beds." + blockType);
-    }
-    public boolean manipulateFly() {
-        return getConfig().getBoolean("claim.manipulate-fly");
     }
 }

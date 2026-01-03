@@ -2,6 +2,7 @@ package org.achymake.chunks.listeners;
 
 import org.achymake.chunks.Chunks;
 import org.achymake.chunks.handlers.ChunkHandler;
+import org.achymake.chunks.handlers.WorldHandler;
 import org.bukkit.block.BlockFace;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -16,6 +17,9 @@ public class BlockFromTo implements Listener {
     private ChunkHandler getChunkHandler() {
         return getInstance().getChunkHandler();
     }
+    private WorldHandler getWorldHandler() {
+        return getInstance().getWorldHandler();
+    }
     private PluginManager getPluginManager() {
         return getInstance().getPluginManager();
     }
@@ -25,9 +29,9 @@ public class BlockFromTo implements Listener {
     @EventHandler(priority = EventPriority.NORMAL)
     public void onBlockFromTo(BlockFromToEvent event) {
         var block = event.getBlock();
-        if (!getChunkHandler().isAllowedClaim(block.getChunk()))return;
+        if (!getWorldHandler().isAllowedClaim(block.getChunk()))return;
         if (!block.isLiquid())return;
-        if (!getChunkHandler().isFluidFromOutsideDisabled())return;
+        if (!getInstance().isFluidFromOutsideDisabled())return;
         var blockFace = event.getFace();
         var chunk = block.getChunk();
         if (getChunkHandler().isClaimed(chunk)) {

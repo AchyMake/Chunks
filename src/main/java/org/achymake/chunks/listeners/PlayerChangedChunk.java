@@ -5,6 +5,7 @@ import org.achymake.chunks.data.Message;
 import org.achymake.chunks.data.Userdata;
 import org.achymake.chunks.events.PlayerChangedChunkEvent;
 import org.achymake.chunks.handlers.ChunkHandler;
+import org.achymake.chunks.handlers.WorldHandler;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -20,6 +21,9 @@ public class PlayerChangedChunk implements Listener {
     private ChunkHandler getChunkHandler() {
         return getInstance().getChunkHandler();
     }
+    private WorldHandler getWorldHandler() {
+        return getInstance().getWorldHandler();
+    }
     private Message getMessage() {
         return getInstance().getMessage();
     }
@@ -32,14 +36,14 @@ public class PlayerChangedChunk implements Listener {
     @EventHandler(priority = EventPriority.MONITOR)
     public void onPlayerChangedChunk(PlayerChangedChunkEvent event) {
         var player = event.getPlayer();
-        if (!getChunkHandler().isAllowedClaim(event.getTo().getChunk()))return;
+        if (!getWorldHandler().isAllowedClaim(event.getTo().getChunk()))return;
         if (event.isCancelled()) {
             player.teleport(event.getFrom());
         } else {
             var to = event.getTo().getChunk();
             if (getChunkHandler().isClaimed(to)) {
                 if (!getChunkHandler().hasAccess(to, player)) {
-                    if (getChunkHandler().manipulateFly()) {
+                    if (getInstance().manipulateFly()) {
                         if (player.isFlying() && getUserdata().isSurvival(player)) {
                             getUserdata().disableFly(player);
                             getMessage().sendActionBar(player, getMessage().get("events.fly.unclaimed"));
@@ -74,9 +78,11 @@ public class PlayerChangedChunk implements Listener {
                 if (!getUserdata().getConfig(player).isString("visit"))return;
                 getMessage().sendActionBar(player, getMessage().get("events.move.exit", getChunkHandler().getName(from)));
                 getUserdata().setString(player, "visit", null);
-                if (player.isFlying() && getUserdata().isSurvival(player)) {
-                    getUserdata().disableFly(player);
-                    getMessage().sendActionBar(player, getMessage().get("events.fly.unclaimed"));
+                if (getInstance().manipulateFly()) {
+                    if (player.isFlying() && getUserdata().isSurvival(player)) {
+                        getUserdata().disableFly(player);
+                        getMessage().sendActionBar(player, getMessage().get("events.fly.unclaimed"));
+                    }
                 }
             }
         }

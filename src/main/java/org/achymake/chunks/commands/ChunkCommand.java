@@ -5,6 +5,7 @@ import org.achymake.chunks.Chunks;
 import org.achymake.chunks.data.Message;
 import org.achymake.chunks.data.Userdata;
 import org.achymake.chunks.handlers.ChunkHandler;
+import org.achymake.chunks.handlers.WorldHandler;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -28,6 +29,9 @@ public class ChunkCommand implements CommandExecutor, TabCompleter {
     private ChunkHandler getChunkHandler() {
         return getInstance().getChunkHandler();
     }
+    private WorldHandler getWorldHandler() {
+        return getInstance().getWorldHandler();
+    }
     private Economy getEconomy() {
         return getInstance().getEconomy();
     }
@@ -44,7 +48,7 @@ public class ChunkCommand implements CommandExecutor, TabCompleter {
                 if (args[0].equalsIgnoreCase("claim")) {
                     if (player.hasPermission("chunks.command.chunk.claim")) {
                         var chunk = player.getLocation().getChunk();
-                        if (getChunkHandler().isAllowedClaim(chunk)) {
+                        if (getWorldHandler().isAllowedClaim(chunk)) {
                             if (!getChunkHandler().isClaimed(chunk)) {
                                 if (!getUserdata().hasReachedChunkLimit(player)) {
                                     var cost = getConfig().getDouble("economy.cost");
@@ -73,7 +77,7 @@ public class ChunkCommand implements CommandExecutor, TabCompleter {
                                         } else player.sendMessage(getMessage().get("commands.chunk.claim.insufficient-funds", eco));
                                     }
                                 } else player.sendMessage(getMessage().get("commands.chunk.claim.reached-limit", String.valueOf(getUserdata().getClaimCount(player)), String.valueOf(getUserdata().getMaxClaims(player))));
-                            } else player.sendMessage(getMessage().get("commands.chunk.claim.already-claimed", getChunkHandler().getName(chunk)));
+                            } else player.sendMessage(getMessage().get("commands.chunk.claim.claimed", getChunkHandler().getName(chunk)));
                         } else player.sendMessage(getMessage().get("commands.chunk.claim.disabled-area"));
                         return true;
                     }

@@ -4,6 +4,7 @@ import org.achymake.chunks.Chunks;
 import org.achymake.chunks.data.Message;
 import org.achymake.chunks.handlers.ChunkHandler;
 import org.achymake.chunks.handlers.EntityHandler;
+import org.achymake.chunks.handlers.WorldHandler;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -21,6 +22,9 @@ public class EntityMount implements Listener {
     private EntityHandler getEntityHandler() {
         return getInstance().getEntityHandler();
     }
+    private WorldHandler getWorldHandler() {
+        return getInstance().getWorldHandler();
+    }
     private Message getMessage() {
         return getInstance().getMessage();
     }
@@ -34,7 +38,7 @@ public class EntityMount implements Listener {
     public void onEntityMount(EntityMountEvent event) {
         var mount = event.getMount();
         var chunk = mount.getLocation().getChunk();
-        if (!getChunkHandler().isAllowedClaim(chunk))return;
+        if (!getWorldHandler().isAllowedClaim(chunk))return;
         if (!getChunkHandler().isClaimed(chunk))return;
         if (event.getEntity() instanceof Player player) {
             if (getChunkHandler().hasAccess(chunk, player))return;

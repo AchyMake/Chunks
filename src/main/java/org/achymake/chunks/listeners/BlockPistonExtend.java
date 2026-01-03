@@ -2,6 +2,7 @@ package org.achymake.chunks.listeners;
 
 import org.achymake.chunks.Chunks;
 import org.achymake.chunks.handlers.ChunkHandler;
+import org.achymake.chunks.handlers.WorldHandler;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -15,6 +16,9 @@ public class BlockPistonExtend implements Listener {
     private ChunkHandler getChunkHandler() {
         return getInstance().getChunkHandler();
     }
+    private WorldHandler getWorldHandler() {
+        return getInstance().getWorldHandler();
+    }
     private PluginManager getPluginManager() {
         return getInstance().getPluginManager();
     }
@@ -24,12 +28,12 @@ public class BlockPistonExtend implements Listener {
     @EventHandler(priority = EventPriority.NORMAL)
     public void onBlockPistonExtend(BlockPistonExtendEvent event) {
         var chunk = event.getBlock().getChunk();
-        if (!getChunkHandler().isAllowedClaim(chunk))return;
-        if (getChunkHandler().isRedstoneOnlyInClaims()) {
+        if (!getWorldHandler().isAllowedClaim(chunk))return;
+        if (getInstance().isRedstoneOnlyInClaims()) {
             if (getChunkHandler().isClaimed(chunk))return;
             event.setCancelled(true);
         }
-        if (getChunkHandler().isPistonFromOutsideDisabled()) {
+        if (getInstance().isPistonFromOutsideDisabled()) {
             if (getChunkHandler().isClaimed(chunk)) {
                 for (var block : event.getBlocks()) {
                     if (getChunkHandler().isClaimed(block.getChunk())) {
