@@ -5,6 +5,7 @@ import org.achymake.chunks.Chunks;
 import org.achymake.chunks.data.Message;
 import org.achymake.chunks.data.Userdata;
 import org.achymake.chunks.handlers.ChunkHandler;
+import org.achymake.chunks.handlers.ScheduleHandler;
 import org.achymake.chunks.handlers.WorldHandler;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -28,6 +29,9 @@ public class ChunkCommand implements CommandExecutor, TabCompleter {
     }
     private ChunkHandler getChunkHandler() {
         return getInstance().getChunkHandler();
+    }
+    private ScheduleHandler getScheduleHandler() {
+        return getInstance().getScheduleHandler();
     }
     private WorldHandler getWorldHandler() {
         return getInstance().getWorldHandler();
@@ -107,7 +111,14 @@ public class ChunkCommand implements CommandExecutor, TabCompleter {
                     }
                 } else if (args[0].equalsIgnoreCase("view")) {
                     if (player.hasPermission("chunks.command.chunk.view")) {
-                        getUserdata().playEffect(player, player);
+                        var config = getUserdata().getConfig(player);
+                        if (config.isInt("tasks.effect")) {
+                            var taskID = config.getInt("tasks.effect");
+                            if (getScheduleHandler().isQueued(taskID)) {
+                                getScheduleHandler().cancel(taskID);
+                            }
+                            getUserdata().setObject(player, "tasks.effect", null);
+                        } else getChunkHandler().scheduleEffect(player);
                         return true;
                     }
                 } else if (args[0].equalsIgnoreCase("tnt")) {
@@ -181,11 +192,11 @@ public class ChunkCommand implements CommandExecutor, TabCompleter {
                                 if (getUserdata().getMembers(player).contains(target)) {
                                     var members = getUserdata().getMembersStringList(player);
                                     members.remove(target.getUniqueId().toString());
-                                    getUserdata().setStringList(player, "members", members);
+                                    getUserdata().setObject(player, "members", members);
                                 }
                                 var banned = getUserdata().getBannedStringList(player);
                                 banned.add(target.getUniqueId().toString());
-                                getUserdata().setStringList(player, "banned", banned);
+                                getUserdata().setObject(player, "banned", banned);
                                 player.sendMessage(getMessage().get("commands.chunk.ban.success", target.getName()));
                             } else player.sendMessage(getMessage().get("commands.chunk.ban.already-banned", target.getName()));
                         } else player.sendMessage(getMessage().get("commands.chunk.ban.self"));
@@ -217,7 +228,7 @@ public class ChunkCommand implements CommandExecutor, TabCompleter {
                         if (getUserdata().getBanned(player).contains(target)) {
                             var banned = getUserdata().getBannedStringList(player);
                             banned.remove(target.getUniqueId().toString());
-                            getUserdata().setStringList(player, "banned", banned);
+                            getUserdata().setObject(player, "banned", banned);
                             player.sendMessage(getMessage().get("commands.chunk.unban.success", target.getName()));
                         } else player.sendMessage(getMessage().get("commands.chunk.unban.invalid", target.getName()));
                         return true;
@@ -232,7 +243,7 @@ public class ChunkCommand implements CommandExecutor, TabCompleter {
                             if (target != player) {
                                 if (!getUserdata().getMembers(player).contains(target)) {
                                     members.add(target.getUniqueId().toString());
-                                    getUserdata().setStringList(player, "members", members);
+                                    getUserdata().setObject(player, "members", members);
                                     player.sendMessage(getMessage().get("commands.chunk.members.add.success", target.getName()));
                                 } else player.sendMessage(getMessage().get("commands.chunk.members.add.already-member", target.getName()));
                             } else player.sendMessage(getMessage().get("commands.chunk.members.add.self"));
@@ -240,7 +251,7 @@ public class ChunkCommand implements CommandExecutor, TabCompleter {
                         } else if (args[1].equalsIgnoreCase("remove")) {
                             if (getUserdata().getMembers(player).contains(target)) {
                                 members.remove(target.getUniqueId().toString());
-                                getUserdata().setStringList(player, "members", members);
+                                getUserdata().setObject(player, "members", members);
                                 player.sendMessage(getMessage().get("commands.chunk.members.remove.success", target.getName()));
                             } else player.sendMessage(getMessage().get("commands.chunk.members.remove.invalid", target.getName()));
                             return true;

@@ -54,10 +54,10 @@ public class PlayerChangedChunk implements Listener {
                     if (getUserdata().isEditor(player)) {
                         if (getUserdata().getConfig(player).isString("visit")) {
                             if (getUserdata().getConfig(player).getString("visit").equals(getChunkHandler().getOwner(to).getUniqueId().toString()))return;
-                            getUserdata().setString(player, "visit", getChunkHandler().getOwner(to).getUniqueId().toString());
+                            getUserdata().setObject(player, "visit", getChunkHandler().getOwner(to).getUniqueId().toString());
                         } else {
                             getMessage().sendActionBar(player, getMessage().get("events.move.visit", getChunkHandler().getName(to)));
-                            getUserdata().setString(player, "visit", getChunkHandler().getOwner(to).getUniqueId().toString());
+                            getUserdata().setObject(player, "visit", getChunkHandler().getOwner(to).getUniqueId().toString());
                         }
                     } else {
                         player.teleport(event.getFrom());
@@ -66,10 +66,10 @@ public class PlayerChangedChunk implements Listener {
                 } else {
                     if (getUserdata().getConfig(player).isString("visit")) {
                         if (getUserdata().getConfig(player).getString("visit").equals(getChunkHandler().getOwner(to).getUniqueId().toString()))return;
-                        getUserdata().setString(player, "visit", getChunkHandler().getOwner(to).getUniqueId().toString());
+                        getUserdata().setObject(player, "visit", getChunkHandler().getOwner(to).getUniqueId().toString());
                     } else {
                         getMessage().sendActionBar(player, getMessage().get("events.move.visit", getChunkHandler().getName(to)));
-                        getUserdata().setString(player, "visit", getChunkHandler().getOwner(to).getUniqueId().toString());
+                        getUserdata().setObject(player, "visit", getChunkHandler().getOwner(to).getUniqueId().toString());
                     }
                 }
             } else {
@@ -77,7 +77,7 @@ public class PlayerChangedChunk implements Listener {
                 if (!getChunkHandler().isClaimed(from))return;
                 if (!getUserdata().getConfig(player).isString("visit"))return;
                 getMessage().sendActionBar(player, getMessage().get("events.move.exit", getChunkHandler().getName(from)));
-                getUserdata().setString(player, "visit", null);
+                getUserdata().setObject(player, "visit", null);
                 if (getInstance().manipulateFly()) {
                     if (player.isFlying() && getUserdata().isSurvival(player)) {
                         getUserdata().disableFly(player);

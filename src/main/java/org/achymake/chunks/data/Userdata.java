@@ -41,6 +41,16 @@ public class Userdata {
     public FileConfiguration getConfig(OfflinePlayer offlinePlayer) {
         return YamlConfiguration.loadConfiguration(getFile(offlinePlayer));
     }
+    public void setObject(OfflinePlayer offlinePlayer, String path, Object value) {
+        var file = getFile(offlinePlayer);
+        var config = YamlConfiguration.loadConfiguration(file);
+        config.set(path, value);
+        try {
+            config.save(file);
+        } catch (IOException e) {
+            getInstance().sendWarning(e.getMessage());
+        }
+    }
     public boolean isEditor(Player player) {
         return getEditors().contains(player);
     }
@@ -83,26 +93,6 @@ public class Userdata {
             chunksStringList.forEach(longString -> chunks.add(getChunk(world, longString)));
         }
         return chunks;
-    }
-    public void setString(OfflinePlayer offlinePlayer, String path, String value) {
-        var file = getFile(offlinePlayer);
-        var config = YamlConfiguration.loadConfiguration(file);
-        config.set(path, value);
-        try {
-            config.save(file);
-        } catch (IOException e) {
-            getInstance().sendWarning(e.getMessage());
-        }
-    }
-    public void setStringList(OfflinePlayer offlinePlayer, String path, List<String> value) {
-        var file = getFile(offlinePlayer);
-        var config = YamlConfiguration.loadConfiguration(file);
-        config.set(path, value);
-        try {
-            config.save(file);
-        } catch (IOException e) {
-            getInstance().sendWarning(e.getMessage());
-        }
     }
     public int getClaimCount(OfflinePlayer offlinePlayer) {
         var worldNames = getConfig(offlinePlayer).getConfigurationSection("chunks").getKeys(false);
@@ -212,17 +202,7 @@ public class Userdata {
         player.playSound(player, Sound.valueOf(soundName.toUpperCase()), volume, pitch);
     }
     private void setup(OfflinePlayer offlinePlayer) {
-        var file = getFile(offlinePlayer);
-        var config = YamlConfiguration.loadConfiguration(file);
-        config.set("name", offlinePlayer.getName());
-        config.createSection("members");
-        config.createSection("banned");
-        config.createSection("chunks");
-        try {
-            config.save(file);
-        } catch (IOException e) {
-            getInstance().sendWarning(e.getMessage());
-        }
+        setObject(offlinePlayer, "name", offlinePlayer.getName());
     }
     public void reload(Player player) {
         if (exists(player)) {
@@ -231,7 +211,7 @@ public class Userdata {
             try {
                 config.load(file);
                 if (!player.getName().equals(config.getString("name"))) {
-                    setString(player, "name", player.getName());
+                    setObject(player, "name", player.getName());
                 }
             } catch (IOException | InvalidConfigurationException e) {
                 getInstance().sendWarning(e.getMessage());

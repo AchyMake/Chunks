@@ -79,7 +79,7 @@ public class ChunkHandler {
         chunks.add(String.valueOf(getChunkKey(chunk)));
         try {
             config.save(file);
-            getUserdata().setStringList(offlinePlayer, "chunks." + worldName, chunks);
+            getUserdata().setObject(offlinePlayer, "chunks." + worldName, chunks);
             return true;
         } catch (IOException e) {
             getInstance().sendWarning(e.getMessage());
@@ -94,7 +94,7 @@ public class ChunkHandler {
             getEconomy().depositPlayer(owner, getConfig().getDouble("economy.refund"));
             var chunks = getUserdata().getChunksStringList(owner, chunk.getWorld().getName());
             chunks.remove(String.valueOf(getChunkKey(chunk)));
-            getUserdata().setStringList(owner, "chunks." + chunk.getWorld().getName(), chunks);
+            getUserdata().setObject(owner, "chunks." + chunk.getWorld().getName(), chunks);
             var recentOwners = config.getStringList("recent-owners");
             recentOwners.add(owner.getUniqueId().toString());
             config.set("owner", null);
@@ -174,5 +174,10 @@ public class ChunkHandler {
                 removeOwner(chunk);
             }
         }
+    }
+    public void scheduleEffect(Player player) {
+        getUserdata().playEffect(player, player);
+        var taskID = getInstance().getScheduleHandler().runLater(() -> scheduleEffect(player), 40).getTaskId();
+        getUserdata().setObject(player, "tasks.effect", taskID);
     }
 }
