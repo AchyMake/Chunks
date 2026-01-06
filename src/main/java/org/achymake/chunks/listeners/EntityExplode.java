@@ -32,19 +32,23 @@ public class EntityExplode implements Listener {
     public EntityExplode() {
         getPluginManager().registerEvents(this, getInstance());
     }
-    @EventHandler(priority = EventPriority.NORMAL)
+    @EventHandler(priority = EventPriority.MONITOR)
     public void onEntityExplode(EntityExplodeEvent event) {
-        if (!getWorldHandler().isAllowedClaim(event.getEntity().getLocation().getChunk()))return;
+        var chunk = event.getLocation().getChunk();
+        if (!getWorldHandler().isAllowedClaim(chunk))return;
         if (!getInstance().isTNTBlockDamageDisabled())return;
-        var blockList = new ArrayList<Block>();
-        for (var block : event.blockList()) {
-            if (getChunkHandler().isClaimed(block.getChunk())) {
-                if (!getEntityHandler().isTNT(event.getEntityType()))return;
-                if (getChunkHandler().isTNTAllowed(block.getChunk()))return;
-                blockList.add(block);
-            } else blockList.add(block);
-        }
-        event.blockList().removeAll(blockList);
-        blockList.clear();
+        var blockList = event.blockList();
+        var newBlockList = new ArrayList<Block>();
+        var entityType = event.getEntityType();
+        blockList.forEach(block -> {
+            var blockChunk = block.getChunk();
+            if (getChunkHandler().isClaimed(blockChunk)) {
+                if (!getEntityHandler().isTNT(entityType))return;
+                if (getChunkHandler().isTNTAllowed(blockChunk))return;
+                newBlockList.add(block);
+            } else newBlockList.add(block);
+        });
+        if (newBlockList.isEmpty())return;
+        blockList.removeAll(newBlockList);
     }
 }
