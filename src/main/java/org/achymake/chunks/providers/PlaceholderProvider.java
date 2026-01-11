@@ -39,27 +39,29 @@ public class PlaceholderProvider extends PlaceholderExpansion {
         } else {
             var instance = Chunks.getInstance();
             var chunk = player.getLocation().getChunk();
+            var userdata = instance.getUserdata();
+            var chunkHandler = instance.getChunkHandler();
             switch (params) {
                 case "owner" -> {
-                    if (instance.getChunkHandler().isClaimed(chunk)) {
-                        return instance.getChunkHandler().getName(chunk);
-                    } else if (instance.getChunkHandler().hasAccess(chunk, player)) {
+                    if (chunkHandler.isClaimed(chunk)) {
+                        return chunkHandler.getName(chunk);
+                    } else if (chunkHandler.hasAccess(chunk, player)) {
                         return "None";
                     } else return "Server";
                 }
                 case "access" -> {
-                    if (instance.getChunkHandler().hasAccess(chunk, player)) {
+                    if (chunkHandler.hasAccess(chunk, player)) {
                         return "&aTrue&f";
                     } else return "&cFalse&f";
                 }
                 case "claims" -> {
-                    return String.valueOf(instance.getUserdata().getClaimCount(player));
+                    return String.valueOf(userdata.getClaimCount(player));
                 }
                 case "claims_left" -> {
-                    return String.valueOf(instance.getUserdata().getMaxClaims(player) - instance.getUserdata().getClaimCount(player));
+                    return String.valueOf(userdata.getMaxClaims(player) - userdata.getClaimCount(player));
                 }
                 case "claims_max" -> {
-                    return String.valueOf(instance.getUserdata().getMaxClaims(player));
+                    return String.valueOf(userdata.getMaxClaims(player));
                 }
             }
         }

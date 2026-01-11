@@ -27,6 +27,7 @@ public final class Chunks extends JavaPlugin {
     private ChunkHandler chunkHandler;
     private DateHandler dateHandler;
     private EntityHandler entityHandler;
+    private GameModeHandler gameModeHandler;
     private MaterialHandler materialHandler;
     private ScheduleHandler scheduleHandler;
     private WorldHandler worldHandler;
@@ -51,6 +52,7 @@ public final class Chunks extends JavaPlugin {
         chunkHandler = new ChunkHandler();
         dateHandler = new DateHandler();
         entityHandler = new EntityHandler();
+        gameModeHandler = new GameModeHandler();
         materialHandler = new MaterialHandler();
         scheduleHandler = new ScheduleHandler();
         worldHandler = new WorldHandler();
@@ -92,7 +94,6 @@ public final class Chunks extends JavaPlugin {
         new BlockPistonRetract();
         new BlockPlace();
         new BlockRedstone();
-        new BlockShearEntity();
         new BlockSpread();
         new CauldronLevelChange();
         new ChunkLoad();
@@ -170,6 +171,9 @@ public final class Chunks extends JavaPlugin {
     }
     public MaterialHandler getMaterialHandler() {
         return materialHandler;
+    }
+    public GameModeHandler getGameModeHandler() {
+        return gameModeHandler;
     }
     public EntityHandler getEntityHandler() {
         return entityHandler;

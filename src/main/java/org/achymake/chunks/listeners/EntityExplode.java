@@ -32,7 +32,7 @@ public class EntityExplode implements Listener {
     public EntityExplode() {
         getPluginManager().registerEvents(this, getInstance());
     }
-    @EventHandler(priority = EventPriority.MONITOR)
+    @EventHandler(priority = EventPriority.NORMAL)
     public void onEntityExplode(EntityExplodeEvent event) {
         var chunk = event.getLocation().getChunk();
         if (!getWorldHandler().isAllowedClaim(chunk))return;

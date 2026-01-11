@@ -32,11 +32,13 @@ public class EntityChangeBlock implements Listener {
     }
     @EventHandler(priority = EventPriority.NORMAL)
     public void onEntityChangeBlock(EntityChangeBlockEvent event) {
-        var chunk = event.getBlock().getChunk();
-        if (!getWorldHandler().isAllowedClaim(chunk))return;
-        if (!getChunkHandler().isClaimed(chunk))return;
         if (event.getEntity() instanceof Player player) {
-            if (!getInstance().isChangeBlockDisabled(event.getBlock().getType()))return;
+            var block = event.getBlock();
+            var chunk = block.getChunk();
+            if (!getWorldHandler().isAllowedClaim(chunk))return;
+            if (!getChunkHandler().isClaimed(chunk))return;
+            var material = block.getType();
+            if (!getInstance().isChangeBlockDisabled(material))return;
             if (getChunkHandler().hasAccess(chunk, player))return;
             event.setCancelled(true);
             getMessage().sendActionBar(player, getMessage().get("events.cancelled.claimed", getChunkHandler().getName(chunk)));

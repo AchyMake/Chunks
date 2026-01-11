@@ -42,6 +42,7 @@ public class EntityMount implements Listener {
         if (!getChunkHandler().isClaimed(chunk))return;
         if (event.getEntity() instanceof Player player) {
             if (getChunkHandler().hasAccess(chunk, player))return;
+            if (getEntityHandler().isOwner(mount, player))return;
             var mountType = mount.getType();
             if (mountType.equals(getEntityHandler().getEntityType("armor_stand")))return;
             if (mountType.equals(getEntityHandler().getEntityType("boat")))return;

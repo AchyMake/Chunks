@@ -32,17 +32,20 @@ public class BlockPistonRetract implements Listener {
         if (getInstance().isRedstoneOnlyInClaims()) {
             if (getChunkHandler().isClaimed(chunk))return;
             event.setCancelled(true);
-        } else if (getInstance().isRedstoneOnlyInClaims()) {
+        }
+        if (getInstance().isPistonFromOutsideDisabled()) {
+            var blocks = event.getBlocks();
             if (getChunkHandler().isClaimed(chunk)) {
-                for (var block : event.getBlocks()) {
-                    if (getChunkHandler().isClaimed(block.getChunk())) {
-                        if (getChunkHandler().getOwner(chunk) == getChunkHandler().getOwner(block.getChunk()))return;
-                        event.setCancelled(true);
-                    }
+                for (var block : blocks) {
+                    var blocksChunk = block.getChunk();
+                    if (!getChunkHandler().isClaimed(blocksChunk))return;
+                    if (getChunkHandler().getOwner(chunk) == getChunkHandler().getOwner(blocksChunk))return;
+                    event.setCancelled(true);
                 }
             } else {
-                for (var block : event.getBlocks()) {
-                    if (!getChunkHandler().isClaimed(block.getChunk()))return;
+                for (var block : blocks) {
+                    var blocksChunk = block.getChunk();
+                    if (!getChunkHandler().isClaimed(blocksChunk))return;
                     event.setCancelled(true);
                 }
             }

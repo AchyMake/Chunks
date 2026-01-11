@@ -3,6 +3,7 @@ package org.achymake.chunks.listeners;
 import org.achymake.chunks.Chunks;
 import org.achymake.chunks.data.Message;
 import org.achymake.chunks.handlers.ChunkHandler;
+import org.achymake.chunks.handlers.EntityHandler;
 import org.achymake.chunks.handlers.WorldHandler;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -16,6 +17,9 @@ public class PlayerUnleashEntity implements Listener {
     }
     private ChunkHandler getChunkHandler() {
         return getInstance().getChunkHandler();
+    }
+    private EntityHandler getEntityHandler() {
+        return getInstance().getEntityHandler();
     }
     private WorldHandler getWorldHandler() {
         return getInstance().getWorldHandler();
@@ -31,10 +35,12 @@ public class PlayerUnleashEntity implements Listener {
     }
     @EventHandler(priority = EventPriority.NORMAL)
     public void onPlayerUnleashEntity(PlayerUnleashEntityEvent event) {
-        var chunk = event.getEntity().getLocation().getChunk();
+        var entity = event.getEntity();
+        var chunk = entity.getLocation().getChunk();
         if (!getWorldHandler().isAllowedClaim(chunk))return;
         if (!getChunkHandler().isClaimed(chunk))return;
         var player = event.getPlayer();
+        if (getEntityHandler().isLeashHolder(entity, player))return;
         if (getChunkHandler().hasAccess(chunk, player))return;
         event.setCancelled(true);
         getMessage().sendActionBar(player, getMessage().get("events.cancelled.claimed", getChunkHandler().getName(chunk)));

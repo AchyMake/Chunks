@@ -33,8 +33,8 @@ public class BlockPlace implements Listener {
     public void onBlockPlace(BlockPlaceEvent event) {
         var chunk = event.getBlock().getChunk();
         if (!getWorldHandler().isAllowedClaim(chunk))return;
-        if (!getInstance().isBlockPlaceDisabled())return;
         if (!getChunkHandler().isClaimed(chunk))return;
+        if (!getInstance().isBlockPlaceDisabled())return;
         var player = event.getPlayer();
         if (getChunkHandler().hasAccess(chunk, player))return;
         event.setCancelled(true);

@@ -32,10 +32,9 @@ public class BlockIgnite implements Listener {
     }
     @EventHandler(priority = EventPriority.NORMAL)
     public void onBlockIgnite(BlockIgniteEvent event) {
-        if (!getWorldHandler().isAllowedClaim(event.getBlock().getChunk()))return;
-        if (event.getIgnitingBlock() == null)return;
         if (event.getIgnitingEntity() instanceof Player player) {
-            var chunk = event.getIgnitingBlock().getChunk();
+            var chunk = event.getBlock().getChunk();
+            if (!getWorldHandler().isAllowedClaim(chunk))return;
             if (!getChunkHandler().isClaimed(chunk))return;
             if (getChunkHandler().hasAccess(chunk, player))return;
             event.setCancelled(true);

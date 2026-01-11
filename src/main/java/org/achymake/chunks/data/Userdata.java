@@ -3,7 +3,9 @@ package org.achymake.chunks.data;
 import org.achymake.chunks.Chunks;
 import org.achymake.chunks.handlers.ChunkHandler;
 import org.achymake.chunks.handlers.WorldHandler;
-import org.bukkit.*;
+import org.bukkit.Chunk;
+import org.bukkit.OfflinePlayer;
+import org.bukkit.World;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -28,9 +30,6 @@ public class Userdata {
     }
     private WorldHandler getWorldHandler() {
         return getInstance().getWorldHandler();
-    }
-    private Chunk getChunk(World world, String longString) {
-        return getWorldHandler().getChunk(world, Long.parseLong(longString));
     }
     public File getFile(OfflinePlayer offlinePlayer) {
         return new File(getInstance().getDataFolder(), "userdata/" + offlinePlayer.getUniqueId() + ".yml");
@@ -90,7 +89,9 @@ public class Userdata {
         var chunks = new ArrayList<Chunk>();
         var chunksStringList = getChunksStringList(offlinePlayer, world.getName());
         if (!chunksStringList.isEmpty()) {
-            chunksStringList.forEach(longString -> chunks.add(getChunk(world, longString)));
+            for (var longString : chunksStringList) {
+                chunks.add(getWorldHandler().getChunk(world, longString));
+            }
         }
         return chunks;
     }
@@ -132,74 +133,73 @@ public class Userdata {
         }
     }
     public void claimSound(Player player) {
-        playSound(player, getConfig().getString("claim.sound.type"), (float) getConfig().getDouble("claim.sound.volume"), (float) getConfig().getDouble("claim.sound.pitch"));
+        getWorldHandler().playSound(player, getConfig().getString("claim.sound.type"), getConfig().getDouble("claim.sound.volume"), getConfig().getDouble("claim.sound.pitch"));
     }
     public void claimEffect(Player player, Chunk chunk) {
         var location = player.getLocation();
-        var particle = Particle.valueOf(getConfig().getString("claim.particle.type"));
-        player.spawnParticle(particle, chunk.getBlock(7, 0, 0).getX(), location.getY() + 4, chunk.getBlock(7, 0, 0).getZ(), getConfig().getInt("claim.particle.amount"), getConfig().getInt("claim.particle.spread"), getConfig().getInt("claim.particle.height"), 0, 0);
-        player.spawnParticle(particle, chunk.getBlock(15, 0, 7).getX() + 1, location.getY() + 4, chunk.getBlock(15, 0, 7).getZ(), getConfig().getInt("claim.particle.amount"), 0, getConfig().getInt("claim.particle.height"), getConfig().getInt("claim.particle.spread"), 0);
-        player.spawnParticle(particle, chunk.getBlock(7, 0, 15).getX(), location.getY() + 4, chunk.getBlock(7, 0, 15).getZ() + 1, getConfig().getInt("claim.particle.amount"), getConfig().getInt("claim.particle.spread"), getConfig().getInt("claim.particle.height"), 0, 0);
-        player.spawnParticle(particle, chunk.getBlock(0, 0, 7).getX(), location.getY() + 4, chunk.getBlock(0, 0, 7).getZ(), getConfig().getInt("claim.particle.amount"), 0, getConfig().getInt("claim.particle.height"), getConfig().getInt("claim.particle.spread"), 0);
+        var particleType = getConfig().getString("claim.particle.type");
+        getWorldHandler().spawnParticle(player, particleType, chunk.getBlock(7, 0, 0).getX(), location.getY() + 4, chunk.getBlock(7, 0, 0).getZ(), getConfig().getInt("claim.particle.amount"), getConfig().getInt("claim.particle.spread"), getConfig().getInt("claim.particle.height"), 0);
+        getWorldHandler().spawnParticle(player, particleType, chunk.getBlock(15, 0, 7).getX() + 1, location.getY() + 4, chunk.getBlock(15, 0, 7).getZ(), getConfig().getInt("claim.particle.amount"), 0, getConfig().getInt("claim.particle.height"), getConfig().getInt("claim.particle.spread"));
+        getWorldHandler().spawnParticle(player, particleType, chunk.getBlock(7, 0, 15).getX(), location.getY() + 4, chunk.getBlock(7, 0, 15).getZ() + 1, getConfig().getInt("claim.particle.amount"), getConfig().getInt("claim.particle.spread"), getConfig().getInt("claim.particle.height"), 0);
+        getWorldHandler().spawnParticle(player, particleType, chunk.getBlock(0, 0, 7).getX(), location.getY() + 4, chunk.getBlock(0, 0, 7).getZ(), getConfig().getInt("claim.particle.amount"), 0, getConfig().getInt("claim.particle.height"), getConfig().getInt("claim.particle.spread"));
     }
     public void claimEffect(Player player, Chunk chunk, OfflinePlayer offlinePlayer) {
         var location = player.getLocation();
-        var particle = Particle.valueOf(getConfig().getString("claim.particle.type"));
+        var particleType = getConfig().getString("claim.particle.type");
         var north = chunk.getBlock(1,0,0).getLocation().add(0,0,-1).getChunk();
         var east = chunk.getBlock(15,0,1).getLocation().add(1,0,0).getChunk();
         var south = chunk.getBlock(1,0,15).getLocation().add(0,0,1).getChunk();
         var west = chunk.getBlock(0,0,1).getLocation().add(-1,0,0).getChunk();
         if (getChunkHandler().isClaimed(north)) {
             if (getChunkHandler().getOwner(north) != offlinePlayer) {
-                player.spawnParticle(particle, chunk.getBlock(7, 0, 0).getX(), location.getY() + 4, chunk.getBlock(7, 0, 0).getZ(), getConfig().getInt("claim.particle.amount"), getConfig().getInt("claim.particle.spread"), getConfig().getInt("claim.particle.height"), 0, 0);
+                getWorldHandler().spawnParticle(player, particleType, chunk.getBlock(7, 0, 0).getX(), location.getY() + 4, chunk.getBlock(7, 0, 0).getZ(), getConfig().getInt("claim.particle.amount"), getConfig().getInt("claim.particle.spread"), getConfig().getInt("claim.particle.height"), 0);
             }
-        } else player.spawnParticle(particle, chunk.getBlock(7, 0, 0).getX(), location.getY() + 4, chunk.getBlock(7, 0, 0).getZ(), getConfig().getInt("claim.particle.amount"), getConfig().getInt("claim.particle.spread"), getConfig().getInt("claim.particle.height"), 0, 0);
+        } else getWorldHandler().spawnParticle(player, particleType, chunk.getBlock(7, 0, 0).getX(), location.getY() + 4, chunk.getBlock(7, 0, 0).getZ(), getConfig().getInt("claim.particle.amount"), getConfig().getInt("claim.particle.spread"), getConfig().getInt("claim.particle.height"), 0);
         if (getChunkHandler().isClaimed(east)) {
             if (getChunkHandler().getOwner(east) != offlinePlayer) {
-                player.spawnParticle(particle, chunk.getBlock(15, 0, 7).getX() + 1, location.getY() + 4, chunk.getBlock(15, 0, 7).getZ(), getConfig().getInt("claim.particle.amount"), 0, getConfig().getInt("claim.particle.height"), getConfig().getInt("claim.particle.spread"), 0);
+                getWorldHandler().spawnParticle(player, particleType, chunk.getBlock(15, 0, 7).getX() + 1, location.getY() + 4, chunk.getBlock(15, 0, 7).getZ(), getConfig().getInt("claim.particle.amount"), 0, getConfig().getInt("claim.particle.height"), getConfig().getInt("claim.particle.spread"));
             }
-        } else player.spawnParticle(particle, chunk.getBlock(15, 0, 7).getX() + 1, location.getY() + 4, chunk.getBlock(15, 0, 7).getZ(), getConfig().getInt("claim.particle.amount"), 0, getConfig().getInt("claim.particle.height"), getConfig().getInt("claim.particle.spread"), 0);
+        } else getWorldHandler().spawnParticle(player, particleType, chunk.getBlock(15, 0, 7).getX() + 1, location.getY() + 4, chunk.getBlock(15, 0, 7).getZ(), getConfig().getInt("claim.particle.amount"), 0, getConfig().getInt("claim.particle.height"), getConfig().getInt("claim.particle.spread"));
         if (getChunkHandler().isClaimed(south)) {
             if (getChunkHandler().getOwner(south) != offlinePlayer) {
-                player.spawnParticle(particle, chunk.getBlock(7, 0, 15).getX(), location.getY() + 4, chunk.getBlock(7, 0, 15).getZ() + 1, getConfig().getInt("claim.particle.amount"), getConfig().getInt("claim.particle.spread"), getConfig().getInt("claim.particle.height"), 0, 0);
+                getWorldHandler().spawnParticle(player, particleType, chunk.getBlock(7, 0, 15).getX(), location.getY() + 4, chunk.getBlock(7, 0, 15).getZ() + 1, getConfig().getInt("claim.particle.amount"), getConfig().getInt("claim.particle.spread"), getConfig().getInt("claim.particle.height"), 0);
             }
-        } else player.spawnParticle(particle, chunk.getBlock(7, 0, 15).getX(), location.getY() + 4, chunk.getBlock(7, 0, 15).getZ() + 1, getConfig().getInt("claim.particle.amount"), getConfig().getInt("claim.particle.spread"), getConfig().getInt("claim.particle.height"), 0, 0);
+        } else getWorldHandler().spawnParticle(player, particleType, chunk.getBlock(7, 0, 15).getX(), location.getY() + 4, chunk.getBlock(7, 0, 15).getZ() + 1, getConfig().getInt("claim.particle.amount"), getConfig().getInt("claim.particle.spread"), getConfig().getInt("claim.particle.height"), 0);
         if (getChunkHandler().isClaimed(west)) {
             if (getChunkHandler().getOwner(west) != offlinePlayer) {
-                player.spawnParticle(particle, chunk.getBlock(0, 0, 7).getX(), location.getY() + 4, chunk.getBlock(0, 0, 7).getZ(), getConfig().getInt("claim.particle.amount"), 0, getConfig().getInt("claim.particle.height"), getConfig().getInt("claim.particle.spread"), 0);
+                getWorldHandler().spawnParticle(player, particleType, chunk.getBlock(0, 0, 7).getX(), location.getY() + 4, chunk.getBlock(0, 0, 7).getZ(), getConfig().getInt("claim.particle.amount"), 0, getConfig().getInt("claim.particle.height"), getConfig().getInt("claim.particle.spread"));
             }
-        } else player.spawnParticle(particle, chunk.getBlock(0, 0, 7).getX(), location.getY() + 4, chunk.getBlock(0, 0, 7).getZ(), getConfig().getInt("claim.particle.amount"), 0, getConfig().getInt("claim.particle.height"), getConfig().getInt("claim.particle.spread"), 0);
+        } else getWorldHandler().spawnParticle(player, particleType, chunk.getBlock(0, 0, 7).getX(), location.getY() + 4, chunk.getBlock(0, 0, 7).getZ(), getConfig().getInt("claim.particle.amount"), 0, getConfig().getInt("claim.particle.height"), getConfig().getInt("claim.particle.spread"));
     }
     public void unclaimSound(Player player) {
-        playSound(player, getConfig().getString("unclaim.sound.type"), (float) getConfig().getDouble("unclaim.sound.volume"), (float) getConfig().getDouble("unclaim.sound.pitch"));
+        getWorldHandler().playSound(player, getConfig().getString("unclaim.sound.type"), getConfig().getDouble("unclaim.sound.volume"), getConfig().getDouble("unclaim.sound.pitch"));
     }
     public void unclaimEffect(Player player, Chunk chunk) {
         var location = player.getLocation();
-        var particle = Particle.valueOf(getConfig().getString("unclaim.particle.type"));
-        player.spawnParticle(particle, chunk.getBlock(7, 0, 0).getX(), location.getY() + 4, chunk.getBlock(7, 0, 0).getZ(), getConfig().getInt("unclaim.particle.amount"), getConfig().getInt("unclaim.particle.spread"), getConfig().getInt("unclaim.particle.height"), 0, 0);
-        player.spawnParticle(particle, chunk.getBlock(15, 0, 7).getX() + 1, location.getY() + 4, chunk.getBlock(15, 0, 7).getZ(), getConfig().getInt("unclaim.particle.amount"), 0, getConfig().getInt("unclaim.particle.height"), getConfig().getInt("unclaim.particle.spread"), 0);
-        player.spawnParticle(particle, chunk.getBlock(7, 0, 15).getX(), location.getY() + 4, chunk.getBlock(7, 0, 15).getZ() + 1, getConfig().getInt("unclaim.particle.amount"), getConfig().getInt("unclaim.particle.spread"), getConfig().getInt("unclaim.particle.height"), 0, 0);
-        player.spawnParticle(particle, chunk.getBlock(0, 0, 7).getX(), location.getY() + 4, chunk.getBlock(0, 0, 7).getZ(), getConfig().getInt("unclaim.particle.amount"), 0, getConfig().getInt("unclaim.particle.height"), getConfig().getInt("unclaim.particle.spread"), 0);
+        var particleType = getConfig().getString("unclaim.particle.type");
+        getWorldHandler().spawnParticle(player, particleType, chunk.getBlock(7, 0, 0).getX(), location.getY() + 4, chunk.getBlock(7, 0, 0).getZ(), getConfig().getInt("unclaim.particle.amount"), getConfig().getInt("unclaim.particle.spread"), getConfig().getInt("unclaim.particle.height"), 0);
+        getWorldHandler().spawnParticle(player, particleType, chunk.getBlock(15, 0, 7).getX() + 1, location.getY() + 4, chunk.getBlock(15, 0, 7).getZ(), getConfig().getInt("unclaim.particle.amount"), 0, getConfig().getInt("unclaim.particle.height"), getConfig().getInt("unclaim.particle.spread"));
+        getWorldHandler().spawnParticle(player, particleType, chunk.getBlock(7, 0, 15).getX(), location.getY() + 4, chunk.getBlock(7, 0, 15).getZ() + 1, getConfig().getInt("unclaim.particle.amount"), getConfig().getInt("unclaim.particle.spread"), getConfig().getInt("unclaim.particle.height"), 0);
+        getWorldHandler().spawnParticle(player, particleType, chunk.getBlock(0, 0, 7).getX(), location.getY() + 4, chunk.getBlock(0, 0, 7).getZ(), getConfig().getInt("unclaim.particle.amount"), 0, getConfig().getInt("unclaim.particle.height"), getConfig().getInt("unclaim.particle.spread"));
     }
     public boolean removeAll(OfflinePlayer offlinePlayer) {
         var config = getConfig(offlinePlayer);
         var worlds = config.getConfigurationSection("chunks").getKeys(false);
         if (!worlds.isEmpty()) {
-            worlds.forEach(worldName -> {
+            for (var worldName : worlds) {
                 var world = getWorldHandler().get(worldName);
-                config.getStringList("chunks." + worldName).forEach(longString -> {
-                    var chunkKey = Long.parseLong(longString);
-                    var x = (int) chunkKey;
-                    var z = (int) (chunkKey >> 32);
-                    var chunk = world.getChunkAt(x, z);
-                    getChunkHandler().removeOwner(chunk);
-                });
-            });
+                if (world != null) {
+                    for (var chunkKeyString : config.getStringList("chunks." + worldName)) {
+                        var chunkKey = Long.parseLong(chunkKeyString);
+                        var x = (int) chunkKey;
+                        var z = (int) (chunkKey >> 32);
+                        var chunk = world.getChunkAt(x, z);
+                        getChunkHandler().removeOwner(chunk);
+                    }
+                }
+            }
             return true;
         } else return false;
-    }
-    public void playSound(Player player, String soundName, float volume, float pitch) {
-        player.playSound(player, Sound.valueOf(soundName.toUpperCase()), volume, pitch);
     }
     private void setup(OfflinePlayer offlinePlayer) {
         setObject(offlinePlayer, "name", offlinePlayer.getName());
@@ -217,9 +217,6 @@ public class Userdata {
                 getInstance().sendWarning(e.getMessage());
             }
         } else setup(player);
-    }
-    public boolean isSurvival(Player player) {
-        return player.getGameMode().equals(GameMode.SURVIVAL);
     }
     public void disableFly(Player player) {
         player.setAllowFlight(false);
@@ -243,16 +240,16 @@ public class Userdata {
     }
     public void reload() {
         var folder = new File(getInstance().getDataFolder(), "userdata");
-        if (folder.exists() && folder.isDirectory()) {
-            for (var file : folder.listFiles()) {
-                if (file.exists() && file.isFile()) {
-                    var config = YamlConfiguration.loadConfiguration(file);
-                    try {
-                        config.load(file);
-                    } catch (IOException | InvalidConfigurationException e) {
-                        getInstance().sendWarning(e.getMessage());
-                    }
-                }
+        if (!folder.exists())return;
+        if (!folder.isDirectory())return;
+        for (var file : folder.listFiles()) {
+            if (!file.exists())return;
+            if (!file.isFile())return;
+            var config = YamlConfiguration.loadConfiguration(file);
+            try {
+                config.load(file);
+            } catch (IOException | InvalidConfigurationException e) {
+                getInstance().sendWarning(e.getMessage());
             }
         }
     }

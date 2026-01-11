@@ -27,10 +27,10 @@ public class CrafterCraft implements Listener {
     }
     @EventHandler(priority = EventPriority.NORMAL)
     public void onCrafterCraft(CrafterCraftEvent event) {
-        var block = event.getBlock();
-        if (!getWorldHandler().isAllowedClaim(block.getChunk()))return;
+        var chunk = event.getBlock().getChunk();
+        if (!getWorldHandler().isAllowedClaim(chunk))return;
+        if (getChunkHandler().isClaimed(chunk))return;
         if (!getInstance().isRedstoneOnlyInClaims())return;
-        if (getChunkHandler().isClaimed(block.getChunk()))return;
         event.setCancelled(true);
     }
 }

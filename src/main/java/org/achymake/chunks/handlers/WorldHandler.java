@@ -8,8 +8,11 @@ import com.sk89q.worldguard.protection.flags.StateFlag;
 import com.sk89q.worldguard.protection.regions.ProtectedCuboidRegion;
 import org.achymake.chunks.Chunks;
 import org.bukkit.Chunk;
+import org.bukkit.Particle;
+import org.bukkit.Sound;
 import org.bukkit.World;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.entity.Player;
 
 public class WorldHandler {
     private Chunks getInstance() {
@@ -23,6 +26,15 @@ public class WorldHandler {
     }
     public Chunk getChunk(World world, long chunkKey) {
         return world.getChunkAt((int) chunkKey, (int) (chunkKey >> 32));
+    }
+    public Chunk getChunk(World world, String longString) {
+        return getChunk(world, Long.parseLong(longString));
+    }
+    public void spawnParticle(Player player, String particleType, double x, double y, double z, int count, double offsetX, double offsetY, double offsetZ) {
+        player.spawnParticle(Particle.valueOf(particleType), x, y, z, count, offsetX, offsetY, offsetZ, 0.0);
+    }
+    public void playSound(Player player, String soundType, double volume, double pitch) {
+        player.playSound(player, Sound.valueOf(soundType), (float) volume, (float) pitch);
     }
     private boolean isAllowed(ApplicableRegionSet applicableRegionSet) {
         for (var regionIn : applicableRegionSet) {

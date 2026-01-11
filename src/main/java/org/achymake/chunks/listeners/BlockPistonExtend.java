@@ -34,16 +34,19 @@ public class BlockPistonExtend implements Listener {
             event.setCancelled(true);
         }
         if (getInstance().isPistonFromOutsideDisabled()) {
+            var blocks = event.getBlocks();
             if (getChunkHandler().isClaimed(chunk)) {
-                for (var block : event.getBlocks()) {
-                    if (getChunkHandler().isClaimed(block.getChunk())) {
-                        if (getChunkHandler().getOwner(chunk) == getChunkHandler().getOwner(block.getChunk()))return;
+                for (var block : blocks) {
+                    var blocksChunk = block.getChunk();
+                    if (getChunkHandler().isClaimed(blocksChunk)) {
+                        if (getChunkHandler().getOwner(chunk) == getChunkHandler().getOwner(blocksChunk))return;
                         event.setCancelled(true);
                     }
                 }
             } else {
-                for (var block : event.getBlocks()) {
-                    if (!getChunkHandler().isClaimed(block.getChunk()))return;
+                for (var block : blocks) {
+                    var blocksChunk = block.getChunk();
+                    if (!getChunkHandler().isClaimed(blocksChunk))return;
                     event.setCancelled(true);
                 }
             }

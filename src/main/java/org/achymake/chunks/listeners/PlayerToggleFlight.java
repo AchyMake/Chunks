@@ -4,6 +4,7 @@ import org.achymake.chunks.Chunks;
 import org.achymake.chunks.data.Message;
 import org.achymake.chunks.data.Userdata;
 import org.achymake.chunks.handlers.ChunkHandler;
+import org.achymake.chunks.handlers.GameModeHandler;
 import org.achymake.chunks.handlers.WorldHandler;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -15,11 +16,14 @@ public class PlayerToggleFlight implements Listener {
     private Chunks getInstance() {
         return Chunks.getInstance();
     }
+    private Userdata getUserdata() {
+        return getInstance().getUserdata();
+    }
     private ChunkHandler getChunkHandler() {
         return getInstance().getChunkHandler();
     }
-    private Userdata getUserdata() {
-        return getInstance().getUserdata();
+    private GameModeHandler getGameModeHandler() {
+        return getInstance().getGameModeHandler();
     }
     private WorldHandler getWorldHandler() {
         return getInstance().getWorldHandler();
@@ -37,7 +41,7 @@ public class PlayerToggleFlight implements Listener {
     public void onPlayerToggleFlight(PlayerToggleFlightEvent event) {
         if (!getInstance().manipulateFly())return;
         var player = event.getPlayer();
-        if (!getUserdata().isSurvival(player))return;
+        if (!player.getGameMode().equals(getGameModeHandler().get("survival")))return;
         var chunk = player.getLocation().getChunk();
         if (!getWorldHandler().isAllowedClaim(chunk))return;
         if (getChunkHandler().isClaimed(chunk)) {

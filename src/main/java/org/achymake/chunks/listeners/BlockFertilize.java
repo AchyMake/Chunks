@@ -1,7 +1,6 @@
 package org.achymake.chunks.listeners;
 
 import org.achymake.chunks.Chunks;
-import org.achymake.chunks.data.Userdata;
 import org.achymake.chunks.handlers.ChunkHandler;
 import org.achymake.chunks.handlers.WorldHandler;
 import org.bukkit.block.BlockState;
@@ -16,9 +15,6 @@ import java.util.ArrayList;
 public class BlockFertilize implements Listener {
     private Chunks getInstance() {
         return Chunks.getInstance();
-    }
-    private Userdata getUserdata() {
-        return getInstance().getUserdata();
     }
     private ChunkHandler getChunkHandler() {
         return getInstance().getChunkHandler();
@@ -38,14 +34,15 @@ public class BlockFertilize implements Listener {
         if (!getInstance().isBlockFertilizeDisabled())return;
         var player = event.getPlayer();
         if (player == null)return;
-        if (getUserdata().isEditor(player))return;
         var blockList = new ArrayList<BlockState>();
-        event.getBlocks().forEach(blockState -> {
-            if (!getChunkHandler().isClaimed(blockState.getChunk()))return;
+        var blocks = event.getBlocks();
+        blocks.forEach(blockState -> {
+            var chunk = blockState.getChunk();
+            if (!getChunkHandler().isClaimed(chunk))return;
+            if (getChunkHandler().hasAccess(chunk, player))return;
             blockList.add(blockState);
         });
         if (blockList.isEmpty())return;
-        event.getBlocks().removeAll(blockList);
-        blockList.clear();
+        blocks.removeAll(blockList);
     }
 }

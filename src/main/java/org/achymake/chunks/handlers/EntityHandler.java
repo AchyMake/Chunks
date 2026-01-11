@@ -2,7 +2,7 @@ package org.achymake.chunks.handlers;
 
 import org.achymake.chunks.Chunks;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.entity.EntityType;
+import org.bukkit.entity.*;
 
 public class EntityHandler {
     private Chunks getInstance() {
@@ -19,5 +19,20 @@ public class EntityHandler {
     }
     public boolean isTNT(EntityType entityType) {
         return entityType.equals(getEntityType("tnt")) || entityType.equals(getEntityType("tnt_minecart"));
+    }
+    public boolean isOwner(Entity entity, Player player) {
+        if (entity instanceof Tameable tameable) {
+            if (tameable.isTamed()) {
+                return tameable.getOwner() == player;
+            }
+        }
+        return false;
+    }
+    public boolean isLeashHolder(Entity entity, Player player) {
+        if (entity instanceof LivingEntity livingEntity) {
+            if (livingEntity.isLeashed()) {
+                return livingEntity.getLeashHolder() == player;
+            } else return false;
+        } else return false;
     }
 }
