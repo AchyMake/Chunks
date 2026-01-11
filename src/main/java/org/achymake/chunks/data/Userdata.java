@@ -2,6 +2,7 @@ package org.achymake.chunks.data;
 
 import org.achymake.chunks.Chunks;
 import org.achymake.chunks.handlers.ChunkHandler;
+import org.achymake.chunks.handlers.UUIDHandler;
 import org.achymake.chunks.handlers.WorldHandler;
 import org.bukkit.Chunk;
 import org.bukkit.OfflinePlayer;
@@ -15,7 +16,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 public class Userdata {
     private final List<Player> editors = new ArrayList<>();
@@ -27,6 +27,9 @@ public class Userdata {
     }
     private ChunkHandler getChunkHandler() {
         return getInstance().getChunkHandler();
+    }
+    private UUIDHandler getUUIDHandler() {
+        return getInstance().getUUIDHandler();
     }
     private WorldHandler getWorldHandler() {
         return getInstance().getWorldHandler();
@@ -64,7 +67,7 @@ public class Userdata {
         var membersStringList = getMembersStringList(offlinePlayer);
         if (!membersStringList.isEmpty()) {
             for (var member : getMembersStringList(offlinePlayer)) {
-                members.add(getInstance().getOfflinePlayer(UUID.fromString(member)));
+                members.add(getInstance().getOfflinePlayer(getUUIDHandler().get(member)));
             }
         }
         return members;
@@ -77,7 +80,7 @@ public class Userdata {
         var bannedStringList = getBannedStringList(offlinePlayer);
         if (!bannedStringList.isEmpty()) {
             for (var ban : bannedStringList) {
-                banned.add(getInstance().getOfflinePlayer(UUID.fromString(ban)));
+                banned.add(getInstance().getOfflinePlayer(getUUIDHandler().get(ban)));
             }
         }
         return banned;
@@ -232,7 +235,8 @@ public class Userdata {
         if (folder.exists() && folder.isDirectory()) {
             for (var file : folder.listFiles()) {
                 if (file.exists() && file.isFile()) {
-                    listed.add(getInstance().getOfflinePlayer(UUID.fromString(file.getName().replace(".yml", ""))));
+                    var renamed = file.getName().replace(".yml", "");
+                    listed.add(getInstance().getOfflinePlayer(getUUIDHandler().get(renamed)));
                 }
             }
         }

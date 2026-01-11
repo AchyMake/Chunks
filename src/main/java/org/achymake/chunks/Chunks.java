@@ -30,6 +30,7 @@ public final class Chunks extends JavaPlugin {
     private GameModeHandler gameModeHandler;
     private MaterialHandler materialHandler;
     private ScheduleHandler scheduleHandler;
+    private UUIDHandler uuidHandler;
     private WorldHandler worldHandler;
     private UpdateChecker updateChecker;
     private BukkitScheduler bukkitScheduler;
@@ -55,6 +56,7 @@ public final class Chunks extends JavaPlugin {
         gameModeHandler = new GameModeHandler();
         materialHandler = new MaterialHandler();
         scheduleHandler = new ScheduleHandler();
+        uuidHandler = new UUIDHandler();
         worldHandler = new WorldHandler();
         updateChecker = new UpdateChecker();
         bukkitScheduler = getServer().getScheduler();
@@ -165,6 +167,9 @@ public final class Chunks extends JavaPlugin {
     }
     public WorldHandler getWorldHandler() {
         return worldHandler;
+    }
+    public UUIDHandler getUUIDHandler() {
+        return uuidHandler;
     }
     public ScheduleHandler getScheduleHandler() {
         return scheduleHandler;

@@ -14,7 +14,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 public class ChunkHandler {
     private Chunks getInstance() {
@@ -28,6 +27,9 @@ public class ChunkHandler {
     }
     private DateHandler getDateHandler() {
         return getInstance().getDateHandler();
+    }
+    private UUIDHandler getUUIDHandler() {
+        return getInstance().getUUIDHandler();
     }
     private WorldHandler getWorldHandler() {
         return getInstance().getWorldHandler();
@@ -48,7 +50,7 @@ public class ChunkHandler {
         var listed = new ArrayList<OfflinePlayer>();
         if (exists(chunk)) {
             for (var uuidString : getConfig(chunk).getStringList("recent-owners").reversed()) {
-                listed.add(getInstance().getOfflinePlayer(UUID.fromString(uuidString)));
+                listed.add(getInstance().getOfflinePlayer(getUUIDHandler().get(uuidString)));
             }
         }
         return listed;
@@ -62,7 +64,7 @@ public class ChunkHandler {
         if (exists(chunk)) {
             var ownerString = getConfig(chunk).getString("owner");
             if (ownerString != null) {
-                return getInstance().getOfflinePlayer(UUID.fromString(ownerString));
+                return getInstance().getOfflinePlayer(getUUIDHandler().get(ownerString));
             } else return null;
         } else return null;
     }

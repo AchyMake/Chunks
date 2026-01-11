@@ -2,7 +2,11 @@ package org.achymake.chunks.handlers;
 
 import org.achymake.chunks.Chunks;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.entity.*;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
+import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Player;
+import org.bukkit.entity.Tameable;
 
 public class EntityHandler {
     private Chunks getInstance() {
