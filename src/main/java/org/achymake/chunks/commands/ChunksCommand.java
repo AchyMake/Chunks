@@ -197,26 +197,32 @@ public class ChunksCommand implements CommandExecutor, TabCompleter {
         var commands = new ArrayList<String>();
         if (sender instanceof Player player) {
             if (args.length == 1) {
+                var listed = new ArrayList<String>();
                 if (player.hasPermission("chunks.command.chunks.edit")) {
-                    commands.add("edit");
+                    listed.add("edit");
                 }
                 if (player.hasPermission("chunks.command.chunks.effect")) {
-                    commands.add("effect");
+                    listed.add("effect");
                 }
                 if (player.hasPermission("chunks.command.chunks.help")) {
-                    commands.add("help");
+                    listed.add("help");
                 }
                 if (player.hasPermission("chunks.command.chunks.info")) {
-                    commands.add("info");
+                    listed.add("info");
                 }
                 if (player.hasPermission("chunks.command.chunks.reload")) {
-                    commands.add("reload");
+                    listed.add("reload");
                 }
                 if (player.hasPermission("chunks.command.chunks.setowner")) {
-                    commands.add("setowner");
+                    listed.add("setowner");
                 }
                 if (player.hasPermission("chunks.command.chunks.unclaim")) {
-                    commands.add("unclaim");
+                    listed.add("unclaim");
+                }
+                for (var list : listed) {
+                    if (list.startsWith(args[0])) {
+                        commands.add(list);
+                    }
                 }
             } else if (args.length == 2) {
                 if (args[0].equalsIgnoreCase("reload")) {

@@ -267,38 +267,42 @@ public class ChunkCommand implements CommandExecutor, TabCompleter {
         var commands = new ArrayList<String>();
         if (sender instanceof Player player) {
             if (args.length == 1) {
+                var listed = new ArrayList<String>();
                 if (player.hasPermission("chunks.command.chunk.ban")) {
-                    commands.add("ban");
+                    listed.add("ban");
                 }
                 if (player.hasPermission("chunks.command.chunk.banned")) {
-                    commands.add("banned");
+                    listed.add("banned");
                 }
                 if (player.hasPermission("chunks.command.chunk.claim")) {
-                    commands.add("claim");
+                    listed.add("claim");
                 }
                 if (player.hasPermission("chunks.command.chunk.help")) {
-                    commands.add("help");
+                    listed.add("help");
                 }
                 if (player.hasPermission("chunks.command.chunk.members")) {
-                    commands.add("members");
+                    listed.add("members");
                 }
                 if (player.hasPermission("chunks.command.chunk.tnt")) {
-                    commands.add("tnt");
+                    listed.add("tnt");
                 }
                 if (player.hasPermission("chunks.command.chunk.unban")) {
-                    commands.add("unban");
+                    listed.add("unban");
                 }
                 if (player.hasPermission("chunks.command.chunk.unclaim")) {
-                    commands.add("unclaim");
+                    listed.add("unclaim");
                 }
                 if (player.hasPermission("chunks.command.chunk.view")) {
-                    commands.add("view");
+                    listed.add("view");
+                }
+                for (var list : listed) {
+                    if (list.startsWith(args[0])) {
+                        commands.add(list);
+                    }
                 }
             } else if (args.length == 2) {
                 if (args[0].equalsIgnoreCase("unclaim")) {
-                    if (player.hasPermission("chunks.command.chunk.unclaim")) {
-                        commands.add("all");
-                    }
+                    commands.add("all");
                 } else if (args[0].equalsIgnoreCase("view")) {
                     if (player.hasPermission("chunks.command.chunk.view.others")) {
                         for (var target : getInstance().getOnlinePlayers()) {
