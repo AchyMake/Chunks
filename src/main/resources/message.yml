@@ -1,0 +1,65 @@
+commands:
+  chunk:
+    claim:
+      success: '&6You claimed a chunk for&a {0}'
+      insufficient-funds: '&cYou do not have&a {0}&c to claim a chunk'
+      reached-limit: '&cYou have reached&f {0}&c out of&f {1}&c claims'
+      claimed: '&cChunk is already claimed by&f {0}'
+      disabled-area: '&cYou are not allowed to claim chunks around here'
+    banned:
+      title: '&6Banned:'
+      listed: '- {0}'
+      empty: '&cBanned members is currently empty'
+    unclaim:
+      success: '&6You unclaimed a chunk and got refunded&a {0}'
+      claimed: '&cChunk is claimed by&f {0}'
+      unclaimed: '&cChunk is already unclaimed'
+      all:
+        success: '&6You unclaimed all chunks and refunded for each&a {0}'
+    tnt:
+      enable: '&6Current chunk allows tnt explosion'
+      disable: '&6Current chunk no longer allows tnt explosion'
+      claimed: '&cChunk is already claimed by&f {0}'
+      unclaimed: '&cChunk is unclaimed'
+    help:
+      title: '&6Chunk Help:'
+      ban: '&f/chunk ban player&7 - bans target from chunk'
+      banned: '&f/chunk banned&7 - check banned players'
+      claim: '&f/chunk claim&7 - claims current chunk'
+      help: '&f/chunk help&7 - shows this list'
+      members: '&f/chunk members add/remove player&7 - adds or removes chunk member'
+      tnt: '&f/chunk tnt&7 - toggle tnt for current chunk'
+      unban: '&f/chunk unban target&7 - unbans player from banned'
+      unclaim: '&f/chunk unclaim&7 - unclaim current chunk'
+      view: '&f/chunk view&7 - view claimed chunks'
+      view-others: '&f/chunk view target&7 - view target chunks'
+    ban:
+      success: '&6You banned&f {0}&6 from your chunks'
+      already-banned: '{0}&c is already banned from chunks'
+      self: '&cYou are not allowed to ban your self from your own chunks'
+    unban:
+      success: '&6You unbanned&f {0}&6 from chunks'
+      invalid: '{0}&c is not banned'
+    members:
+      title: '&6Members:'
+      listed: '- {0}'
+      empty: '&cMembers is currently empty'
+      add:
+        success: '&6You added&f {0}&6 as member'
+        already-member: '{0}&c is already a member'
+        self: '&cYou can not add your self to chunk members'
+      remove:
+        success: '&6You added&f {0}&6 as member'
+        invalid: '{0}&c is not a member'
+events:
+  cancelled:
+    claimed: '&cChunk is owned by&f {0}'
+    pvp: '&cPVP is disabled inside claimed chunks'
+    command: '&cYou are not allowed to use&f {0}&c inside&f {1}&c chunks'
+  move:
+    banned: '&cYou are banned from&f {0}&c chunk'
+    visit: '&6You entered&f {0}&6 chunk'
+    exit: '&6You exited&f {0}&6 chunk'
+  fly:
+    claimed: '&cYou are not allowed to fly inside&f {0}&c chunk!'
+    unclaimed: '&cYou are not allowed to fly outside your chunks!'
