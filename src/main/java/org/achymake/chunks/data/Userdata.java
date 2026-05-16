@@ -99,15 +99,17 @@ public class Userdata {
         return chunks;
     }
     public int getClaimCount(OfflinePlayer offlinePlayer) {
-        var worldNames = getConfig(offlinePlayer).getConfigurationSection("chunks").getKeys(false);
-        if (!worldNames.isEmpty()) {
-            var integers = new ArrayList<Integer>();
-            for (var worldName : worldNames) {
-                if (!integers.isEmpty()) {
-                    integers.set(0, integers.getFirst() + getConfig(offlinePlayer).getStringList("chunks." + worldName).size());
-                } else integers.addFirst(getConfig(offlinePlayer).getStringList("chunks." + worldName).size());
-            }
-            return integers.getFirst();
+        if (getConfig(offlinePlayer).isConfigurationSection("chunks")) {
+            var worldNames = getConfig(offlinePlayer).getConfigurationSection("chunks").getKeys(false);
+            if (!worldNames.isEmpty()) {
+                var integers = new ArrayList<Integer>();
+                for (var worldName : worldNames) {
+                    if (!integers.isEmpty()) {
+                        integers.set(0, integers.getFirst() + getConfig(offlinePlayer).getStringList("chunks." + worldName).size());
+                    } else integers.addFirst(getConfig(offlinePlayer).getStringList("chunks." + worldName).size());
+                }
+                return integers.getFirst();
+            } else return 0;
         } else return 0;
     }
     public int getMaxClaims(Player player) {

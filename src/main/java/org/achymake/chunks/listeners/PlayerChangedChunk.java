@@ -6,7 +6,6 @@ import org.achymake.chunks.data.Userdata;
 import org.achymake.chunks.events.PlayerChangedChunkEvent;
 import org.achymake.chunks.handlers.ChunkHandler;
 import org.achymake.chunks.handlers.GameModeHandler;
-import org.achymake.chunks.handlers.WorldHandler;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -28,9 +27,6 @@ public class PlayerChangedChunk implements Listener {
     private GameModeHandler getGameModeHandler() {
         return getInstance().getGameModeHandler();
     }
-    private WorldHandler getWorldHandler() {
-        return getInstance().getWorldHandler();
-    }
     private PluginManager getPluginManager() {
         return getInstance().getPluginManager();
     }
@@ -44,7 +40,6 @@ public class PlayerChangedChunk implements Listener {
         var chunkTo = to.getChunk();
         var from = event.getFrom();
         var chunkFrom = from.getChunk();
-        if (!getWorldHandler().isAllowedClaim(chunkTo))return;
         if (!event.isCancelled()) {
             if (getChunkHandler().isClaimed(chunkTo)) {
                 if (!getChunkHandler().hasAccess(chunkTo, player)) {

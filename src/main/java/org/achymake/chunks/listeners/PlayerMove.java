@@ -13,9 +13,6 @@ public class PlayerMove implements Listener {
     private Chunks getInstance() {
         return Chunks.getInstance();
     }
-    private WorldHandler getWorldHandler() {
-        return getInstance().getWorldHandler();
-    }
     private PluginManager getPluginManager() {
         return getInstance().getPluginManager();
     }
@@ -26,7 +23,6 @@ public class PlayerMove implements Listener {
     public void onPlayerMove(PlayerMoveEvent event) {
         if (event.getTo() == null)return;
         if (event.getFrom().getChunk() == event.getTo().getChunk())return;
-        if (!getWorldHandler().isAllowedClaim(event.getTo().getChunk()))return;
         getPluginManager().callEvent(new PlayerChangedChunkEvent(event.getPlayer(), event.getFrom(), event.getTo()));
     }
 }
