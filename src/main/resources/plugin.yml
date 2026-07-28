@@ -1,7 +1,7 @@
 name: Chunks
 version: '${project.version}'
 main: org.achymake.chunks.Chunks
-api-version: '26.1.2'
+api-version: '26.2'
 prefix: '${project.name}'
 load: POSTWORLD
 depend:

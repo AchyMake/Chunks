@@ -18,7 +18,9 @@ public class EntityHandler {
         return getConfig().getBoolean("friendly." + entityType);
     }
     public boolean isTNT(EntityType entityType) {
-        return entityType.equals(getEntityType("tnt")) || entityType.equals(getEntityType("tnt_minecart"));
+        return entityType.equals(getEntityType("tnt")) ||
+                entityType.equals(getEntityType("tnt_minecart")) ||
+                entityType.equals(getEntityType("sulfur_cube"));
     }
     public boolean isOwner(Entity entity, Player player) {
         if (entity instanceof Tameable tameable) {
